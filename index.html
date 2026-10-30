@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RTP Route Finder</title>
+<link rel="stylesheet" href="leaflet.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div id="app" class="view-both">
+  <aside id="side">
+    <div id="searchcard">
+      <div id="compact"><div class="ft" id="compactrow"><span id="cfrom"></span><span class="arrow">→</span><span id="cto"></span><button id="expand" aria-label="Edit the route">⌄</button></div><div class="row2"><span id="csummary"></span><span id="segslot"></span></div></div>
+      <div class="brand"><b>Research Techno Plaza</b><span class="sub" id="status">Loading…</span><button id="collapse" class="phone-only" title="Back to the route" aria-label="Back to the route">⌃</button></div>
+      <div class="notice" id="notice"></div>
+      <div class="fields">
+        <div class="field from" id="fieldfrom"><span class="dot from"></span><input id="from" type="text" placeholder="From (Entrance 1)" autocomplete="off" spellcheck="false" aria-label="Start"><button class="clear" data-for="from" aria-label="Clear start">×</button></div>
+        <div class="field to" id="fieldto"><span class="dot to"></span><input id="to" type="text" placeholder="Where to? room code, name or nickname" autocomplete="off" spellcheck="false" aria-label="Destination"><button class="clear" data-for="to" aria-label="Clear destination">×</button></div>
+        <button id="swap" title="Swap start and destination" aria-label="Swap start and destination">⇅</button>
+      </div>
+      <div class="suggest" id="suggest"></div>
+      <div class="chips">
+        <button class="chip" id="stepfree" aria-pressed="false">Step-free</button>
+        <button class="chip" id="nolifts" aria-pressed="false">Avoid lifts</button>
+        <div class="seg" id="viewseg" role="group" aria-label="View"><button data-view="map">Map</button><button data-view="both" class="on">Both</button><button data-view="3d">3D</button></div>
+      </div>
+      <div class="sumrow"><div id="summary"></div><div class="tools"><button id="copy" class="small" title="Copy a link to this route and position">Link</button><button id="export" class="small" title="Download route.json for Unity">route.json</button></div></div>
+    </div>
+    <div id="sheet">
+      <div id="sheetgrip"><div class="handle" id="handle"><span></span></div><div id="sheethead"></div></div>
+      <ol id="steps"></ol>
+    </div>
+  </aside>
+  <main id="views">
+    <section id="map2d"><div id="map"></div><div id="levels"></div><div id="mapmsg"></div></section>
+    <section id="view3dwrap">
+      <div id="stage">
+        <canvas id="view"></canvas>
+        <div id="level"></div>
+        <div id="banner"></div>
+        <div id="hint3d">drag sideways to move · up / down to look around</div>
+        <div id="fade"><div class="card"><div class="ico" id="cardico">🛗</div><div class="t" id="cardtitle"></div><div class="s" id="cardsub"></div></div></div>
+      </div>
+    </section>
+    <div id="bottom">
+      <div id="caption">
+        <div class="step"><span class="n" id="stepn"></span><span id="steptext">Pick a destination to see the way</span></div>
+        <div id="hint"></div>
+        <div id="next"></div>
+      </div>
+      <div class="scrubrow"><input id="scrub" type="range" min="0" max="100" value="0" step="0.1" aria-label="Position along the route in metres" disabled><span id="pos">0 m / 0 m</span></div>
+      <div class="buttons">
+        <button id="prevturn" title="Previous decision point (PageUp)" disabled>⇤</button>
+        <button id="back" title="Back 3 m (↓ or ←)" disabled>▼<span class="lbl"> 3 m</span></button>
+        <button id="fwd" class="primary" title="Forward 3 m (↑ or →)" disabled>▲<span class="lbl"> 3 m</span></button>
+        <button id="nextturn" title="Next decision point (PageDown)" disabled>⇥</button>
+        <button id="play" class="play" title="Fly through the route (space)" disabled>▶<span class="lbl"> Play</span></button>
+        <select id="speed" title="Fly-through pace"><option value="1">1×</option><option value="3" selected>3×</option><option value="10">10×</option></select>
+      </div>
+    </div>
+  </main>
+</div>
+<div id="toast"></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.147.0/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/objects/Reflector.js"></script>
+<script src="demo/wayfind.js"></script>
+<script src="route_export.js"></script>
+<script src="rtp-glb.js"></script>
+<script src="view3d.js"></script>
+<script src="view2d.js"></script>
+<script src="walkthrough.js"></script>
+</body>
+</html>
