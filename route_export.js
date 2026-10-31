@@ -68,21 +68,24 @@
     }
     return paths;
   }
-  /* camera polyline from node a to node b: the precomputed clearance path, else the straight edge */
+  /* camera polyline from node a to node b: the precomputed clearance path, else the straight edge (a free start or destination:
+     the straight line between the snapped point and the graph node's camera position) */
+  const pathId = n => n.same_as || n.id;   // a free destination on a node itself (Wayfind's __end with same_as) uses that node's camera data
   function edgePath(paths, a, b) {
     const P = index(paths);
     if (P) {
-      const f = P._edges.get(a.id + '|' + b.id); if (f) return f;
-      const r = P._edges.get(b.id + '|' + a.id); if (r) return r.slice().reverse();
+      const f = P._edges.get(pathId(a) + '|' + pathId(b)); if (f) return f;
+      const r = P._edges.get(pathId(b) + '|' + pathId(a)); if (r) return r.slice().reverse();
     }
     return [nodePos(paths, a), nodePos(paths, b)];
   }
-  const nodePos = (paths, n) => { const P = index(paths); return (P && P._nodes.get(n.id)) || [n.x, n.y]; };
+  const nodePos = (paths, n) => { const P = index(paths); return (P && P._nodes.get(pathId(n))) || [n.x, n.y]; };
 
   /* venue: Wayfind.load() result; plan: Wayfind.plan() result; manifest: model-manifest.json; paths: camera-paths.json or null;
      meta: { startLabel, options }. Returns { json, runs, rides, length, stepS, stepOfEdge, N, E }. */
   function build(venue, plan, manifest, paths, meta) {
     meta = meta || {};
+    const freeEnd = !!(plan.dest && plan.dest.virtual);   // a free destination (Wayfind's __end): no door, no opening, ends "along" like a zone's door
     const zOf = Object.fromEntries(manifest.levels.map(l => [l.id, l.z]));
     const N = plan.route.nodes.map(id => plan.nodeOf(id)), E = plan.route.edges;
     const stepOfEdge = new Array(E.length).fill(-1);
@@ -146,15 +149,21 @@
         nodeS[k + 1] = s; run = null;
       }
     }
+    if (freeEnd && E.length && E[E.length - 1].edge.type !== 'walk') {   // a free destination on a lift or stair node, reached by the ride: a zero-length run at the landing, so the walk ends on that level
+      const p = nodePos(paths, N[N.length - 1]);
+      runs.push({ level: N[N.length - 1].level, pts: [{ x: p[0], y: p[1], s, k: E.length - 1, node: N.length - 1 }], s0: s, s1: s, k0: E.length - 1, k1: E.length - 1 });
+    }
     const fin = runs[runs.length - 1];
     const opened = last.type === 'door' && hasOpening(manifest, last.id), arriveM = opened ? ARRIVE_M : ARRIVE_NO_WALL_M;
     // how the walk ends: on the builder's spot in front of the door ("front" / "oblique"), else 3 m back along the stub ("stub"), turned to the door (its opening's centre); or 3.5 m short at a destination without an opening ("along"), turned to its hanging sign (destination.face_x / face_y: the page and the follower turn to that point for both facings)
-    const hg = (manifest.hanging || []).find(h => h.node === last.id), facePt = opened || !hg ? doorPt : { x: hg.x, y: hg.y };   // what the walk turns to at its end
+    const hg = (manifest.hanging || []).find(h => h.node === last.id), face = plan.dest && plan.dest.face;
+    const facePt = face ? { x: +face.x, y: +face.y } : opened || !hg ? doorPt : { x: hg.x, y: hg.y };   // what the walk turns to at its end (a free destination's own face point wins)
     const arrive = { m: usedSpot ? arrivalSpot.distance_m : arriveM, facing: opened ? 'door' : 'along', opening: opened, door: doorPt, face: facePt, mode: usedSpot ? arrivalSpot.mode : (opened ? 'stub' : 'along'), tail: [{ x: doorPt.x, y: doorPt.y }] };   // tail: from the walk's end to the door, along what the arrival cut removed (the plan draws it dotted)
-    if (!usedSpot && fin && last.type === 'door' && E.length && E[E.length - 1].edge.type === 'walk') {   // arrival: end arriveM from the door, back along the final run
+    if (!usedSpot && fin && (last.type === 'door' || freeEnd) && E.length && E[E.length - 1].edge.type === 'walk') {   // arrival: end arriveM from the door, back along the final run
       const afterRide = rides.some(x => x.afterRun === runs.length - 2);   // the final run follows a ride (afterRun is the run before the ride)
-      const gone = arriveCut(fin.pts, doorPt, arriveM, afterRide ? ARRIVE_MIN_WALK_M : 0);   // a run that starts at a ride landing keeps at least ARRIVE_MIN_WALK_M of walk
+      const gone = arriveCut(fin.pts, doorPt, arriveM, afterRide || freeEnd ? ARRIVE_MIN_WALK_M : 0);   // a run that starts at a ride landing keeps at least ARRIVE_MIN_WALK_M of walk; so does a free destination's (a point tapped beside the start keeps 1 m or the whole run)
       arrive.tail = gone.slice().reverse().map(g => ({ x: g.x, y: g.y })).concat([{ x: doorPt.x, y: doorPt.y }]);
+      if (freeEnd && arrive.tail.length > 1) { const a = arrive.tail[arrive.tail.length - 2]; if (Math.hypot(a.x - doorPt.x, a.y - doorPt.y) < 1e-4) arrive.tail.splice(arrive.tail.length - 2, 1); }   // a free end's path ends on the point itself: once
       const end = fin.pts[fin.pts.length - 1], landing = afterRide && end === fin.pts[0];   // the cut stopped at the ride landing itself (the minimum walk): that vertex keeps the landing node
       const carry = ni => {   // a node whose vertex the cut removed is marked on a remaining unmarked vertex within 1 m of it, never the end vertex; otherwise it is not marked
         const nn = N[ni], q = fin.pts.filter(p => p.node == null && p !== end).map(p => [Math.hypot(p.x - nn.x, p.y - nn.y), p]).sort((a, b) => a[0] - b[0])[0];
@@ -171,7 +180,7 @@
       }
       fin.s1 = end.s; s = end.s; nodeS[N.length - 1] = s;
       arrive.m = +Math.hypot(end.x - doorPt.x, end.y - doorPt.y).toFixed(2);   // the cut only shortens: the walk ends at least arriveM from the door, this is the real distance
-    }
+    } else if (freeEnd && fin) { const end = fin.pts[fin.pts.length - 1]; arrive.m = +Math.hypot(end.x - doorPt.x, end.y - doorPt.y).toFixed(2); }   // a free destination at a ride landing: the walk ends there
     const length = s;
     const isRide = st => st.kind === 'lift' || st.kind === 'stairs' || st.kind === 'escalator';
     // the node a step's position (s) and first_waypoint refer to: the door for the arrival, the ride's own node for a ride (its leg may start
@@ -200,7 +209,11 @@
         if (!wpOfEdge.has(p.k)) wpOfEdge.set(p.k, waypoints.length - 1);
       });
     });
-    if (waypoints.length) waypoints[waypoints.length - 1].action = 'arrive';
+    if (waypoints.length) {   // the last waypoint is the arrival; a route that ends by a ride keeps its landing (action lift / stairs, which a follower rides on) and gets a separate arrive waypoint on the same spot
+      const w = waypoints[waypoints.length - 1];
+      if (w.action === 'lift' || w.action === 'stairs') waypoints.push(Object.assign({}, w, { i: waypoints.length, action: 'arrive', ride_step: undefined }));
+      else w.action = 'arrive';
+    }
     const steps = plan.steps.map((st, i) => ({ i, kind: st.kind, text: st.text, hint: st.hint || '', level: st.level, to_level: st.toLevel || null, s: +stepS[i].toFixed(2),
       first_waypoint: wpOfNode.has(nodeIndexOfStep(st)) ? wpOfNode.get(nodeIndexOfStep(st)) : (st.kind === 'arrive' ? Math.max(0, waypoints.length - 1) : (wpOfEdge.get(Math.min(st.firstEdge, E.length - 1)) ?? 0)) }));   // a step whose node's vertex was cut off points at the first waypoint of its own edge
     const json = {

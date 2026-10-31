@@ -5,14 +5,17 @@
    moves the shared "where I am" value; clicking the route jumps there. The marker lives in its own layer, so a redraw
    of the step markers never removes it under the finger. The map follows the position (level and pan, with padding
    for whatever overlaps the map) unless the viewer is dragging the marker, has just panned or zoomed, or picked a
-   level pill. Exposes window.View2D(deps). */
+   level pill. The rooms of rooms.json are invisible polygons over the plan: hovering outlines one, tapping it (or any
+   other point of the plan) hands it to the page as a place to go to or start from. Exposes window.View2D(deps). */
 window.View2D = function (deps) {
-  const { el, levelsEl, msgEl, plans, PLANS, levels, esc, onScrub, onClickStep, overlaps } = deps;   // levels: [{id, name, floor}], onScrub(s, run, level), onClickStep(i), overlaps(): [{left, top, right, bottom}] of panels covering the map
+  const { el, levelsEl, msgEl, plans, PLANS, levels, esc, onScrub, onClickStep, overlaps, rooms, onPickRoom, onPickPoint, isThumb, labelOf } = deps;   // labelOf(room): the label of a room without a name ("Lift", "Unnamed office")
+  let suppressPickUntil = 0;   // a tap right after the position marker was dragged is the drag's release, not a pick   // levels: [{id, name, floor}], onScrub(s, run, level), onClickStep(i), overlaps(): [{left, top, right, bottom}] of panels covering the map, rooms: rooms.json or null, onPickRoom(room, level), onPickPoint(level, x, y), isThumb(): the plan is the small thumbnail (no picking)
   const planOf = Object.fromEntries((plans.levels || []).map(l => [l.id, l.plan]));
   const missing = levels.map(l => l.id).filter(id => !planOf[id]);
   const map = L.map(el, { crs: L.CRS.Simple, minZoom: -3, maxZoom: 3, zoomSnap: 0.25, attributionControl: false, zoomControl: false, tap: false });
-  L.control.zoom({ position: 'topleft' }).addTo(map);   // top left: the level pills take the right, a phone's sheet the bottom
-  const overlays = {}, routeLayer = L.layerGroup().addTo(map), markerLayer = L.layerGroup().addTo(map), posLayer = L.layerGroup().addTo(map);
+  L.control.zoom({ position: 'bottomright' }).addTo(map);   // bottom right, above the view thumbnail (the panel covers the top left, the level pills the top right); phones pinch instead
+  const overlays = {}, roomLayers = {}, routeLayer = L.layerGroup().addTo(map), markerLayer = L.layerGroup().addTo(map), posLayer = L.layerGroup().addTo(map), pickLayer = L.layerGroup().addTo(map);
+  let pick = null;   // {node: {level, x, y}, name}: the tapped place, marked until the card closes
   let level = null, R = null, plan = null, dest = null, startLabel = '', current = -1, posMarker = null, dragging = false, pos = null;
   let stepMarkers = [], lastPan = 0, panTimer = null, userUntil = 0;
   const USER_PAUSE_MS = 4000, PILL_PAUSE_MS = 6000, MARGIN = 40;
@@ -21,14 +24,17 @@ window.View2D = function (deps) {
   if (missing.length) { msgEl.textContent = `No 2D plan for ${missing.join(', ')} (plans2d/manifest.json)`; msgEl.style.display = 'block'; }
   map.on('dragstart zoomstart', () => { userUntil = performance.now() + USER_PAUSE_MS; });   // the viewer is looking around: no following for a moment
   const userBusy = () => performance.now() < userUntil || (map.dragging && map.dragging.moving && map.dragging.moving());
-  function padding() {   // {tl: [x, y], br: [x, y]} pixels covered at the map's edges by the search card / the steps sheet, plus a margin
-    const r = el.getBoundingClientRect(); let top = 0, bottom = 0, left = 0, right = 0;
+  function padding() {   // {tl: [x, y], br: [x, y]} pixels covered at the map's edges by what floats over it (the panel on the left, the search card on top, the sheet at the bottom), plus a margin
+    const r = el.getBoundingClientRect(); let top = 0, bottom = 0, left = 0, right = 0; const T = 28;
     for (const o of (overlaps ? overlaps() : [])) {
       if (o.right <= r.left || o.left >= r.right || o.bottom <= r.top || o.top >= r.bottom) continue;
-      if (o.top <= r.top + 1) top = Math.max(top, o.bottom - r.top);
-      else if (o.bottom >= r.bottom - 1) bottom = Math.max(bottom, r.bottom - o.top);
+      const tall = (Math.min(o.bottom, r.bottom) - Math.max(o.top, r.top)) > r.height * 0.5, wide = (Math.min(o.right, r.right) - Math.max(o.left, r.left)) > r.width * 0.5;
+      if (tall && !wide && o.left <= r.left + T) left = Math.max(left, o.right - r.left);          // a panel hugging the left edge
+      else if (tall && !wide && o.right >= r.right - T) right = Math.max(right, r.right - o.left);  // ... or the right edge
+      else if (o.top <= r.top + T) top = Math.max(top, o.bottom - r.top);                           // a card along the top
+      else if (o.bottom >= r.bottom - T) bottom = Math.max(bottom, r.bottom - o.top);               // a sheet along the bottom
     }
-    return { tl: [left + MARGIN, Math.min(top, r.height * 0.5) + MARGIN], br: [right + MARGIN, Math.min(bottom, r.height * 0.5) + MARGIN] };
+    return { tl: [Math.min(left, r.width * 0.5) + MARGIN, Math.min(top, r.height * 0.5) + MARGIN], br: [Math.min(right, r.width * 0.5) + MARGIN, Math.min(bottom, r.height * 0.5) + MARGIN] };
   }
   function showLevel(lv, fit, byUser) {
     if (!planOf[lv]) return;
@@ -38,14 +44,43 @@ window.View2D = function (deps) {
       for (const id in overlays) if (id !== lv && map.hasLayer(overlays[id])) map.removeLayer(overlays[id]);
       if (!overlays[lv]) overlays[lv] = L.imageOverlay(PLANS + p.image, [[0, 0], [p.size_px[1], p.size_px[0]]]);   // lazily, once per level
       overlays[lv].addTo(map);
-      levelsEl.querySelectorAll('button').forEach(b => b.classList.toggle('active', b.dataset.level === lv));
-      draw(); placePos();
+      showRooms(lv);
+      levelsEl.querySelectorAll('button').forEach(b => { const on = b.dataset.level === lv; b.classList.toggle('active', on); b.setAttribute('aria-pressed', String(on)); });
+      draw(); placePos(); placePick();
     }
     if (fit) fitPlan();
   }
+  function showRooms(lv) {   // the level's room polygons, built once per level: invisible until hovered, a tap picks the room
+    for (const id in roomLayers) if (id !== lv && map.hasLayer(roomLayers[id])) map.removeLayer(roomLayers[id]);
+    const L_ = rooms && rooms.levels && rooms.levels[lv]; if (!L_) return;
+    if (!roomLayers[lv]) {
+      const g = L.layerGroup();
+      for (const rm of (L_.rooms || []).slice().sort((a, b) => (b.area_m2 || 0) - (a.area_m2 || 0))) {   // large rooms first: a room inside another is drawn on top, so a tap picks the smallest
+        if (!rm.poly || rm.poly.length < 3) continue;
+        const rings = [rm.poly].concat(rm.holes || []).map(ring => ring.map(([x, y]) => toLL(lv, x, y)));   // holes (a lobby walled off inside a room) are not part of the room: a tap there falls through
+        const poly = L.polygon(rings, { stroke: false, fill: true, fillColor: '#2563eb', fillOpacity: 0, interactive: true, bubblingMouseEvents: false, className: 'room-hover' });
+        poly.on('mouseover', () => poly.setStyle({ fillOpacity: 0.14 })); poly.on('mouseout', () => poly.setStyle({ fillOpacity: 0 }));
+        poly.on('click', e => { L.DomEvent.stop(e); if (onPickRoom && !(isThumb && isThumb())) onPickRoom(rm, lv); });
+        poly.bindTooltip(esc(rm.name || (labelOf ? labelOf(rm) : 'Unnamed room')), { sticky: true, direction: 'top', opacity: 0.95 });
+        g.addLayer(poly);
+      }
+      roomLayers[lv] = g;
+    }
+    roomLayers[lv].addTo(map);
+  }
+  map.on('click', e => {   // a tap on the plan itself (rooms, the route and markers stop their own clicks): a free point
+    if (!level || !planOf[level] || !onPickPoint || (isThumb && isThumb()) || performance.now() < suppressPickUntil) return;
+    const m = fromLL(level, e.latlng); onPickPoint(level, m.x, m.y);
+  });
+  function placePick() {
+    pickLayer.clearLayers();
+    if (!pick || pick.node.level !== level || !planOf[level]) return;
+    L.marker(toLL(level, pick.node.x, pick.node.y), { icon: pinIcon('pick', '<svg><use href="#i-pin"/></svg>'), interactive: false, zIndexOffset: 900 }).bindTooltip(esc(pick.name), { permanent: true, direction: 'top', offset: [0, -12], className: 'pin' }).addTo(pickLayer);
+  }
+  function setPick(node, name) { pick = node ? { node, name: name || '' } : null; if (node && node.level !== level) showLevel(node.level, false); placePick(); }
   function fitPlan() { if (!overlays[level]) return; map.invalidateSize(); const pd = padding(); map.fitBounds(overlays[level].getBounds(), { paddingTopLeft: pd.tl, paddingBottomRight: pd.br }); }
   for (const l of levels.slice().sort((a, b) => b.floor - a.floor)) {
-    const b = document.createElement('button'); b.textContent = l.id; b.dataset.level = l.id; b.title = l.name;
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = l.id; b.dataset.level = l.id; b.title = l.name; b.setAttribute('aria-label', l.name); b.setAttribute('aria-pressed', 'false');
     b.onclick = () => showLevel(l.id, false, true); levelsEl.appendChild(b);
   }
   // ---- the route on the current level
@@ -75,8 +110,8 @@ window.View2D = function (deps) {
       line.on('click', e => { const m = fromLL(level, e.latlng), q = nearestOnRuns(level, m.x, m.y); if (q) onScrub(q.s, q.run, level); L.DomEvent.stop(e); });
     }
     const N = plan.nodeOf, first = R.runs[0], firstPt = first.pts[0], last = plan.nodeOf(plan.route.nodes[plan.route.nodes.length - 1]);
-    if (first.level === level) L.marker(toLL(level, firstPt.x, firstPt.y), { icon: pinIcon('start', '●'), interactive: false }).bindTooltip(esc(startLabel || 'Start'), { permanent: true, direction: 'top', offset: [0, -12], className: 'pin' }).addTo(markerLayer);
-    if (last.level === level) L.marker(toLL(level, R.arrive.door.x, R.arrive.door.y), { icon: pinIcon('arrive', '■'), interactive: false }).bindTooltip(esc(dest.name), { permanent: true, direction: 'top', offset: [0, -12], className: 'pin' }).addTo(markerLayer);
+    if (first.level === level) L.marker(toLL(level, firstPt.x, firstPt.y), { icon: pinIcon('start', '<svg><use href="#i-dot"/></svg>'), interactive: false }).bindTooltip(esc(startLabel || 'Start'), { permanent: true, direction: 'top', offset: [0, -12], className: 'pin' }).addTo(markerLayer);
+    if (last.level === level) L.marker(toLL(level, R.arrive.door.x, R.arrive.door.y), { icon: pinIcon('arrive', '<svg><use href="#i-flag"/></svg>'), interactive: false }).bindTooltip(esc(dest.name), { permanent: true, direction: 'top', offset: [0, -12], className: 'pin' }).addTo(markerLayer);
     const fin = R.runs[R.runs.length - 1], end = fin.pts[fin.pts.length - 1], tail = R.arrive.tail || [R.arrive.door];   // the last metres to the door itself, dotted, along the path the arrival cut removed (the walk stops short of the door, turned to it)
     if (fin.level === level && last.level === level && Math.hypot(R.arrive.door.x - end.x, R.arrive.door.y - end.y) > 0.2) L.polyline([end].concat(tail).map(p => toLL(level, p.x, p.y)), { color: '#d62828', weight: 4, opacity: 0.75, dashArray: '1 9', lineCap: 'round', interactive: false }).addTo(routeLayer);
     plan.steps.forEach((st, i) => {
@@ -84,10 +119,11 @@ window.View2D = function (deps) {
       const ride = st.kind === 'lift' || st.kind === 'stairs', n = N(st.node);
       const q = ride && n ? { x: n.x, y: n.y } : pointAt(R.stepS[i], st.level);
       if (!q) return;
-      const m = L.marker(toLL(level, q.x, q.y), { icon: pinIcon(st.kind + (i === current ? ' current' : ''), ride ? (st.kind === 'lift' ? '🛗' : '↕') : String(i + 1)), zIndexOffset: 100 }).addTo(markerLayer);
+      const glyph = ride ? `<svg><use href="#i-${st.kind}"/></svg>` : String(i + 1);
+      const m = L.marker(toLL(level, q.x, q.y), { icon: pinIcon(st.kind + (i === current ? ' current' : ''), glyph), zIndexOffset: 100 }).addTo(markerLayer);
       m.bindTooltip(ride ? `${st.kind === 'lift' ? 'Lift' : 'Stairs'} → ${st.toLevel}` : esc(st.text.replace(/\s*\(\d+ m\)$/, '')), { direction: 'right', offset: [14, 0] });
       m.on('click', () => onClickStep(i));
-      stepMarkers.push({ i, m, cls: st.kind, text: ride ? (st.kind === 'lift' ? '🛗' : '↕') : String(i + 1) });
+      stepMarkers.push({ i, m, cls: st.kind, text: glyph });
     });
   }
   function placePos() {   // the position marker on the shown level (hidden while the position is on another level)
@@ -97,7 +133,7 @@ window.View2D = function (deps) {
       posMarker = L.marker(ll, { icon: L.divIcon({ className: '', html: '<div class="posmark"><div class="dir"></div><div class="dot"></div></div>', iconSize: [44, 44], iconAnchor: [22, 22] }), draggable: true, zIndexOffset: 1000, title: 'Drag along the route' }).addTo(posLayer);
       posMarker.on('dragstart', () => { dragging = true; });
       posMarker.on('drag', e => { const m = fromLL(level, e.target.getLatLng()), q = nearestOnRuns(level, m.x, m.y); if (!q) return; e.target.setLatLng(toLL(level, q.x, q.y)); onScrub(q.s, q.run, level); });
-      posMarker.on('dragend', () => { dragging = false; });
+      posMarker.on('dragend', () => { dragging = false; suppressPickUntil = performance.now() + 400; });
       posMarker.on('remove', () => { dragging = false; });
     } else posMarker.setLatLng(ll);
     posMarker.setOpacity(1);
@@ -107,7 +143,7 @@ window.View2D = function (deps) {
   function setRoute(R_, plan_, dest_, startLabel_) {
     R = R_; plan = plan_; dest = dest_; startLabel = startLabel_ || ''; current = -1; pos = null; dragging = false; userUntil = 0;
     if (posMarker) { posLayer.removeLayer(posMarker); posMarker = null; }
-    levelsEl.querySelectorAll('button').forEach(b => b.classList.toggle('onroute', !!(plan && plan.levels.includes(b.dataset.level))));
+    levelsEl.querySelectorAll('button').forEach(b => { const on = !!(plan && plan.levels.includes(b.dataset.level)); b.classList.toggle('onroute', on); const nm = levels.find(l => l.id === b.dataset.level); b.title = (nm ? nm.name : b.dataset.level) + (on ? ' (on the route)' : ''); b.setAttribute('aria-label', b.title); });
     if (!R) { draw(); return; }
     const lv0 = R.runs[0].level; if (level !== lv0) showLevel(lv0, false); else draw();
     const pts = R.runs.filter(r => r.level === level).flatMap(r => r.pts.map(p => toLL(level, p.x, p.y)));
@@ -131,9 +167,9 @@ window.View2D = function (deps) {
   }
   function showDestination(x, y, lv, name) {   // "already here": the destination pin alone
     setRoute(null); showLevel(lv, false);
-    L.marker(toLL(lv, x, y), { icon: pinIcon('arrive', '■'), interactive: false }).bindTooltip(esc(name), { permanent: true, direction: 'top', offset: [0, -12], className: 'pin' }).addTo(markerLayer);
+    L.marker(toLL(lv, x, y), { icon: pinIcon('arrive', '<svg><use href="#i-flag"/></svg>'), interactive: false }).bindTooltip(esc(name), { permanent: true, direction: 'top', offset: [0, -12], className: 'pin' }).addTo(markerLayer);
     map.invalidateSize(); map.setView(toLL(lv, x, y), 1);
   }
   function refit() { map.invalidateSize(); if (R) { const pts = R.runs.filter(r => r.level === level).flatMap(r => r.pts.map(p => toLL(level, p.x, p.y))); const pd = padding(); if (pts.length > 1) map.fitBounds(L.latLngBounds(pts), { paddingTopLeft: pd.tl, paddingBottomRight: pd.br, maxZoom: 1 }); } else fitPlan(); }
-  return { map, showLevel, setRoute, setPosition, setCurrentStep, showDestination, refit, level: () => level, invalidate: () => map.invalidateSize(), fit: fitPlan };
+  return { map, showLevel, setRoute, setPosition, setCurrentStep, showDestination, refit, setPick, level: () => level, invalidate: () => map.invalidateSize(), fit: fitPlan };
 };

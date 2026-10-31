@@ -194,15 +194,16 @@ window.View3D = function (deps) {
     if ((o.kind === 'door' && o.own_wall) || o.kind === 'lift' || o.kind === 'stairs' || o.kind === 'entrance') for (const id of o.nodes || [o.node]) if (!openingOf.has(id)) openingOf.set(id, o);
   }
   const hangingOf = new Map((manifest.hanging || []).map(h => [h.node, h]));
-  function signPlace(node) {   // -> position, height and the direction the plate faces (into the corridor / toward the approach)
-    const nb = neighbourOf(node.id), o = openingOf.get(node.id);
+  function signPlace(node, way) {   // -> position, height and the direction the plate faces (into the corridor / toward the approach); way: for a free destination (not in the venue graph) the unit direction { x, y } it is approached from and how far back along it the plate hangs (back, default SIGN_HANG_BACK_M)
+    const nb = way ? null : neighbourOf(node.id), o = openingOf.get(node.id);
     let dx = 0, dy = 0;
     if (nb) { const L = Math.hypot(nb.x - node.x, nb.y - node.y) || 1; dx = (nb.x - node.x) / L; dy = (nb.y - node.y) / L; }
+    else if (way) { dx = way.x; dy = way.y; }
     if (o && o.sign) { const s = o.sign, off = s.hanging ? 0 : s.face_m + 0.03, ox = s.x != null ? s.x : o.x, oy = s.y != null ? s.y : o.y, d = s.dir || o.dir; return { x: ox + s.nx * off, y: oy + s.ny * off, h: s.h || 2.55, nx: s.nx, ny: s.ny, dx: d[0], dy: d[1], free: s.free_m, hanging: !!s.hanging }; }   // just in front of the wall's real face, within the free span along it (s.x/y/dir: a mount moved to another wall; s.hanging: a plate hanging in the corridor before a door whose both sides are inside a room or a box, at x, y itself)
     if (o) { let nx = -o.dir[1], ny = o.dir[0]; if (nx * dx + ny * dy < 0) { nx = -nx; ny = -ny; } return { x: o.x + nx * 0.13, y: o.y + ny * 0.13, h: 2.55, nx, ny }; }
     const hg = hangingOf.get(node.id);
     if (hg) return { x: hg.x, y: hg.y, h: hg.h || SIGN_HANG_H, nx: hg.nx, ny: hg.ny, dx: hg.ny, dy: -hg.nx, free: hg.free_m };
-    if (nb) return { x: node.x + dx * SIGN_HANG_BACK_M, y: node.y + dy * SIGN_HANG_BACK_M, h: SIGN_HANG_H, nx: dx, ny: dy };   // no wall of its own (a zone's door, a point off any wall): a hanging plate before the spot, facing the way in, clear of the neighbours' walls the spot touches
+    if (nb || way) { const back = way && way.back != null ? way.back : SIGN_HANG_BACK_M; return { x: node.x + dx * back, y: node.y + dy * back, h: SIGN_HANG_H, nx: dx, ny: dy }; }   // no wall of its own (a zone's door, a point off any wall): a hanging plate before the spot, facing the way in, clear of the neighbours' walls the spot touches
     return { x: node.x, y: node.y, h: 2.3 };
   }
   const signed = new Set();
@@ -299,17 +300,19 @@ window.View3D = function (deps) {
     const at = members.find(m => prefer && prefer.has(m.id)) || (a ? members.reduce((p, m) => segDist(m.x, m.y, a, b) < segDist(p.x, p.y, a, b) ? m : p) : members[0]);
     addSign(at, text, null, null, members.map(m => m.id));
   }
-  function buildSigns(plan, dest, endPt) {   // endPt: where the walk ends, so a hanging destination plate (no opening) faces the viewer there
+  function buildSigns(plan, dest, endPt, way) {   // endPt: where the walk ends, so a hanging destination plate (no opening) faces the viewer there; way: a free destination's approach (signPlace)
     clearSigns();
-    const last = plan.nodeOf(plan.route.nodes[plan.route.nodes.length - 1]);
-    const guessed = /door position guessed/.test(last.label || '');
+    const last = plan.nodeOf(plan.route.nodes[plan.route.nodes.length - 1]), free = isFree(plan);
+    dest = dest || plan.dest;
+    const guessed = !free && /door position guessed/.test(last.label || '');
     const short = shortName(dest.name), subs = [];
     if (short !== displayName(dest.name)) subs.push(displayName(dest.name));
     if (guessed) subs.push('door position unknown');
     let place = null, maxW;
     if (endPt) { const dEnd = Math.hypot(endPt.x - last.x, endPt.y - last.y); maxW = Math.max(1.2, Math.min(SIGN_MAX_W_M, 0.8 * dEnd)); }   // a close arrival spot (1.5-2.5 m) gets a narrower plate, so the whole sign fits in the view
     const hg = hangingOf.get(last.id);
-    if (hg) place = { x: hg.x, y: hg.y, h: hg.h || SIGN_HANG_H, nx: hg.nx, ny: hg.ny, dx: hg.ny, dy: -hg.nx, free: hg.free_m, maxW: Math.min(maxW || SIGN_MAX_W_HANGING_M, Math.max(0.6, hg.free_m[1] - hg.free_m[0] - 0.1)) };   // the builder's hanging plate: back along the stub, clear of walls, no wider than its free span
+    if (free) { place = signPlace(last, way); if (maxW) place.maxW = maxW; }   // a free destination (a tapped point): a hanging plate at the point, facing the approach
+    else if (hg) place = { x: hg.x, y: hg.y, h: hg.h || SIGN_HANG_H, nx: hg.nx, ny: hg.ny, dx: hg.ny, dy: -hg.nx, free: hg.free_m, maxW: Math.min(maxW || SIGN_MAX_W_HANGING_M, Math.max(0.6, hg.free_m[1] - hg.free_m[0] - 0.1)) };   // the builder's hanging plate: back along the stub, clear of walls, no wider than its free span
     else if (!openingOf.has(last.id) && endPt) { const L = Math.hypot(endPt.x - last.x, endPt.y - last.y) || 1, ux = (endPt.x - last.x) / L, uy = (endPt.y - last.y) / L; place = { x: last.x + ux * SIGN_HANG_BACK_M, y: last.y + uy * SIGN_HANG_BACK_M, h: SIGN_HANG_H, nx: ux, ny: uy, maxW }; }
     else if (maxW) { place = signPlace(last); place.maxW = place.free ? Math.min(maxW, Math.max(0.6, place.free[1] - place.free[0] - 0.1)) : maxW; }
     let ds = addSign(last, short, subs, guessed ? 'rgba(180,83,9,0.92)' : undefined, null, place);   // (a) the destination: never faded, in view at arrival
@@ -458,16 +461,27 @@ window.View3D = function (deps) {
   // a panel overlaying the left of the view: a target is centred in the part it leaves free (none in the split layout)
   function framed(bearing) { const pf = ui.panelFrac(); if (!pf) return bearing; const halfH = Math.atan(Math.tan(camera.fov / 2 * Math.PI / 180) * camera.aspect); return bearing + Math.atan(pf * Math.tan(halfH)); }
   function destSign() { const g = labels[shownLevel]; return g ? g.children.find(o => o.userData.dest) : null; }
+  const isFree = p => !!(p && p.dest && p.dest.virtual);   // a free destination: Wayfind's __end, a point with no door, no opening, not in the venue graph
+  function approachWay(R, last, endPt) {   // a free destination's plate (signPlace's way): facing back to where the walk ends (the camera), hung SIGN_HANG_BACK_M back toward it, or ahead of the point when the walk ends within 1.5 m of it
+    const pt = R.arrive.door, d = Math.hypot(endPt.x - pt.x, endPt.y - pt.y);
+    if (d > 0.3) return { x: (endPt.x - pt.x) / d, y: (endPt.y - pt.y) / d, back: Math.min(SIGN_HANG_BACK_M, d - 1.5) };
+    const back = P => { for (let i = P.length - 1; i > 0; i--) { const a = P[i - 1], b = P[i], L = Math.hypot(b.x - a.x, b.y - a.y); if (L > 0.05) return { x: (a.x - b.x) / L, y: (a.y - b.y) / L }; } return null; };
+    let u = back(R.runs[R.runs.length - 1].pts);   // the walk reaches the point: back along its last segment
+    if (!u && last.same_as) { const nb = neighbourOf(last.same_as), L = nb ? Math.hypot(nb.x - last.x, nb.y - last.y) : 0; if (L > 0.05) u = { x: (last.x - nb.x) / L, y: (last.y - nb.y) / L }; }   // a ride landing on the point (a lift / stair node): the plate ahead, out toward its corridor
+    if (!u) u = back(R.runs.flatMap(r => r.pts));
+    return u ? { x: u.x, y: u.y, back: d - 1.5 } : null;
+  }
   function setRoute(plan_, R_, dest_) {
     clearOverlays(); clearSigns(); plan = plan_; R = R_; dest = dest_; arrivedHere = false; resetFade(); lookYaw = lookPitch = 0;
     target.s = view.s = 0; target.run = view.run = 0;
     if (!R) return;
-    const last = plan.nodeOf(plan.route.nodes[plan.route.nodes.length - 1]);
+    const last = plan.nodeOf(plan.route.nodes[plan.route.nodes.length - 1]), free = isFree(plan);
     for (const run of R.runs) overlay[run.level].add(ribbon(run));
     const first = R.runs[0].pts[0];
     overlay[R.runs[0].level].add(pin(first.x, first.y, zOf[R.runs[0].level], 'start'));
-    overlay[last.level].add(pin(R.arrive.door.x, R.arrive.door.y, zOf[last.level], 'dest'));   // the arrival marker: the floor ring at the door (its opening's centre) plus the sign above it
-    { const fr = R.runs[R.runs.length - 1]; buildSigns(plan, dest, fr.pts[fr.pts.length - 1]); }
+    const ring = free ? plan.dest.face || R.arrive.door : R.arrive.door;   // a free destination's ring: at its face point (the tapped spot), else the point
+    overlay[last.level].add(pin(ring.x, ring.y, zOf[last.level], 'dest'));   // the arrival marker: the floor ring at the door (its opening's centre) plus the sign above it
+    { const fr = R.runs[R.runs.length - 1], endPt = fr.pts[fr.pts.length - 1]; buildSigns(plan, dest, endPt, free ? approachWay(R, last, endPt) : undefined); }
     apply(0, true);
   }
   function setAlready(plan_, dest_) {   // start is the destination: show the room from where a walk to it would end, no walk
@@ -492,7 +506,13 @@ window.View3D = function (deps) {
     else if (approach.length) ({ x: cx, y: cy } = approach[approach.length - 1]);
     else { const t = nb || last, L = Math.hypot(t.x - last.x, t.y - last.y) || 1; cx = last.x + (t.x - last.x) / L * Math.min(1.0, L); cy = last.y + (t.y - last.y) / L * Math.min(1.0, L); }
     showLevel(last.level);
-    overlay[last.level].add(pin(door.x, door.y, zOf[last.level], 'dest')); buildSigns(plan, dest, { x: cx, y: cy }); fadeSigns(cx, -cy);
+    let way;
+    if (isFree(plan)) {   // a free destination (no graph neighbour, no opening): the camera stands on the point, the plate 1.5 m ahead (toward its face point when that is elsewhere, else the way the view looks)
+      const f = plan.dest.face, h = f && Math.hypot(f.x - cx, f.y - cy) > 0.3 ? Math.atan2(f.y - cy, f.x - cx) : yaw;
+      way = { x: -Math.cos(h), y: -Math.sin(h), back: -1.5 };
+    }
+    const ring = way ? plan.dest.face || door : door;
+    overlay[last.level].add(pin(ring.x, ring.y, zOf[last.level], 'dest')); buildSigns(plan, dest, { x: cx, y: cy }, way); fadeSigns(cx, -cy);
     const ds0 = destSign(), aim = ds0 ? { x: (door.x + ds0.position.x) / 2, y: (door.y - ds0.position.z) / 2 } : door;
     yaw = framed(opened || !ds0 ? Math.atan2(aim.y - cy, aim.x - cx) : Math.atan2(-ds0.position.z - cy, ds0.position.x - cx));
     pitch = arrivalPitch(cx, cy, zOf[last.level] + EYE, door);
@@ -521,7 +541,7 @@ window.View3D = function (deps) {
       fadeEl.style.opacity = Math.max(0, Math.min(1, a * 1.25)).toFixed(3);
       if (fade.card && fade.ride) {
         const ride = fade.ride, step = plan.steps[ride.step] || {};
-        $('#cardico').textContent = ride.type === 'lift' ? '🛗' : '🪜'; $('#cardtitle').textContent = step.text || `Take the ${ride.type} to ${levelName(ride.toLevel)}`; $('#cardsub').textContent = `${levelName(ride.fromLevel)} → ${levelName(ride.toLevel)}${step.hint ? ' · ' + step.hint : ''}`;
+        { const u = $('#fade .ico use'); if (u) u.setAttribute('href', ride.type === 'stairs' ? '#i-stairs' : '#i-lift'); }   // the card's icon (an SVG symbol in index.html) $('#cardtitle').textContent = step.text || `Take the ${ride.type} to ${levelName(ride.toLevel)}`; $('#cardsub').textContent = `${levelName(ride.fromLevel)} → ${levelName(ride.toLevel)}${step.hint ? ' · ' + step.hint : ''}`;
         card.style.display = a > 0.2 ? 'block' : 'none';
       } else card.style.display = 'none';
       if (ph >= 1) resetFade();

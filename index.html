@@ -3,65 +3,142 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
 <title>RTP Route Finder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="leaflet.css">
 <link rel="stylesheet" href="app.css">
 </head>
 <body>
-<div id="app" class="view-both">
-  <aside id="side">
+<svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-swap" viewBox="0 0 24 24"><path d="m7 16 4 4 4-4M11 20V4M17 8l-4-4-4 4"/></symbol>
+  <symbol id="i-directions" viewBox="0 0 24 24"><path d="M12 2l10 10-10 10L2 12z"/><path d="M9 12h5l-1.5-1.5M14 12l-1.5 1.5"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 5v14l12-7z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><path d="M7 5h4v14H7zM13 5h4v14h-4z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-fwd" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
+  <symbol id="i-first" viewBox="0 0 24 24"><path d="M17 6l-6 6 6 6M8 6v12"/></symbol>
+  <symbol id="i-last" viewBox="0 0 24 24"><path d="M7 6l6 6-6 6M16 6v12"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="m6 15 6-6 6 6"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 22s7-7.2 7-12a7 7 0 1 0-14 0c0 4.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+  <symbol id="i-door" viewBox="0 0 24 24"><path d="M4 21h16M6 21V4h9v17M12 12h.01"/><path d="M15 6h3v15"/></symbol>
+  <symbol id="i-lift" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="m8 11 2-3 2 3M8 14l2 3 2-3M16 8v8"/></symbol>
+  <symbol id="i-stairs" viewBox="0 0 24 24"><path d="M3 20h5v-4h4v-4h4V8h5"/></symbol>
+  <symbol id="i-toilet" viewBox="0 0 24 24"><circle cx="8" cy="5" r="2"/><path d="M5 10h6l-1 6H6zM7 16v5M9 16v5"/><circle cx="17" cy="5" r="2"/><path d="M15 9h4l1 7h-6zM17 16v5"/></symbol>
+  <symbol id="i-meeting" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="10" rx="2"/><path d="M8 4v3M16 4v3M8 17v3M16 17v3"/></symbol>
+  <symbol id="i-lab" viewBox="0 0 24 24"><path d="M9 3h6M10 3v6L4.5 19a1 1 0 0 0 .9 1.5h13.2a1 1 0 0 0 .9-1.5L14 9V3"/><path d="M7 15h10"/></symbol>
+  <symbol id="i-room" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 10v10"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.2.9-4.5 4.3 1.1 6.2L12 17l-5.5 3 1.1-6.2L3.1 9.5l6.2-.9z"/></symbol>
+  <symbol id="i-help" viewBox="0 0 24 24"><path d="M12 21s-7-4.4-7-10a7 7 0 0 1 14 0c0 5.6-7 10-7 10z"/><path d="M12 8v4M12 15h.01"/></symbol>
+  <symbol id="i-cube" viewBox="0 0 24 24"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></symbol>
+  <symbol id="i-map" viewBox="0 0 24 24"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z"/><path d="M9 3v15M15 6v15"/></symbol>
+  <symbol id="i-split" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M12 4v16"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1.5 1.5"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1.5-1.5"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></symbol>
+  <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></symbol>
+  <symbol id="i-walk" viewBox="0 0 24 24"><circle cx="13" cy="4" r="1.5"/><path d="M10 21l2-7-3-2 1-5 4 2 2 3M8 12l-1 4M14 14l3 7"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4h11l-1.5 4L16 12H5"/></symbol>
+  <symbol id="i-dot" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/></symbol>
+</svg>
+
+<div id="app" class="view-map">
+  <section id="map2d" aria-label="Floor plan">
+    <div id="map"></div>
+    <div id="levels" aria-label="Levels"></div>
+    <div id="mapmsg"></div>
+  </section>
+  <section id="view3dwrap" aria-label="3D view">
+    <div id="stage">
+      <canvas id="view"></canvas>
+      <div id="level"></div>
+      <div id="banner"></div>
+      <div id="hint3d">Drag sideways to walk · up or down to look around</div>
+      <div id="fade"><div class="card"><div class="ico"><svg><use href="#i-lift"/></svg></div><div class="t" id="cardtitle"></div><div class="s" id="cardsub"></div></div></div>
+    </div>
+  </section>
+
+  <button id="thumbtap" type="button" aria-label="Switch to the 3D view"><span class="lbl"><svg><use href="#i-cube"/></svg><span id="thumblbl">3D</span></span></button>
+  <div id="viewtools">
+    <button id="splitbtn" type="button" class="round" title="Plan and 3D side by side" aria-pressed="false"><svg><use href="#i-split"/></svg></button>
+  </div>
+
+  <aside id="panel">
     <div id="searchcard">
-      <div id="compact"><div class="ft" id="compactrow"><span id="cfrom"></span><span class="arrow">→</span><span id="cto"></span><button id="expand" aria-label="Edit the route">⌄</button></div><div class="row2"><span id="csummary"></span><span id="segslot"></span></div></div>
-      <div class="brand"><b>Research Techno Plaza</b><span class="sub" id="status">Loading…</span><button id="collapse" class="phone-only" title="Back to the route" aria-label="Back to the route">⌃</button></div>
+      <div id="compact">
+        <div class="ft" id="compactrow" role="button" tabindex="0" aria-label="Edit the route"><span id="cfrom"></span><span class="arrow">→</span><span id="cto"></span><button id="expand" type="button" aria-label="Edit the route"><svg><use href="#i-down"/></svg></button></div>
+        <div class="row2"><span id="csummary"></span></div>
+      </div>
+      <div class="brand"><b>Research Techno Plaza</b><span class="sub" id="status">Loading…</span><button id="collapse" type="button" class="phone-only" aria-label="Back to the route"><svg><use href="#i-up"/></svg></button></div>
       <div class="notice" id="notice"></div>
       <div class="fields">
-        <div class="field from" id="fieldfrom"><span class="dot from"></span><input id="from" type="text" placeholder="From (Entrance 1)" autocomplete="off" spellcheck="false" aria-label="Start"><button class="clear" data-for="from" aria-label="Clear start">×</button></div>
-        <div class="field to" id="fieldto"><span class="dot to"></span><input id="to" type="text" placeholder="Where to? room code, name or nickname" autocomplete="off" spellcheck="false" aria-label="Destination"><button class="clear" data-for="to" aria-label="Clear destination">×</button></div>
-        <button id="swap" title="Swap start and destination" aria-label="Swap start and destination">⇅</button>
+        <label class="field from" id="fieldfrom"><span class="dot from" aria-hidden="true"></span><span class="sr">Start</span><input id="from" type="text" placeholder="Start (Entrance 1)" autocomplete="off" spellcheck="false" enterkeyhint="search" role="combobox" aria-autocomplete="list" aria-haspopup="listbox" aria-controls="suggest" aria-expanded="false"><button class="clear" type="button" data-for="from" aria-label="Clear start"><svg><use href="#i-close"/></svg></button></label>
+        <label class="field to" id="fieldto"><span class="dot to" aria-hidden="true"></span><span class="sr">Destination</span><input id="to" type="text" placeholder="Where to? Room code or name" autocomplete="off" spellcheck="false" enterkeyhint="search" role="combobox" aria-autocomplete="list" aria-haspopup="listbox" aria-controls="suggest" aria-expanded="false"><button class="clear" type="button" data-for="to" aria-label="Clear destination"><svg><use href="#i-close"/></svg></button></label>
+        <button id="swap" type="button" title="Swap start and destination" aria-label="Swap start and destination"><svg><use href="#i-swap"/></svg></button>
       </div>
-      <div class="suggest" id="suggest"></div>
+      <div class="suggest" id="suggest" role="listbox" aria-label="Suggestions"></div>
       <div class="chips">
-        <button class="chip" id="stepfree" aria-pressed="false">Step-free</button>
-        <button class="chip" id="nolifts" aria-pressed="false">Avoid lifts</button>
-        <div class="seg" id="viewseg" role="group" aria-label="View"><button data-view="map">Map</button><button data-view="both" class="on">Both</button><button data-view="3d">3D</button></div>
+        <button class="chip" id="stepfree" type="button" aria-pressed="false">Step-free</button>
+        <button class="chip" id="nolifts" type="button" aria-pressed="false">Avoid lifts</button>
+        <span class="sp"></span>
+        <button id="copy" type="button" class="chip tool" title="Copy a link to this route and position"><svg><use href="#i-link"/></svg>Link</button>
+        <button id="export" type="button" class="chip tool icon hide-sm" title="Download route.json for Unity" aria-label="Download route.json for Unity"><svg><use href="#i-download"/></svg><span class="lbl">route.json</span></button>
       </div>
-      <div class="sumrow"><div id="summary"></div><div class="tools"><button id="copy" class="small" title="Copy a link to this route and position">Link</button><button id="export" class="small" title="Download route.json for Unity">route.json</button></div></div>
     </div>
+
     <div id="sheet">
-      <div id="sheetgrip"><div class="handle" id="handle"><span></span></div><div id="sheethead"></div></div>
-      <ol id="steps"></ol>
+      <div id="sheetgrip"><div class="handle"><span></span></div></div>
+      <div id="sheetbody">
+        <section id="explore" aria-label="Explore">
+          <div class="exhead"><svg><use href="#i-compass"/></svg><h2>Explore</h2><span class="sub">Tap a room on the plan, or pick a place</span></div>
+          <div id="excats" class="excats"></div>
+          <div id="exlist" class="exlist" hidden>
+            <div class="exlisthead"><button id="exback" type="button" aria-label="Back to categories"><svg><use href="#i-left"/></svg></button><h3 id="exlisttitle"></h3></div>
+            <ol id="exitems"></ol>
+          </div>
+          <div id="exlandmarks"><h3>Landmarks</h3><ol id="exlm"></ol></div>
+        </section>
+
+        <section id="routebox" aria-label="Route" hidden>
+          <div class="navsticky">
+          <div id="sheethead"></div>
+          <div id="bottom">
+            <div id="caption">
+              <div class="step"><span class="n" id="stepn"></span><span id="steptext">Pick a destination to see the way</span></div>
+              <div id="hint"></div>
+              <div id="next"></div>
+            </div>
+            <div class="scrubrow"><input id="scrub" type="range" min="0" max="100" value="0" step="0.1" aria-label="Position along the route in metres" disabled><span id="pos">0 m / 0 m</span></div>
+            <div class="buttons">
+              <button id="prevturn" type="button" title="Previous decision point (PageUp)" aria-label="Previous decision point" disabled><svg><use href="#i-first"/></svg></button>
+              <button id="back" type="button" title="Back 3 m (↓ or ←)" aria-label="Back 3 metres" disabled><svg><use href="#i-back"/></svg><span class="lbl">3 m</span></button>
+              <button id="play" type="button" class="primary play" title="Fly through the route (space)" aria-label="Fly through the route" disabled><svg class="ic-play"><use href="#i-play"/></svg><svg class="ic-pause"><use href="#i-pause"/></svg><span class="lbl">Play</span></button>
+              <button id="fwd" type="button" title="Forward 3 m (↑ or →)" aria-label="Forward 3 metres" disabled><svg><use href="#i-fwd"/></svg><span class="lbl">3 m</span></button>
+              <button id="nextturn" type="button" title="Next decision point (PageDown)" aria-label="Next decision point" disabled><svg><use href="#i-last"/></svg></button>
+              <select id="speed" title="Fly-through pace" aria-label="Fly-through pace"><option value="1">1×</option><option value="3" selected>3×</option><option value="10">10×</option></select>
+            </div>
+          </div>
+          </div>
+          <ol id="steps"></ol>
+        </section>
+      </div>
     </div>
   </aside>
-  <main id="views">
-    <section id="map2d"><div id="map"></div><div id="levels"></div><div id="mapmsg"></div></section>
-    <section id="view3dwrap">
-      <div id="stage">
-        <canvas id="view"></canvas>
-        <div id="level"></div>
-        <div id="banner"></div>
-        <div id="hint3d">drag sideways to move · up / down to look around</div>
-        <div id="fade"><div class="card"><div class="ico" id="cardico">🛗</div><div class="t" id="cardtitle"></div><div class="s" id="cardsub"></div></div></div>
-      </div>
-    </section>
-    <div id="bottom">
-      <div id="caption">
-        <div class="step"><span class="n" id="stepn"></span><span id="steptext">Pick a destination to see the way</span></div>
-        <div id="hint"></div>
-        <div id="next"></div>
-      </div>
-      <div class="scrubrow"><input id="scrub" type="range" min="0" max="100" value="0" step="0.1" aria-label="Position along the route in metres" disabled><span id="pos">0 m / 0 m</span></div>
-      <div class="buttons">
-        <button id="prevturn" title="Previous decision point (PageUp)" disabled>⇤</button>
-        <button id="back" title="Back 3 m (↓ or ←)" disabled>▼<span class="lbl"> 3 m</span></button>
-        <button id="fwd" class="primary" title="Forward 3 m (↑ or →)" disabled>▲<span class="lbl"> 3 m</span></button>
-        <button id="nextturn" title="Next decision point (PageDown)" disabled>⇥</button>
-        <button id="play" class="play" title="Fly through the route (space)" disabled>▶<span class="lbl"> Play</span></button>
-        <select id="speed" title="Fly-through pace"><option value="1">1×</option><option value="3" selected>3×</option><option value="10">10×</option></select>
-      </div>
+
+  <div id="placecard" hidden>
+    <div class="pc-head"><div class="pc-name" id="pcname"></div><button id="pcclose" type="button" aria-label="Close"><svg><use href="#i-close"/></svg></button></div>
+    <div class="pc-sub" id="pcsub"></div>
+    <div class="pc-actions">
+      <button id="pcgo" type="button" class="primary"><svg><use href="#i-directions"/></svg>Directions</button>
+      <button id="pcstart" type="button"><svg><use href="#i-dot"/></svg>Start here</button>
     </div>
-  </main>
+  </div>
 </div>
-<div id="toast"></div>
+<div id="toast" role="status" aria-live="polite"></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.147.0/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>

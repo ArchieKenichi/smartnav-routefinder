@@ -135,7 +135,8 @@
     return best;
   }
   function withVirtualStart(venue, level, x, y, opts) {
-    const s = snap(venue, level, x, y, opts);
+    if (!Number.isFinite(+x) || !Number.isFinite(+y)) throw new Error('a free start needs a level, x and y');
+    const s = snap(venue, level, +x, +y, opts);
     if (!s) return null;
     if (s.d > MAX_SNAP_M) throw new Error(`That point is ${s.d.toFixed(0)} m from the nearest corridor (limit ${MAX_SNAP_M} m)`);
     const a0 = venue.nodes.get(s.e.from), b0 = venue.nodes.get(s.e.to);
@@ -148,7 +149,35 @@
     const ea = { from: id, to: a.id, type: 'walk', length_m: Math.hypot(s.px - a.x, s.py - a.y), i: -1, hint: s.e.hint_reverse || null, step_free: s.e.step_free };
     const eb = { from: id, to: b.id, type: 'walk', length_m: Math.hypot(s.px - b.x, s.py - b.y), i: -2, hint: s.e.hint || null, step_free: s.e.step_free };
     adj.set(id, [{ edge: ea, to: a.id, forward: true }, { edge: eb, to: b.id, forward: true }]);
-    return { venue: Object.assign({}, venue, { nodes, adj }), startId: id, snapDistance: s.d };
+    return { venue: Object.assign({}, venue, { nodes, adj }), startId: id, snapDistance: s.d, snap: s };
+  }
+  /* A free destination, snapped the same way: a virtual node __end joined by walk edges from the snapped edge's ends (hints of that
+     edge in the walked direction) and, when a virtual start lies on the same edge, straight from it. A point within SNAP_TO_NODE_M
+     of a node (or of the virtual start) ends at that node: the route is planned to it (goalId) and plan() renames it __end.
+     start: withVirtualStart()'s result when the start is virtual, else null. */
+  const END_ID = '__end';
+  function withVirtualEnd(venue, level, x, y, opts, name, start) {
+    const s = snap(venue, level, x, y, opts);
+    if (!s) return null;
+    if (s.d > MAX_SNAP_M) throw new Error(`That point is ${s.d.toFixed(0)} m from the nearest corridor (limit ${MAX_SNAP_M} m)`);
+    const a = venue.nodes.get(s.e.from), b = venue.nodes.get(s.e.to);
+    const vs = start && start.snap && start.snap.e === s.e ? venue.nodes.get(start.startId) : null;   // the virtual start, on this same edge
+    const node = { id: END_ID, level, x: s.px, y: s.py, type: 'junction', label: name };
+    const nodes = new Map(venue.nodes); nodes.set(END_ID, node);
+    const at = [a, b, vs].find(n => n && Math.hypot(s.px - n.x, s.py - n.y) <= SNAP_TO_NODE_M);
+    if (at) {   // on the node itself: no zero-length edge; same_as lets the 3D export use that node's camera path and position
+      Object.assign(node, { x: at.x, y: at.y, same_as: at.id });
+      return { venue: Object.assign({}, venue, { nodes }), goalId: at.id, snapDistance: s.d, node };
+    }
+    const adj = new Map(venue.adj);
+    const link = (from, hint, i) => {
+      const e = { from: from.id, to: END_ID, type: 'walk', length_m: Math.hypot(s.px - from.x, s.py - from.y), i, hint: hint || null, step_free: s.e.step_free };
+      adj.set(from.id, (adj.get(from.id) || []).concat([{ edge: e, to: END_ID, forward: true }]));
+    };
+    link(a, s.e.hint, -3);                                  // a -> point walks the edge forwards
+    if (!s.e.one_way) link(b, s.e.hint_reverse, -4);        // b -> point against it
+    if (vs && (s.t > start.snap.t || !s.e.one_way)) link(vs, s.t > start.snap.t ? s.e.hint : s.e.hint_reverse, -5);   // start and end on one edge: one edge between them
+    return { venue: Object.assign({}, venue, { nodes, adj }), goalId: END_ID, snapDistance: s.d, node };
   }
 
   // ------------------------------------------------------------ instructions (port of routing/InstructionBuilder.cs)
@@ -221,6 +250,10 @@
     const arrive = { kind: 'arrive', node: last.id, level: last.level, firstEdge: E.length, edgeCount: 0, length_m: 0, hint: null };
     list.push(arrive);
     foldFinalStubIntoArrival(list, arrive, last.type === 'door');
+    if (last.face && N.length >= 2 && Math.hypot(last.face.x - last.x, last.face.y - last.y) > 0.3) {   // a free destination with a face point (a room's wall): the side is where that wall lies from the final heading, not the folded corridor turn; a bare point keeps the turn's side
+      const t = turnAngle(bearing(N[N.length - 2], last), bearing(last, last.face));
+      arrive.turn = Math.abs(t) >= STRAIGHT_DEG ? t : null;
+    }
     dropZeroLengthOpening(list);
     return list.map(ins => Object.assign(ins, { text: describe(ins) }));
 
@@ -291,18 +324,37 @@
   const instructionsWithSide = instructions;
 
   // ------------------------------------------------------------ public
+  /* start: a node id or a free position { level, x, y }; destId: a destination id or a free point { level, x, y, name, face?: { x, y } }
+     (snapped like a start; plan.dest is then { id: '__end', name, door_node: '__end', level, x, y (the snapped point), virtual: true,
+     face, category: 'point', node }). snapDistance / endSnapDistance: how far the start / the free destination was snapped (0 otherwise). */
   function plan(venue, start, destId, opts) {
     opts = opts || {};
-    const dest = venue.dests.find(d => d.id === destId);
-    if (!dest) throw new Error(`unknown destination ${destId}`);
-    let v = venue, startId, snapDistance = 0;
+    const free = destId != null && typeof destId === 'object';
+    let dest = null;
+    if (!free) { dest = venue.dests.find(d => d.id === destId); if (!dest) throw new Error(`unknown destination ${destId}`); }
+    else if (!Number.isFinite(+destId.x) || !Number.isFinite(+destId.y)) throw new Error('a free destination needs a level, x and y');
+    let v = venue, startId, snapDistance = 0, vs = null;
     if (typeof start === 'string') startId = start;
-    else { const s = withVirtualStart(venue, start.level, start.x, start.y, opts); if (!s) throw new Error('no walkable edge on that level'); v = s.venue; startId = s.startId; snapDistance = s.snapDistance; }
-    const r = astar(v, startId, dest.door_node, opts);
+    else { const s = withVirtualStart(venue, start.level, start.x, start.y, opts); if (!s) throw new Error('no walkable edge on that level'); v = s.venue; startId = s.startId; snapDistance = s.snapDistance; vs = s.startId === '__start' ? s : null; }
+    let goalId = free ? null : dest.door_node, endSnapDistance = 0;
+    if (free) {
+      const name = destId.name != null && String(destId.name).trim() ? String(destId.name) : 'the selected point';
+      const e = withVirtualEnd(v, destId.level, +destId.x, +destId.y, opts, name, vs);
+      if (!e) throw new Error('no walkable edge on that level');
+      v = e.venue; goalId = e.goalId; endSnapDistance = e.snapDistance;
+      const f = destId.face && Number.isFinite(+destId.face.x) && Number.isFinite(+destId.face.y) ? { x: +destId.face.x, y: +destId.face.y } : { x: e.node.x, y: e.node.y };
+      dest = { id: END_ID, name, door_node: END_ID, level: e.node.level, x: e.node.x, y: e.node.y, virtual: true, face: f, category: 'point', node: e.node };
+    }
+    const r = astar(v, startId, goalId, opts);
     if (!r) return null;
+    if (free && goalId !== END_ID) {   // the point is a node (or the virtual start): that node is the route's end, renamed __end
+      r.nodes[r.nodes.length - 1] = END_ID;
+      if (r.edges.length) r.edges[r.edges.length - 1] = Object.assign({}, r.edges[r.edges.length - 1], { to: END_ID });
+    }
+    if (free) { const en = v.nodes.get(END_ID); if (en) v.nodes.set(END_ID, Object.assign({}, en, { face: dest.face })); }   // the end node carries the face point (a copy: the venue's own node is never touched), for the arrival's side
     const steps = instructionsWithSide(v, r, dest.name);
     const levels = []; for (const n of r.nodes) { const l = v.nodes.get(n).level; if (levels[levels.length - 1] !== l) levels.push(l); }
-    return { route: r, steps, dest, levels, snapDistance, nodeOf: id => v.nodes.get(id) };
+    return { route: r, steps, dest, levels, snapDistance, endSnapDistance, nodeOf: id => v.nodes.get(id) };
   }
 
   return { load, search, plan, astar, snap, instructions: instructionsWithSide, bearing, turnAngle, norm };

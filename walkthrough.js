@@ -3,7 +3,10 @@
    3D model (view3d.js, rtp.glb) — driven by one "where I am along the route" value in metres: drag the marker on the
    plan, the slider under the 3D view, or sideways across the 3D view; a fly-through plays the whole route at 1x / 3x /
    10x pausing at each decision point; the steps list, captions ("Turn right in 6 m"), shareable ?from=&to=&s= links and
-   route.json for Unity. window.walkthrough exposes the page for the arrival test. */
+   route.json for Unity. Google Maps style: the plan fills the window with the 3D view as a live thumbnail (tap to swap, or
+   side by side on a desktop), an Explore list of places by category and landmarks while no destination is set, and any
+   room or point tapped on the plan (rooms.json) can be the destination or the start, named or not (a free point is
+   routed to the corridor beside it). window.walkthrough exposes the page for the arrival test. */
 (async function () {
   'use strict';
   // Survey notices — blank or delete these two constants after the site walk.
@@ -26,12 +29,15 @@
 
   // ------------------------------------------------------------ data
   async function fetchFirst(urls) { for (const u of urls) { try { const r = await fetch(u); if (r.ok) return { url: u, json: await r.json() }; } catch (e) {} } throw new Error('venue package not found'); }
-  let venueSrc, manifest, paths = null, plans = { levels: [] };
+  let venueSrc, manifest, paths = null, plans = { levels: [] }, rooms = null;
+  let viewMode = 'map';   // map | 3d | split (set below; declared here because the views' callbacks read it)
+  let sheetState = 'peek';   // the phone sheet: peek | half | full
   try {
     venueSrc = await fetchFirst(VENUE_URLS);
     const r = await fetch('model-manifest.json'); if (!r.ok) throw new Error('model-manifest.json missing'); manifest = await r.json();
     try { const p = await fetch('camera-paths.json'); if (p.ok) paths = await p.json(); } catch (e) {}
     try { const p = await fetch(PLANS + 'manifest.json'); if (p.ok) plans = await p.json(); } catch (e) {}
+    try { const p = await fetch('rooms.json'); if (p.ok) rooms = await p.json(); } catch (e) {}   // room polygons for taps on the plan (build_rooms.py); optional
   } catch (e) { status('Could not load data. Serve the mapping folder (python3 -m http.server 8765) and open http://localhost:8765/preview3d/ — and run build_model.py once.'); return; }
   if (typeof THREE === 'undefined' || !THREE.GLTFLoader) { status('three.js could not be loaded; this page needs internet access for it once.'); return; }
   let V;
@@ -56,9 +62,25 @@
     let m;
     if ((m = v.match(/^entrance(?::(\d+))?$/))) return entrancePlaces[(+m[1] || 1) - 1] || null;
     if (v.startsWith('dest:')) return V.dests.find(d => d.id === v.slice(5)) || null;
-    if (v.startsWith('node:')) { const id = v.slice(5), n = V.nodes.get(id); if (!n) return null; return placeOfNode.get(id) || { id: 'node:' + id, name: `Node ${id}${n.label ? ' (' + n.label.replace(/\s*\(.*\)$/, '') + ')' : ''}`, door_node: id, node: n, category: 'node' }; }
+    if (v.startsWith('node:')) { const id = v.slice(5), n = V.nodes.get(id); if (!n) return null; const lp = liftPlaces.find(x => x.door_node === id); return placeOfNode.get(id) || lp || { id: 'node:' + id, name: `Node ${id}${n.label ? ' (' + n.label.replace(/\s*\(.*\)$/, '') + ')' : ''}`, door_node: id, node: n, category: 'node' }; }
+    if (v.startsWith('room:')) { const rm = roomIndex.get(v.slice(5)); return rm ? placeOfRoom(rm, rm.level) : null; }
+    if ((m = v.match(/^pt:(L\d+),(-?[\d.]+),(-?[\d.]+)$/))) return V.levels.get(m[1]) ? placeAtPoint(m[1], +m[2], +m[3]) : null;
     return V.dests.find(d => d.id === v) || entrancePlaces.find(e => e.id === v) || (Wayfind.search(V, v, { max: 1 })[0] || {}).dest || null;
   }
+  // a tapped room is a place too: its venue destination when it has one, else a free destination at the corridor point nearest to it (rooms.json anchor / face)
+  const roomIndex = new Map(); if (rooms && rooms.levels) for (const lv in rooms.levels) for (const rm of rooms.levels[lv].rooms || []) roomIndex.set(rm.id, Object.assign({ level: lv }, rm));
+  const KIND_LABEL = { lift: 'Lift', stairs: 'Stairs', toilet: 'Toilet', 'meeting room': 'Meeting room', 'seminar room': 'Seminar room', office: 'Office', lab: 'Lab', workshop: 'Workshop', 'research centre': 'Research centre', 'event space': 'Event space', lounge: 'Lounge', studio: 'Studio', school: 'School' };
+  const kindLabel = rm => KIND_LABEL[rm.kind] || 'Room';
+  function placeOfRoom(rm, lv) {
+    const d = rm.dest && V.dests.find(x => x.id === rm.dest); if (d) return d;
+    if (rm.kind === 'lift' || rm.kind === 'stairs') {   // a lift or stair box: the graph's own node for it, so the route uses the ride
+      const at = rm.anchor || rm.centroid, n = [...V.nodes.values()].filter(x => x.level === lv && x.type === rm.kind).map(x => ({ x, d: Math.hypot(x.x - at[0], x.y - at[1]) })).sort((a, b) => a.d - b.d)[0];
+      if (n && n.d < 6) return { id: 'node:' + n.x.id, name: `${kindLabel(rm)} (${levelName(lv)})`, door_node: n.x.id, node: n.x, category: rm.kind };
+    }
+    if (!rm.anchor) return null;
+    return { id: 'room:' + rm.id, name: rm.name || `${rm.name ? '' : 'Unnamed '}${kindLabel(rm).toLowerCase()} (${levelName(lv)})`, door_node: null, point: { level: lv, x: rm.anchor[0], y: rm.anchor[1] }, face: rm.face ? { x: rm.face[0], y: rm.face[1] } : null, node: { level: lv, x: rm.anchor[0], y: rm.anchor[1] }, category: rm.kind || 'room', room: rm };
+  }
+  function placeAtPoint(lv, x, y, name) { return { id: `pt:${lv},${x.toFixed(1)},${y.toFixed(1)}`, name: name || 'Dropped pin', door_node: null, point: { level: lv, x, y }, node: { level: lv, x, y }, category: 'point' }; }
 
   // ------------------------------------------------------------ the two views
   const canvas = $('#view');
@@ -66,16 +88,20 @@
     const c = canvas.getBoundingClientRect(), s = $('#searchcard').getBoundingClientRect(), ov = s.bottom - c.top;
     return s.right > c.left && s.left < c.right && s.top < c.top + 10 && ov > 0 ? Math.min(c.height * 0.6, ov + 8) : 28;
   }
-  const panelFrac = () => 0;   // nothing overlays the left of the 3D view in this layout (the split keeps the panel beside it)
+  const panelFrac = () => {   // the floating panel covers the left of a full-window 3D view on a desktop: targets are centred in the part it leaves free
+    if (isPhone() || viewMode !== '3d') return 0;
+    const c = canvas.getBoundingClientRect(), p = $('#panel').getBoundingClientRect(), ov = p.right - c.left;
+    return ov > 0 && p.left < c.left + c.width * 0.5 && c.width > 0 ? Math.min(0.6, ov / c.width) : 0;
+  };
   const rectOf = sel => { const b = $(sel).getBoundingClientRect(); return { left: b.left, top: b.top, right: b.right, bottom: b.bottom }; };
-  const overlaps = () => isPhone() ? [rectOf('#searchcard'), rectOf('#sheet')] : [];   // what may cover the plan: the search card (Map view) and the steps sheet
+  const overlaps = () => viewMode === '3d' ? [] : isPhone() ? [rectOf('#searchcard'), rectOf('#sheet')] : [rectOf('#panel')];   // what covers the plan: the search card and the sheet on a phone, the floating panel on a desktop, nothing while the plan is the thumbnail
   function layoutVars() {   // CSS variables the phone layout needs: the sheet's height (the 3D-only view stops above it) and the search card's (the Map view starts under it)
-    const app = $('#app'); app.style.setProperty('--sheet-h', (isPhone() ? $('#sheet').getBoundingClientRect().height : 0) + 'px');
+    const app = $('#app'); app.style.setProperty('--sheet-h', (isPhone() ? sheetHeight(sheetState) : 0) + 'px');   // the sheet's target height, not its rect: it may still be sliding
     app.style.setProperty('--header-h', (isPhone() ? $('#searchcard').getBoundingClientRect().height + 16 : 0) + 'px');
   }
   const v3 = View3D({ canvas, manifest, V, paths, ui: { headerPx, panelFrac, levelName, borrowedFrom, borrowedCaption: BORROWED_CAPTION } });
   let v2 = null;
-  if (typeof L !== 'undefined') v2 = View2D({ el: $('#map'), levelsEl: $('#levels'), msgEl: $('#mapmsg'), plans, PLANS, levels: byFloor.map(l => ({ id: l.id, name: levelName(l.id), floor: l.floor })), esc, onScrub: (s, run, lv) => { stopFly(); setS(s, lv); }, onClickStep: i => goToStep(i), overlaps });
+  if (typeof L !== 'undefined') v2 = View2D({ el: $('#map'), levelsEl: $('#levels'), msgEl: $('#mapmsg'), plans, PLANS, levels: byFloor.map(l => ({ id: l.id, name: levelName(l.id), floor: l.floor })), esc, onScrub: (s, run, lv) => { stopFly(); setS(s, lv); }, onClickStep: i => goToStep(i), overlaps, rooms, onPickRoom: (rm, lv) => pickRoom(rm, lv), onPickPoint: (lv, x, y) => pickPoint(lv, x, y), isThumb: () => viewMode === '3d', labelOf: rm => (rm.kind === 'lift' || rm.kind === 'stairs' ? kindLabel(rm) : 'Unnamed ' + kindLabel(rm).toLowerCase()) });
   else { $('#mapmsg').textContent = 'The map library (Leaflet) could not be loaded; the 2D plan needs internet access for it once.'; $('#mapmsg').style.display = 'block'; }
   status('Loading the 3D model…');
   try { await v3.load(); } catch (e) { status(e.message && /level/.test(e.message) ? e.message : 'rtp.glb could not be loaded. Run python3 build_model.py in preview3d/ first.'); return; }
@@ -89,6 +115,7 @@
   const floorOf = lv => (V.levels.get(lv) || {}).floor || +String(lv).replace(/\D/g, '') || 0;
   function suggestions(q, which) {
     const nq = Wayfind.norm(q).split(' ').map(t => EXTRA_SYNONYMS[t] || t).join(' '), out = [];
+    if (!nq && which === 'to') return [];   // nothing typed: Explore (and the plan) is the way to pick a destination; the start keeps its entrance defaults
     for (const e of entrancePlaces) if (!nq || `entrance ${e.entrance}`.startsWith(nq) || nq === String(e.entrance) || 'entrance'.startsWith(nq) || nq === 'exit' || 'main entrance'.startsWith(nq)) out.push(e);
     if (!nq) return out;
     const category = /\b(toilet|toilets|wc|loo|restroom|washroom|bathroom|handicap)\b/.test(nq);
@@ -103,15 +130,18 @@
   }
   function renderSug() {
     sug.innerHTML = '';
+    for (const w of ['from', 'to']) { inputs[w].setAttribute('aria-expanded', String(sugFor === w && sugItems.length > 0)); if (sugFor !== w) inputs[w].removeAttribute('aria-activedescendant'); }
     if (!sugFor || !sugItems.length) { sug.style.display = 'none'; return; }
     const f = $('#searchcard .fields'); sug.style.top = (f.offsetTop + f.offsetHeight + 4) + 'px'; sug.style.display = 'block';
+    if (sugActive >= 0) inputs[sugFor].setAttribute('aria-activedescendant', 'sug-' + sugActive);
     sugItems.forEach((p, i) => {
-      const d = document.createElement('div'); d.className = i === sugActive ? 'active' : '';
-      d.innerHTML = `<span class="ico">${p.category === 'entrance' ? '⌂' : p.category === 'toilet' ? '🚻' : '●'}</span><span class="name">${esc(p.name)}</span>${p.category === 'entrance' ? '' : `<span class="code">${esc(p.id)}</span>`}<span class="lvl">${esc(p.node.level)}</span>`;
+      const d = document.createElement('div'); d.className = i === sugActive ? 'active' : ''; d.id = 'sug-' + i; d.setAttribute('aria-selected', String(i === sugActive));
+      d.innerHTML = `<span class="ico">${icon(p)}</span><span class="name">${esc(p.name)}</span>${p.category === 'entrance' ? '' : `<span class="code">${esc(p.id)}</span>`}<span class="lvl">${esc(p.node.level)}</span>`;
+      d.setAttribute('role', 'option');
       d.onmousedown = e => { e.preventDefault(); choose(sugFor, p); }; sug.appendChild(d);
     });
   }
-  function setActive(i) { sugActive = Math.max(0, Math.min(sugItems.length - 1, i)); [...sug.children].forEach((d, k) => { d.classList.toggle('active', k === sugActive); if (k === sugActive) d.scrollIntoView({ block: 'nearest' }); }); }
+  function setActive(i) { sugActive = Math.max(0, Math.min(sugItems.length - 1, i)); [...sug.children].forEach((d, k) => { d.classList.toggle('active', k === sugActive); d.setAttribute('aria-selected', String(k === sugActive)); if (k === sugActive) d.scrollIntoView({ block: 'nearest' }); }); if (sugFor && sugActive >= 0) inputs[sugFor].setAttribute('aria-activedescendant', 'sug-' + sugActive); }
   function openSug(which) { sugFor = which; sugItems = suggestions(inputs[which].value, which); sugActive = sugItems.length ? 0 : -1; renderSug(); }
   function closeSug() { sugFor = null; sugItems = []; renderSug(); }
   function restoreField(which) { inputs[which].value = sel[which] ? sel[which].name : ''; $('#field' + which).classList.toggle('filled', !!sel[which]); }
@@ -143,31 +173,99 @@
   for (const id of ['stepfree', 'nolifts']) $('#' + id).onclick = () => { const b = $('#' + id), on = b.classList.toggle('on'); b.setAttribute('aria-pressed', on); route(true); };
   setField('from', sel.from);
 
+  // ------------------------------------------------------------ Explore: places by category, and the landmarks (shown while no destination is set)
+  const liftPlaces = [...V.nodes.values()].filter(n => n.type === 'lift' || n.type === 'stairs').map(n => { const lab = (n.label || '').replace(/\s*\(.*\)$/, '').trim(); return { id: 'node:' + n.id, name: `${n.type === 'lift' ? 'Lift' : 'Stairs'}${lab && !/^(lift|lifts|stairs?|staircase)$/i.test(lab) ? ' · ' + lab : ''} (${levelName(n.level)})`, door_node: n.id, node: n, category: n.type }; });
+  const isMeeting = d => /\b(meeting|discussion|breakout|board ?room|seminar|training|harvard|lecture|conference|tutorial|classroom)\b/i.test(d.name);
+  const CATS = [
+    { id: 'entrances', name: 'Entrances', ic: 'door', cls: 'g', items: entrancePlaces },
+    { id: 'toilets', name: 'Toilets', ic: 'toilet', cls: 't', items: V.dests.filter(d => d.category === 'toilet') },
+    { id: 'meeting', name: 'Meeting & seminar rooms', ic: 'meeting', cls: '', items: V.dests.filter(d => d.category !== 'toilet' && d.category !== 'lab' && isMeeting(d)) },
+    { id: 'labs', name: 'Labs & cleanrooms', ic: 'lab', cls: 'l', items: V.dests.filter(d => d.category === 'lab') },
+    { id: 'lifts', name: 'Lifts & stairs', ic: 'lift', cls: '', items: liftPlaces },
+    { id: 'other', name: 'Offices & other rooms', ic: 'room', cls: 'r', items: V.dests.filter(d => d.category !== 'toilet' && d.category !== 'lab' && !isMeeting(d)) },
+  ];
+  const landmarks = V.dests.filter(d => /\[[^\]]+\]/.test(d.name) || d.category === 'lecture_theatre' || d.category === 'help_point').sort((a, b) => a.name.localeCompare(b.name));   // the institutes and centres (MazeMap titles with an acronym), the seminar room, the help point
+  const ICON = { entrance: 'door', toilet: 'toilet', lab: 'lab', lift: 'lift', stairs: 'stairs', room: 'room', lecture_theatre: 'meeting', help_point: 'help', point: 'pin', node: 'dot', 'meeting room': 'meeting', 'seminar room': 'meeting', 'event space': 'meeting', 'research centre': 'star', workshop: 'lab', office: 'room', school: 'room', lounge: 'room', studio: 'room' };
+  const icon = p => `<svg aria-hidden="true"><use href="#i-${ICON[p.category] || (isMeeting(p) ? 'meeting' : 'room')}"/></svg>`;
+  function placeRow(p) {
+    const li = document.createElement('li'); li.setAttribute('role', 'button'); li.tabIndex = 0;
+    li.title = p.name;
+    li.innerHTML = `<span class="ico">${icon(p)}</span><span class="name">${esc(p.name)}</span>${p.category === 'entrance' ? '' : `<span class="code">${esc(p.id.replace(/^node:/, ''))}</span>`}<span class="lvl">${esc(p.node.level)}</span>`;
+    li.onclick = () => choose('to', p); li.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choose('to', p); } };
+    return li;
+  }
+  function renderExplore() {
+    const cats = $('#excats'); cats.innerHTML = '';
+    for (const c of CATS) {
+      if (!c.items.length) continue;
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'excat';
+      b.innerHTML = `<span class="ic ${c.cls}"><svg aria-hidden="true"><use href="#i-${c.ic}"/></svg></span><span class="tx"><div class="nm">${esc(c.name)}</div><div class="ct">${c.items.length} place${c.items.length === 1 ? '' : 's'}</div></span>`;
+      b.onclick = () => openCat(c); cats.appendChild(b);
+    }
+    const lm = $('#exlm'); lm.innerHTML = ''; for (const d of landmarks) lm.appendChild(placeRow(d)); $('#exlandmarks').hidden = !landmarks.length;
+  }
+  function openCat(c) {   // one category: its places grouped by level, the levels nearest the start first
+    $('#excats').hidden = true; $('#exlandmarks').hidden = true; $('#exlist').hidden = false; $('#exlisttitle').textContent = c.name;
+    const ol = $('#exitems'); ol.innerHTML = '';
+    const from = sel.from && sel.from.node ? floorOf(sel.from.node.level) : 1;
+    const byLevel = new Map(); for (const p of c.items) { const k = p.node.level; if (!byLevel.has(k)) byLevel.set(k, []); byLevel.get(k).push(p); }
+    const order = [...byLevel.keys()].sort((a, b) => (Math.abs(floorOf(a) - from) - Math.abs(floorOf(b) - from)) || floorOf(a) - floorOf(b));
+    for (const lv of order) { const h = document.createElement('li'); h.className = 'lvlhead'; h.textContent = levelName(lv); ol.appendChild(h); for (const p of byLevel.get(lv).sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }))) ol.appendChild(placeRow(p)); }
+    if (isPhone() && sheetState === 'peek') setSheet('half');
+    $('#explore').scrollTop = 0;
+  }
+  function closeCat() { $('#exlist').hidden = true; $('#excats').hidden = false; $('#exlandmarks').hidden = !landmarks.length; }
+  $('#exback').onclick = closeCat;
+  renderExplore();
+  function showRouteBox(on) { $('#routebox').hidden = !on; $('#explore').hidden = !!on; }
+
+  // ------------------------------------------------------------ a tapped room or point on the plan: a card with Directions / Start here
+  let picked = null;
+  function pickRoom(rm, lv) {
+    const p = placeOfRoom(rm, lv);
+    if (!p) { toast('No corridor near that room in the map data'); return; }
+    showPlaceCard(p, rm.name ? kindLabel(rm) : (rm.kind === 'lift' || rm.kind === 'stairs' ? kindLabel(rm) : 'Unnamed ' + kindLabel(rm).toLowerCase()), lv);
+  }
+  function pickPoint(lv, x, y) { if (viewMode === '3d') return; showPlaceCard(placeAtPoint(lv, x, y), 'Point on the plan', lv); }
+  function showPlaceCard(p, kind, lv) {
+    picked = p; $('#pcname').textContent = p.name;
+    $('#pcsub').textContent = `${kind.charAt(0).toUpperCase() + kind.slice(1)} · ${levelName(lv)}${p.door_node ? '' : ' · the route ends in the corridor beside it'}`;
+    $('#placecard').hidden = false; $('#app').classList.add('has-card'); if (v2) v2.setPick(p.node, p.name);
+  }
+  function hidePlaceCard() { picked = null; $('#placecard').hidden = true; $('#app').classList.remove('has-card'); if (v2) v2.setPick(null); }
+  $('#pcclose').onclick = hidePlaceCard;
+  $('#pcgo').onclick = () => { if (!picked) return; const p = picked; hidePlaceCard(); choose('to', p); };
+  $('#pcstart').onclick = () => { if (!picked) return; const p = picked; hidePlaceCard(); setField('from', p); route(); if (!sel.to) inputs.to.focus(); };
+
   // ------------------------------------------------------------ the route
   let plan = null, R = null, dest = null, already = null;
   let pos = { s: 0, run: 0 };
-  const summary = html => { for (const id of ['summary', 'sheethead', 'csummary']) $('#' + id).innerHTML = html; };
+  const summary = html => { for (const id of ['sheethead', 'csummary']) $('#' + id).innerHTML = html; };
   // on phones the search card shrinks to a two-line route header once a route is set; tapping it opens the fields again
   function setCollapsed(on) { $('#searchcard').classList.toggle('collapsed', !!on && isPhone()); if (on) { $('#cfrom').textContent = sel.from ? sel.from.name : ''; $('#cto').textContent = sel.to ? sel.to.name : ''; } layoutVars(); }
   $('#compactrow').onclick = () => setCollapsed(false);
-  function placeSeg() { const seg = $('#viewseg'), slot = isPhone() ? $('#segslot') : $('#searchcard .chips'); if (seg.parentElement !== slot) slot.appendChild(seg); if (!isPhone()) setCollapsed(false); }
-  placeSeg();
   function route(keepS) {
     const sPrev = keepS && R ? pos.s : 0;
     stopFly(); plan = null; R = null; dest = null; already = null; pos = { s: 0, run: 0 };
     v3.clear(); if (v2) v2.setRoute(null);
     $('#steps').innerHTML = ''; summary(''); setCaptionIdle(); enableControls(false); $('#scrub').value = 0; $('#scrub').max = 100; $('#pos').textContent = '0 m / 0 m';
     $('#app').classList.remove('has-route'); pinnedStep = -1;
-    if (!sel.from || !sel.to) { layoutVars(); updateUrl(); return; }
+    showRouteBox(!!sel.to); if (!isPhone()) setCollapsed(false);
+    if (!sel.from || !sel.to) { setSheet(sheetState); layoutVars(); updateUrl(); return; }
     dest = sel.to;
-    try { plan = Wayfind.plan(Vplan, sel.from.door_node, dest.id, opts()); } catch (e) { toast(e.message); updateUrl(); return; }
-    if (!plan) { summary(`<b>No route</b> to ${esc(dest.name)} with these options.`); $('#steptext').textContent = `No route to ${dest.name} with these options`; updateUrl(); return; }
-    if (plan.route.edges.length === 0) {   // start is the destination: show the room, no walk
+    // a place with a door node is a graph destination (or an entrance); a tapped room or point is a free destination, routed to the corridor beside it
+    const fromArg = sel.from.door_node ? sel.from.door_node : sel.from.point;
+    const inDests = Vplan.dests.some(d => d.id === dest.id);   // a venue destination or an entrance plans to its id; a lift or stair node and a tapped room or point are free destinations (snapped onto the node or the corridor)
+    const toArg = inDests ? dest.id : dest.door_node ? { level: dest.node.level, x: dest.node.x, y: dest.node.y, name: dest.name } : Object.assign({ name: dest.name }, dest.point, dest.face ? { face: dest.face } : {});
+    try { plan = Wayfind.plan(Vplan, fromArg, toArg, opts()); } catch (e) { toast(e.message); setSheet(sheetState); layoutVars(); updateUrl(); return; }
+    if (!plan) { summary(`<b>No route</b> to ${esc(dest.name)} with these options.`); $('#steptext').textContent = `No route to ${dest.name} with these options`; setSheet(sheetState); layoutVars(); updateUrl(); return; }
+    if (plan.dest && plan.dest.virtual) dest = Object.assign({}, dest, plan.dest, { id: dest.id, name: dest.name });   // the snapped point and its face, the place's own id for links
+    if (plan.route.edges.length === 0) {   // start is the destination: show the place, no walk (a free destination too: view3d stands on the point)
       already = v3.setAlready(plan, dest);
       summary(`<b>You are already at ${esc(dest.name)}</b><span class="sep">·</span>${esc(levelName(already.level))}`);
       $('#stepn').style.display = 'none'; $('#steptext').textContent = `You are already at ${dest.name}`; $('#hint').textContent = 'Pick another start or destination to see the way.'; $('#next').textContent = '';
       if (v2) v2.showDestination(already.door.x, already.door.y, already.level, dest.name);
-      $('#app').classList.add('has-route'); setCollapsed(true); layoutVars(); updateUrl(); return;
+      $('#app').classList.add('has-route'); setCollapsed(true); setSheet(sheetState); layoutVars(); updateUrl(); return;
     }
     R = RouteExport.build(Vplan, plan, manifest, paths, { startLabel: sel.from.name, options: opts() });
     const rides = {}; for (const r of R.rides) rides[r.type] = (rides[r.type] || 0) + 1;
@@ -185,7 +283,7 @@
     if (v2) v2.setRoute(R, plan, dest, sel.from.name);
     $('#scrub').max = R.length.toFixed(1); enableControls(true);
     setS(Math.min(sPrev, R.length), null, { snap: true });
-    if (isPhone() && sheetState === 'peek') setSheet('peek');
+    setSheet(sheetState); $('#sheetbody').scrollTop = 0; $('#steps').scrollTop = 0;
     $('#app').classList.add('has-route'); setCollapsed(true); layoutVars();
     updateUrl();
   }
@@ -196,8 +294,8 @@
     const c = R.runs.map((r, i) => i).filter(i => s >= R.runs[i].s0 - 1e-6 && s <= R.runs[i].s1 + 1e-6);
     if (!c.length) return s <= 0 ? 0 : R.runs.length - 1;
     if (levelHint) { const b = c.find(i => R.runs[i].level === levelHint); if (b != null) return b; }
+    if (s >= R.length - 1e-6) return c[c.length - 1];   // the end of the route is on its last run (a free destination on a lift node lands there by the ride)
     if (c.includes(pos.run)) return pos.run;
-    if (s >= R.length - 1e-6) return c[c.length - 1];
     return dir < 0 ? c[0] : c[c.length - 1];
   }
   let urlDirty = false, urlAt = 0;   // the address bar follows the position once it has settled for a moment (not during a drag)
@@ -252,7 +350,14 @@
       $('#steptext').textContent = big; $('#hint').textContent = hint; $('#next').textContent = then;
       if (current !== currentStep) {
         currentStep = current;
-        document.querySelectorAll('#steps li').forEach((li, k) => { li.classList.toggle('current', k === current); if (k === current && !$('#steps').matches(':hover')) li.scrollIntoView({ block: 'nearest' }); });
+        const list = $('#steps');
+        document.querySelectorAll('#steps li').forEach((li, k) => {
+          li.classList.toggle('current', k === current);
+          if (k === current && !list.matches(':hover')) {   // keep the current step in view by scrolling the list alone (scrollIntoView would also scroll the sheet under the controls)
+            const r = li.getBoundingClientRect(), lr = list.getBoundingClientRect();
+            if (r.top < lr.top) list.scrollTop += r.top - lr.top; else if (r.bottom > lr.bottom) list.scrollTop += r.bottom - lr.bottom;
+          }
+        });
         if (v2) v2.setCurrentStep(current);
       }
     }
@@ -268,7 +373,7 @@
   const fly = { on: false, pace: +$('#speed').value, pauseUntil: 0 };
   function setFly(on) { if (!R) return; fly.on = on; if (on && pos.s >= R.length - 1e-6) setS(0, null, { snap: true }); fly.pauseUntil = 0; updatePlay(); }
   function stopFly() { if (fly.on) { fly.on = false; updatePlay(); } }
-  function updatePlay() { const b = $('#play'); b.textContent = fly.on ? '❚❚ Pause' : '▶ Play'; b.title = fly.on ? 'Pause the fly-through (space)' : 'Fly through the route (space)'; }
+  function updatePlay() { const b = $('#play'); b.classList.toggle('playing', fly.on); b.querySelector('.lbl').textContent = fly.on ? 'Pause' : 'Play'; b.title = fly.on ? 'Pause the fly-through (space)' : 'Fly through the route (space)'; b.setAttribute('aria-label', b.title); }
   $('#speed').onchange = () => { fly.pace = +$('#speed').value; };
   function flyTick(now, dt) {
     if (!fly.on || !R || now < fly.pauseUntil || v3.state().transition) return;
@@ -286,8 +391,10 @@
   $('#scrub').addEventListener('input', () => { if (R) { stopFly(); setS(+$('#scrub').value); } });
   $('#scrub').addEventListener('change', () => $('#scrub').blur());
   const keyDir = { ArrowUp: +1, ArrowRight: +1, ArrowDown: -1, ArrowLeft: -1 };
-  for (const b of document.querySelectorAll('.buttons button, .chip, .seg button, .tools button')) b.addEventListener('click', () => b.blur());   // a clicked button must not also eat the next space
+  for (const b of document.querySelectorAll('.buttons button, .chip, .round, #thumbtap')) b.addEventListener('click', () => b.blur());   // a clicked button must not also eat the next space
+  $('#compactrow').addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setCollapsed(false); inputs.to.focus(); } });
   window.addEventListener('keydown', e => {
+    if (e.defaultPrevented || (e.target && e.target.closest && e.target.closest('[role="button"], #placecard, .leaflet-container'))) return;   // a row, the route header, the card and the map handle their own keys
     const tag = e.target && e.target.tagName, isRange = tag === 'INPUT' && e.target.type === 'range';
     if (tag === 'BUTTON' || tag === 'SELECT' || tag === 'TEXTAREA' || (tag === 'INPUT' && !isRange)) return;
     if (isRange && !(e.key in keyDir)) return;
@@ -319,20 +426,31 @@
   canvas.addEventListener('contextmenu', e => e.preventDefault());
   canvas.addEventListener('wheel', e => { if (!R) return; e.preventDefault(); stopFly(); setS(pos.s + (Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX) * WHEEL_M_PER_PX); }, { passive: false });
 
-  // ------------------------------------------------------------ view toggle (Map / Both / 3D) and the phone sheet
-  let viewMode = 'both';
+  // ------------------------------------------------------------ view modes: the plan with the 3D view as a thumbnail (map), the 3D view with the plan as a thumbnail (3d), side by side (split, desktops); and the phone sheet
   function setView(mode) {
-    viewMode = ['map', 'both', '3d'].includes(mode) ? mode : 'both';
-    for (const m of ['map', 'both', '3d']) $('#app').classList.toggle('view-' + m, m === viewMode);
-    $('#viewseg').querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.view === viewMode));
-    v3.resize();   // the canvas changed size: the camera's aspect follows at once, not at the next frame
-    layoutVars(); setTimeout(() => { if (v2) v2.refit(); }, 0); urlDirty = true;
+    if (mode === 'both') mode = 'split';   // the earlier name in links
+    viewMode = ['map', '3d', 'split'].includes(mode) ? mode : 'map';
+    if (viewMode === 'split' && (isPhone() || window.innerWidth < 1100)) viewMode = '3d';   // side by side needs room for the panel beside half a plan
+    for (const m of ['map', '3d', 'split']) $('#app').classList.toggle('view-' + m, m === viewMode);
+    const to3d = viewMode !== '3d';
+    $('#thumblbl').textContent = to3d ? '3D' : 'Map'; $('#thumbtap').setAttribute('aria-label', to3d ? '3D: switch to the 3D view' : 'Map: back to the plan');
+    $('#thumbtap use').setAttribute('href', to3d ? '#i-cube' : '#i-map');
+    $('#splitbtn').setAttribute('aria-pressed', String(viewMode === 'split'));
+    if (viewMode === '3d') hidePlaceCard();
+    v3.resize(); layoutVars();   // the canvas changed size: the camera's aspect follows at once, not at the next frame
+    if (v2) { v2.refit(); setTimeout(() => { v2.refit(); v3.resize(); }, 240); }   // and again once the size transition has ended
+    urlDirty = true;
   }
-  $('#viewseg').querySelectorAll('button').forEach(b => b.onclick = () => setView(b.dataset.view));
-  const sheet = $('#sheet'), handle = $('#handle');
-  let sheetState = 'peek';
-  const sheetHeight = st => st === 'peek' ? 76 : st === 'half' ? Math.round(window.innerHeight * 0.45) : Math.round(window.innerHeight * 0.86);
-  function setSheet(st) { sheetState = st; sheet.style.height = isPhone() ? sheetHeight(st) + 'px' : ''; $('#app').style.setProperty('--sheet-h', (isPhone() ? sheetHeight(st) : 0) + 'px'); }
+  $('#thumbtap').onclick = () => setView(viewMode === '3d' ? 'map' : '3d');
+  $('#splitbtn').onclick = () => setView(viewMode === 'split' ? 'map' : 'split');
+  const sheet = $('#sheet');
+  function sheetHeight(st) {   // peek: the grip plus the route's summary, caption and controls (measured), or just the Explore heading; full stops under the search card
+    if (st === 'half') return Math.round(window.innerHeight * 0.45);
+    if (st === 'full') return Math.min(Math.round(window.innerHeight * 0.86), Math.round(window.innerHeight - $('#searchcard').getBoundingClientRect().bottom - 8));
+    const nav = $('.navsticky'), grip = $('#sheetgrip').offsetHeight || 36;
+    return sel.to && !$('#routebox').hidden ? grip + nav.offsetHeight + 2 : grip + ($('.exhead').offsetHeight || 64) + 8;
+  }
+  function setSheet(st) { sheetState = st; const h = sheetHeight(st); sheet.style.height = isPhone() ? h + 'px' : ''; $('#app').style.setProperty('--sheet-h', (isPhone() ? h : 0) + 'px'); $('#sheetbody').scrollTop = 0; }
   let sheetDrag = null;
   const grip = $('#sheetgrip');
   grip.addEventListener('pointerdown', e => { if (!isPhone()) return; sheetDrag = { y: e.clientY, h: sheet.getBoundingClientRect().height, moved: false }; sheet.classList.add('dragging'); try { grip.setPointerCapture(e.pointerId); } catch (err) {} });
@@ -344,7 +462,7 @@
     sheetDrag = null;
   };
   grip.addEventListener('pointerup', endSheet); grip.addEventListener('pointercancel', endSheet);
-  window.addEventListener('resize', () => { setSheet(sheetState); placeSeg(); layoutVars(); if (v2) v2.refit(); });
+  window.addEventListener('resize', () => { if (viewMode === 'split' && (isPhone() || window.innerWidth < 1100)) setView('3d'); setSheet(sheetState); layoutVars(); if (v2) v2.refit(); });
 
   // ------------------------------------------------------------ share link, route.json, the URL
   function linkParams() {
@@ -352,7 +470,7 @@
     if (sel.from) p.set('from', sel.from.id); if (sel.to) p.set('to', sel.to.id);
     if (opts().stepFree) p.set('stepfree', '1'); if (opts().avoidLifts) p.set('nolifts', '1');
     if (R && pos.s > 0.05) { p.set('s', pos.s.toFixed(1)); p.set('lv', R.runs[pos.run].level); }   // the level too: at a ride boundary the same metre is on two floors
-    if (viewMode !== 'both') p.set('view', viewMode);
+    if (viewMode !== 'map') p.set('view', viewMode);
     return p;
   }
   function updateUrl() { urlDirty = false; const q = linkParams().toString(); history.replaceState(null, '', q ? '?' + q : location.pathname); }
@@ -393,7 +511,8 @@
     v3.idleAt(n0, nb);
     if (v2) v2.showLevel(n0.level, true);
   }
-  enableControls(false); setSheet('peek'); layoutVars();
+  enableControls(false); showRouteBox(false); setView('map'); setSheet('peek'); layoutVars();
+  $('#app').classList.add('loaded');   // the status line's job is done (a phone hides it from here on; a load error keeps it)
   applyUrl();
   if (v2) requestAnimationFrame(() => v2.refit());   // the plan fitted to the panel it really has (not the size it had before layout)
   if (!sel.to) inputs.to.focus();
@@ -409,8 +528,9 @@
     showLevel: v3.showLevel, scene: v3.scene, camera: v3.camera, renderer: v3.renderer, THREE, labels: v3.labels, look: a => v3.look(a, null, true), signs: v3.signs, pitch: v3.pitch, headerPx, panelFrac, map: v2 ? v2.map : null,
     frame: () => { const now = performance.now(); flyTick(now, 1 / 60); v3.update(now); },   // one animation step on demand (tests in a hidden pane, where requestAnimationFrame is paused)
     flyPause: ms => { fly.pauseUntil = performance.now() + (ms || 0); },   // hold the fly-through where it is (screenshots of a decision-point pause)
-    setDest: id => { const d = V.dests.find(d => d.id === id) || entrancePlaces.find(e => e.id === id); if (d) choose('to', d); return !!d; },
+    setDest: id => { const d = V.dests.find(d => d.id === id) || entrancePlaces.find(e => e.id === id) || placeFromParam(id); if (d) choose('to', d); return !!d; },
     setStart: v => { const pl = placeFromParam(v); if (pl) { setField('from', pl); route(); } return !!pl; },
+    pick: (lv, x, y) => pickPoint(lv, x, y), pickRoom: id => { const rm = roomIndex.get(id); if (rm) pickRoom(rm, rm.level); return !!rm; }, rooms: () => rooms, explore: openCat, categories: CATS,
     get debugCamera() { return v3.debugCamera; }, set debugCamera(c) { v3.debugCamera = c; },
     state: () => { const st = v3.state(); return { s: pos.s, run: pos.run, length: R ? R.length : 0, level: st.level, moving: st.moving, transition: st.transition, autoWalk: fly.on, arrivedHere: !!already, view: viewMode }; },
   };
