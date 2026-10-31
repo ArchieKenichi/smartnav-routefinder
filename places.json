@@ -1,0 +1,4 @@
+{
+  "_about": "Hand-kept facts per place for the route finder. Keys: a room code (RTP-XF-05-10), a plan room id shown on an unnamed room's card as Map id (L2-p1003236572), entrance:1, or node:L1-n52 for a lift or stairs. Fields: name (labels an unnamed room or corrects a name), access (keycard | staff | closed), note (one short line shown with the place). Photos are not listed here: save photos/<key>.jpg and run make_shotlist.py; see photos/README.md and photos/SHOTLIST.md.",
+  "_example": { "name": "Store room", "access": "keycard", "note": "ERI@N staff only" }
+}

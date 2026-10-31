@@ -13,6 +13,10 @@ window.View2D = function (deps) {
   const planOf = Object.fromEntries((plans.levels || []).map(l => [l.id, l.plan]));
   const missing = levels.map(l => l.id).filter(id => !planOf[id]);
   const map = L.map(el, { crs: L.CRS.Simple, minZoom: -3, maxZoom: 3, zoomSnap: 0.25, attributionControl: false, zoomControl: false, tap: false });
+  // stacking, bottom up: the plan images, the room shapes, the route (Leaflet's own overlay pane), the direction chevrons, the markers.
+  // Panes keep that order however often a level's image is removed and added again (an image added later would otherwise paint over the route).
+  map.createPane('plans').style.zIndex = 350; map.createPane('rooms').style.zIndex = 380; map.createPane('chevrons').style.zIndex = 450;
+  const ARROW_M = 10;   // a direction chevron on the route every so many metres
   L.control.zoom({ position: 'bottomright' }).addTo(map);   // bottom right, above the view thumbnail (the panel covers the top left, the level pills the top right); phones pinch instead
   const overlays = {}, roomLayers = {}, routeLayer = L.layerGroup().addTo(map), markerLayer = L.layerGroup().addTo(map), posLayer = L.layerGroup().addTo(map), pickLayer = L.layerGroup().addTo(map);
   let pick = null;   // {node: {level, x, y}, name}: the tapped place, marked until the card closes
@@ -42,7 +46,7 @@ window.View2D = function (deps) {
     if (level !== lv) {
       level = lv; const p = planOf[lv];
       for (const id in overlays) if (id !== lv && map.hasLayer(overlays[id])) map.removeLayer(overlays[id]);
-      if (!overlays[lv]) overlays[lv] = L.imageOverlay(PLANS + p.image, [[0, 0], [p.size_px[1], p.size_px[0]]]);   // lazily, once per level
+      if (!overlays[lv]) overlays[lv] = L.imageOverlay(PLANS + p.image, [[0, 0], [p.size_px[1], p.size_px[0]]], { pane: 'plans' });   // lazily, once per level
       overlays[lv].addTo(map);
       showRooms(lv);
       levelsEl.querySelectorAll('button').forEach(b => { const on = b.dataset.level === lv; b.classList.toggle('active', on); b.setAttribute('aria-pressed', String(on)); });
@@ -58,7 +62,7 @@ window.View2D = function (deps) {
       for (const rm of (L_.rooms || []).slice().sort((a, b) => (b.area_m2 || 0) - (a.area_m2 || 0))) {   // large rooms first: a room inside another is drawn on top, so a tap picks the smallest
         if (!rm.poly || rm.poly.length < 3) continue;
         const rings = [rm.poly].concat(rm.holes || []).map(ring => ring.map(([x, y]) => toLL(lv, x, y)));   // holes (a lobby walled off inside a room) are not part of the room: a tap there falls through
-        const poly = L.polygon(rings, { stroke: false, fill: true, fillColor: '#2563eb', fillOpacity: 0, interactive: true, bubblingMouseEvents: false, className: 'room-hover' });
+        const poly = L.polygon(rings, { pane: 'rooms', stroke: false, fill: true, fillColor: '#2563eb', fillOpacity: 0, interactive: true, bubblingMouseEvents: false, className: 'room-hover' });
         poly.on('mouseover', () => poly.setStyle({ fillOpacity: 0.14 })); poly.on('mouseout', () => poly.setStyle({ fillOpacity: 0 }));
         poly.on('click', e => { L.DomEvent.stop(e); if (onPickRoom && !(isThumb && isThumb())) onPickRoom(rm, lv); });
         poly.bindTooltip(esc(rm.name || (labelOf ? labelOf(rm) : 'Unnamed room')), { sticky: true, direction: 'top', opacity: 0.95 });
@@ -108,6 +112,7 @@ window.View2D = function (deps) {
     for (const { r } of runsOn(level)) {
       const line = L.polyline(r.pts.map(p => toLL(level, p.x, p.y)), { color: '#d62828', weight: 6, opacity: 0.9, lineJoin: 'round', lineCap: 'round' }).addTo(routeLayer);
       line.on('click', e => { const m = fromLL(level, e.latlng), q = nearestOnRuns(level, m.x, m.y); if (q) onScrub(q.s, q.run, level); L.DomEvent.stop(e); });
+      for (const c of chevronsOn(r)) L.marker(toLL(level, c.x, c.y), { pane: 'chevrons', interactive: false, keyboard: false, icon: L.divIcon({ className: '', html: `<div class="chev" style="transform:rotate(${(90 - c.heading * 180 / Math.PI).toFixed(1)}deg)"><svg viewBox="0 0 16 16"><path d="M4 10l4-5 4 5"/></svg></div>`, iconSize: [16, 16], iconAnchor: [8, 8] }) }).addTo(routeLayer);
     }
     const N = plan.nodeOf, first = R.runs[0], firstPt = first.pts[0], last = plan.nodeOf(plan.route.nodes[plan.route.nodes.length - 1]);
     if (first.level === level) L.marker(toLL(level, firstPt.x, firstPt.y), { icon: pinIcon('start', '<svg><use href="#i-dot"/></svg>'), interactive: false }).bindTooltip(esc(startLabel || 'Start'), { permanent: true, direction: 'top', offset: [0, -12], className: 'pin' }).addTo(markerLayer);
@@ -125,6 +130,18 @@ window.View2D = function (deps) {
       m.on('click', () => onClickStep(i));
       stepMarkers.push({ i, m, cls: st.kind, text: glyph });
     });
+  }
+  function chevronsOn(run) {   // points every ARROW_M along a run with the heading there, clear of its ends
+    const out = [], P = run.pts; if (P.length < 2) return out;
+    let next = Math.min(ARROW_M, Math.max(3, (run.s1 - run.s0) / 2));
+    for (let k = 0; k + 1 < P.length; k++) {
+      const a = P[k], b = P[k + 1], L_ = b.s - a.s; if (L_ < 1e-6) continue;
+      while (next >= a.s - run.s0 && next <= b.s - run.s0 && run.s1 - run.s0 - next >= 3) {
+        const t = (next - (a.s - run.s0)) / L_; out.push({ x: a.x + t * (b.x - a.x), y: a.y + t * (b.y - a.y), heading: Math.atan2(b.y - a.y, b.x - a.x) }); next += ARROW_M;
+      }
+      if (next > b.s - run.s0 && next > run.s1 - run.s0 - 3) break;
+    }
+    return out;
   }
   function placePos() {   // the position marker on the shown level (hidden while the position is on another level)
     if (!pos || !R || !planOf[level] || !R.runs[pos.run] || R.runs[pos.run].level !== level) { if (posMarker) posMarker.setOpacity(0); return; }

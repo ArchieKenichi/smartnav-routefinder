@@ -29,7 +29,7 @@
 
   // ------------------------------------------------------------ data
   async function fetchFirst(urls) { for (const u of urls) { try { const r = await fetch(u); if (r.ok) return { url: u, json: await r.json() }; } catch (e) {} } throw new Error('venue package not found'); }
-  let venueSrc, manifest, paths = null, plans = { levels: [] }, rooms = null;
+  let venueSrc, manifest, paths = null, plans = { levels: [] }, rooms = null, places = {}, photos = {};
   let viewMode = 'map';   // map | 3d | split (set below; declared here because the views' callbacks read it)
   let sheetState = 'peek';   // the phone sheet: peek | half | full
   try {
@@ -38,10 +38,14 @@
     try { const p = await fetch('camera-paths.json'); if (p.ok) paths = await p.json(); } catch (e) {}
     try { const p = await fetch(PLANS + 'manifest.json'); if (p.ok) plans = await p.json(); } catch (e) {}
     try { const p = await fetch('rooms.json'); if (p.ok) rooms = await p.json(); } catch (e) {}   // room polygons for taps on the plan (build_rooms.py); optional
+    try { const p = await fetch('places.json'); if (p.ok) { const j = await p.json(); for (const k in j) if (k[0] !== '_') places[k] = j[k]; } } catch (e) {}   // hand-kept facts per place: name, access, note (photos/README.md); optional
+    try { const p = await fetch('photos/manifest.json'); if (p.ok) photos = await p.json(); } catch (e) {}   // key → photo file, written by make_shotlist.py from the photos folder; optional
   } catch (e) { status('Could not load data. Serve the mapping folder (python3 -m http.server 8765) and open http://localhost:8765/preview3d/ — and run build_model.py once.'); return; }
   if (typeof THREE === 'undefined' || !THREE.GLTFLoader) { status('three.js could not be loaded; this page needs internet access for it once.'); return; }
   let V;
   try { V = Wayfind.load(venueSrc.json); } catch (e) { status('The venue package could not be read: ' + e.message); return; }
+  for (const d of V.dests) { const o = places[d.id]; if (o && o.name) d.name = o.name; }   // places.json can correct a destination's name…
+  if (rooms && rooms.levels) for (const L of Object.values(rooms.levels)) for (const rm of L.rooms || []) { const o = places[rm.id]; if (o && o.name) rm.name = o.name; }   // …and label a room the map data left unnamed
   const zOf = Object.fromEntries(manifest.levels.map(l => [l.id, l.z]));
   const byFloor = manifest.levels.slice().sort((a, b) => a.floor - b.floor);
   const SPEED = RouteExport.WALK_SPEED;
@@ -71,6 +75,12 @@
   const roomIndex = new Map(); if (rooms && rooms.levels) for (const lv in rooms.levels) for (const rm of rooms.levels[lv].rooms || []) roomIndex.set(rm.id, Object.assign({ level: lv }, rm));
   const KIND_LABEL = { lift: 'Lift', stairs: 'Stairs', toilet: 'Toilet', 'meeting room': 'Meeting room', 'seminar room': 'Seminar room', office: 'Office', lab: 'Lab', workshop: 'Workshop', 'research centre': 'Research centre', 'event space': 'Event space', lounge: 'Lounge', studio: 'Studio', school: 'School' };
   const kindLabel = rm => KIND_LABEL[rm.kind] || 'Room';
+  // facts per place from places.json and the photo folder: a place's key is its destination id, its plan room id (room:… stripped), entrance:N or node:<id>
+  const ACCESS = { keycard: 'Key card needed', staff: 'Staff only', closed: 'Closed to visitors' };
+  const placeKey = p => String(p.id || '').replace(/^room:/, '');
+  function infoOf(p) { const k = placeKey(p), o = places[k] || {}; return { photo: photos[k] || o.photo || null, access: ACCESS[o.access] ? o.access : null, note: o.note || '' }; }
+  const lockSvg = a => `<svg class="lock" role="img" aria-label="${ACCESS[a]}"><use href="#i-lock"/></svg>`;
+  const accChip = p => { const i = p ? infoOf(p) : {}; return i.access ? `<span class="acc ${i.access}"><svg aria-hidden="true"><use href="#i-lock"/></svg>${ACCESS[i.access]}</span>` : ''; };
   function placeOfRoom(rm, lv) {
     const d = rm.dest && V.dests.find(x => x.id === rm.dest); if (d) return d;
     if (rm.kind === 'lift' || rm.kind === 'stairs') {   // a lift or stair box: the graph's own node for it, so the route uses the ride
@@ -115,9 +125,13 @@
   const floorOf = lv => (V.levels.get(lv) || {}).floor || +String(lv).replace(/\D/g, '') || 0;
   function suggestions(q, which) {
     const nq = Wayfind.norm(q).split(' ').map(t => EXTRA_SYNONYMS[t] || t).join(' '), out = [];
-    if (!nq && which === 'to') return [];   // nothing typed: Explore (and the plan) is the way to pick a destination; the start keeps its entrance defaults
-    for (const e of entrancePlaces) if (!nq || `entrance ${e.entrance}`.startsWith(nq) || nq === String(e.entrance) || 'entrance'.startsWith(nq) || nq === 'exit' || 'main entrance'.startsWith(nq)) out.push(e);
-    if (!nq) return out;
+    if (!nq) {   // nothing typed: an action to choose the place on the plan; the start also offers the entrances; a note says any room can be typed
+      const rows = [{ id: 'pick', name: which === 'from' ? 'Choose the start on the plan' : 'Choose the destination on the plan', category: 'pick', action: 'pick' }];
+      if (which === 'from') rows.push(...entrancePlaces);
+      rows.push({ id: 'note', name: which === 'from' ? 'or type any room, lift or landmark' : 'or type a room code or name, or use Explore below', category: 'note', action: 'note' });
+      return rows;
+    }
+    for (const e of entrancePlaces) if (`entrance ${e.entrance}`.startsWith(nq) || nq === String(e.entrance) || 'entrance'.startsWith(nq) || nq === 'exit' || 'main entrance'.startsWith(nq)) out.push(e);
     const category = /\b(toilet|toilets|wc|loo|restroom|washroom|bathroom|handicap)\b/.test(nq);
     const hits = Wayfind.search(V, nq, { max: category ? 80 : 10, preferLevel: v3.state().level }).map(r => r.dest).filter(d => !out.includes(d));
     if (!category) return out.concat(hits).slice(0, 12);
@@ -132,20 +146,22 @@
     sug.innerHTML = '';
     for (const w of ['from', 'to']) { inputs[w].setAttribute('aria-expanded', String(sugFor === w && sugItems.length > 0)); if (sugFor !== w) inputs[w].removeAttribute('aria-activedescendant'); }
     if (!sugFor || !sugItems.length) { sug.style.display = 'none'; return; }
-    const f = $('#searchcard .fields'); sug.style.top = (f.offsetTop + f.offsetHeight + 4) + 'px'; sug.style.display = 'block';
+    const f = $('#searchcard .fields'); sug.style.top = (f.offsetTop + f.offsetHeight + 4) + 'px'; sug.style.display = 'block'; toast('');   // the list answers whatever a toast was prompting for
     if (sugActive >= 0) inputs[sugFor].setAttribute('aria-activedescendant', 'sug-' + sugActive);
     sugItems.forEach((p, i) => {
-      const d = document.createElement('div'); d.className = i === sugActive ? 'active' : ''; d.id = 'sug-' + i; d.setAttribute('aria-selected', String(i === sugActive));
-      d.innerHTML = `<span class="ico">${icon(p)}</span><span class="name">${esc(p.name)}</span>${p.category === 'entrance' ? '' : `<span class="code">${esc(p.id)}</span>`}<span class="lvl">${esc(p.node.level)}</span>`;
+      const d = document.createElement('div'); d.className = (i === sugActive ? 'active' : '') + (p.action ? ' ' + (p.action === 'pick' ? 'act' : 'note') : ''); d.id = 'sug-' + i; d.setAttribute('aria-selected', String(i === sugActive));
+      if (p.action) { d.innerHTML = p.action === 'pick' ? `<span class="ico"><svg aria-hidden="true"><use href="#i-target"/></svg></span><span class="name">${esc(p.name)}</span>` : `<span class="name">${esc(p.name)}</span>`; if (p.action === 'note') d.setAttribute('aria-disabled', 'true'); }
+      else { const a = infoOf(p).access; d.innerHTML = `<span class="ico">${icon(p)}</span><span class="name">${esc(p.name)}${a ? lockSvg(a) : ''}</span>${p.category === 'entrance' ? '' : `<span class="code">${esc(p.id)}</span>`}<span class="lvl">${esc(p.node.level)}</span>`; }
       d.setAttribute('role', 'option');
       d.onmousedown = e => { e.preventDefault(); choose(sugFor, p); }; sug.appendChild(d);
     });
   }
   function setActive(i) { sugActive = Math.max(0, Math.min(sugItems.length - 1, i)); [...sug.children].forEach((d, k) => { d.classList.toggle('active', k === sugActive); d.setAttribute('aria-selected', String(k === sugActive)); if (k === sugActive) d.scrollIntoView({ block: 'nearest' }); }); if (sugFor && sugActive >= 0) inputs[sugFor].setAttribute('aria-activedescendant', 'sug-' + sugActive); }
-  function openSug(which) { sugFor = which; sugItems = suggestions(inputs[which].value, which); sugActive = sugItems.length ? 0 : -1; renderSug(); }
+  function openSug(which) { sugFor = which; sugItems = suggestions(inputs[which].value, which); sugActive = sugItems.length && !sugItems[0].action ? 0 : (sugItems.length > 1 && inputs[which].value ? 0 : -1); renderSug(); }
   function closeSug() { sugFor = null; sugItems = []; renderSug(); }
   function restoreField(which) { inputs[which].value = sel[which] ? sel[which].name : ''; $('#field' + which).classList.toggle('filled', !!sel[which]); }
   function choose(which, place) {
+    if (place && place.action) { if (place.action === 'pick') startPick(which); return; }
     const same = !!(sel[which] && place && sel[which].id === place.id);
     setField(which, place); closeSug(); inputs[which].blur(); if (which === 'to' && !sel.from) setField('from', entrancePlaces[0] || null);
     route(same);   // the same place again keeps the position
@@ -190,7 +206,8 @@
   function placeRow(p) {
     const li = document.createElement('li'); li.setAttribute('role', 'button'); li.tabIndex = 0;
     li.title = p.name;
-    li.innerHTML = `<span class="ico">${icon(p)}</span><span class="name">${esc(p.name)}</span>${p.category === 'entrance' ? '' : `<span class="code">${esc(p.id.replace(/^node:/, ''))}</span>`}<span class="lvl">${esc(p.node.level)}</span>`;
+    const info = infoOf(p);
+    li.innerHTML = `<span class="ico">${icon(p)}</span><span class="name">${esc(p.name)}${info.access ? lockSvg(info.access) : ''}</span>${p.category === 'entrance' ? '' : `<span class="code">${esc(p.id.replace(/^node:/, ''))}</span>`}<span class="lvl">${esc(p.node.level)}</span>${info.photo ? `<img class="thumb" src="${esc(info.photo)}" alt="" loading="lazy">` : ''}`;
     li.onclick = () => choose('to', p); li.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choose('to', p); } };
     return li;
   }
@@ -219,17 +236,34 @@
   renderExplore();
   function showRouteBox(on) { $('#routebox').hidden = !on; $('#explore').hidden = !!on; }
 
-  // ------------------------------------------------------------ a tapped room or point on the plan: a card with Directions / Start here
-  let picked = null;
+  // ------------------------------------------------------------ a tapped room or point on the plan: a card with Directions / Start here, or, after "Choose … on the plan", the place itself
+  let picked = null, pickMode = null;   // pickMode: 'from' | 'to' while the next tap on the plan sets that field
+  function startPick(which) {
+    pickMode = which; closeSug(); inputs[which].blur(); hidePlaceCard();
+    if (viewMode === '3d') setView('map');
+    $('#app').classList.add('picking'); if (isPhone()) setCollapsed(!!(R || already));
+    toast(`Tap a room or a corridor on the plan to set the ${which === 'from' ? 'start' : 'destination'} (Esc cancels)`, 8000);
+  }
+  function endPick() { pickMode = null; $('#app').classList.remove('picking'); }
+  function tookPick(p) {   // a tap while picking: the field is set at once, no card
+    const which = pickMode; endPick(); toast('');
+    if (which === 'from') { setField('from', p); route(); if (!sel.to) inputs.to.focus(); } else choose('to', p);
+  }
   function pickRoom(rm, lv) {
     const p = placeOfRoom(rm, lv);
     if (!p) { toast('No corridor near that room in the map data'); return; }
+    if (pickMode) { tookPick(p); return; }
     showPlaceCard(p, rm.name ? kindLabel(rm) : (rm.kind === 'lift' || rm.kind === 'stairs' ? kindLabel(rm) : 'Unnamed ' + kindLabel(rm).toLowerCase()), lv);
   }
-  function pickPoint(lv, x, y) { if (viewMode === '3d') return; showPlaceCard(placeAtPoint(lv, x, y), 'Point on the plan', lv); }
+  function pickPoint(lv, x, y) { if (viewMode === '3d') return; const p = placeAtPoint(lv, x, y); if (pickMode) { tookPick(p); return; } showPlaceCard(p, 'Point on the plan', lv); }
   function showPlaceCard(p, kind, lv) {
     picked = p; $('#pcname').textContent = p.name;
     $('#pcsub').textContent = `${kind.charAt(0).toUpperCase() + kind.slice(1)} · ${levelName(lv)}${p.door_node ? '' : ' · the route ends in the corridor beside it'}`;
+    const info = infoOf(p), img = $('#pcphoto');   // a photo from the photos folder, an access warning or note from places.json, the map id of a room nobody has named yet
+    if (info.photo) { img.src = info.photo; img.alt = 'Photo of ' + p.name; img.hidden = false; } else { img.removeAttribute('src'); img.hidden = true; }
+    $('#pcaccess').hidden = !(info.access || info.note); $('#pcaccess').className = 'access ' + (info.access || 'info'); $('#pcaccessico').setAttribute('href', info.access ? '#i-lock' : '#i-info');
+    $('#pcaccesstext').textContent = [info.access ? ACCESS[info.access] : '', info.note].filter(Boolean).join(' · ');
+    const unnamed = p.room && !p.room.name; $('#pcid').hidden = !unnamed; $('#pcid').textContent = unnamed ? 'Map id ' + p.room.id : '';
     $('#placecard').hidden = false; $('#app').classList.add('has-card'); if (v2) v2.setPick(p.node, p.name);
   }
   function hidePlaceCard() { picked = null; $('#placecard').hidden = true; $('#app').classList.remove('has-card'); if (v2) v2.setPick(null); }
@@ -250,7 +284,8 @@
     v3.clear(); if (v2) v2.setRoute(null);
     $('#steps').innerHTML = ''; summary(''); setCaptionIdle(); enableControls(false); $('#scrub').value = 0; $('#scrub').max = 100; $('#pos').textContent = '0 m / 0 m';
     $('#app').classList.remove('has-route'); pinnedStep = -1;
-    showRouteBox(!!sel.to); if (!isPhone()) setCollapsed(false);
+    showRouteBox(!!sel.to && !!sel.from); if (!isPhone()) setCollapsed(false);   // a destination without a start shows Explore again, with a prompt for the start
+    if (sel.to && !sel.from && !pickMode) toast('Where from? Type a room, tap the plan, or choose an entrance', 6000);
     if (!sel.from || !sel.to) { setSheet(sheetState); layoutVars(); updateUrl(); return; }
     dest = sel.to;
     // a place with a door node is a graph destination (or an entrance); a tapped room or point is a free destination, routed to the corridor beside it
@@ -262,7 +297,7 @@
     if (plan.dest && plan.dest.virtual) dest = Object.assign({}, dest, plan.dest, { id: dest.id, name: dest.name });   // the snapped point and its face, the place's own id for links
     if (plan.route.edges.length === 0) {   // start is the destination: show the place, no walk (a free destination too: view3d stands on the point)
       already = v3.setAlready(plan, dest);
-      summary(`<b>You are already at ${esc(dest.name)}</b><span class="sep">·</span>${esc(levelName(already.level))}`);
+      summary(`<b>You are already at ${esc(dest.name)}</b><span class="sep">·</span>${esc(levelName(already.level))}${accChip(dest)}`);
       $('#stepn').style.display = 'none'; $('#steptext').textContent = `You are already at ${dest.name}`; $('#hint').textContent = 'Pick another start or destination to see the way.'; $('#next').textContent = '';
       if (v2) v2.showDestination(already.door.x, already.door.y, already.level, dest.name);
       $('#app').classList.add('has-route'); setCollapsed(true); setSheet(sheetState); layoutVars(); updateUrl(); return;
@@ -273,7 +308,7 @@
     const walkM = plan.route.edges.filter(x => x.edge.type === 'walk').reduce((t, x) => t + (x.edge.length_m || 0), 0) || R.length;   // the walk itself, the graph's walk edges (a ride step's length includes the short stub folded into it), not the camera path (a door beside the landing walks more than the cut path)
     const seconds = walkM / SPEED + R.rides.reduce((t, r) => t + r.seconds, 0);   // route_export's ride allowance: RIDE_S plus RIDE_EXTRA_S per further floor
     const levelsText = R.runs.map(r => r.level).filter((l, i, a) => i === 0 || l !== a[i - 1]).join(' → ');
-    summary(`<b>${fmtM(walkM)}</b><span class="sep">·</span>${Math.max(1, Math.round(seconds / 60))} min<span class="sep">·</span>${levelsText}${rideText ? `<span class="sep">·</span>${rideText}` : ''}`);
+    summary(`<b>${fmtM(walkM)}</b><span class="sep">·</span>${Math.max(1, Math.round(seconds / 60))} min<span class="sep">·</span>${levelsText}${rideText ? `<span class="sep">·</span>${rideText}` : ''}${accChip(dest)}`);
     plan.steps.forEach((st, i) => {
       const li = document.createElement('li'); li.className = st.kind;
       li.innerHTML = `<span class="n">${i + 1}</span><div><div class="t">${esc(st.text)}</div>${st.hint ? `<div class="h">${esc(st.hint)}</div>` : ''}</div><span class="lv">${esc(st.level)}${st.toLevel ? ' → ' + esc(st.toLevel) : ''}</span>`;
@@ -394,6 +429,7 @@
   for (const b of document.querySelectorAll('.buttons button, .chip, .round, #thumbtap')) b.addEventListener('click', () => b.blur());   // a clicked button must not also eat the next space
   $('#compactrow').addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setCollapsed(false); inputs.to.focus(); } });
   window.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && pickMode) { endPick(); toast(''); return; }
     if (e.defaultPrevented || (e.target && e.target.closest && e.target.closest('[role="button"], #placecard, .leaflet-container'))) return;   // a row, the route header, the card and the map handle their own keys
     const tag = e.target && e.target.tagName, isRange = tag === 'INPUT' && e.target.type === 'range';
     if (tag === 'BUTTON' || tag === 'SELECT' || tag === 'TEXTAREA' || (tag === 'INPUT' && !isRange)) return;

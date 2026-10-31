@@ -44,6 +44,9 @@
   <symbol id="i-walk" viewBox="0 0 24 24"><circle cx="13" cy="4" r="1.5"/><path d="M10 21l2-7-3-2 1-5 4 2 2 3M8 12l-1 4M14 14l3 7"/></symbol>
   <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4h11l-1.5 4L16 12H5"/></symbol>
   <symbol id="i-dot" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></symbol>
 </svg>
 
 <div id="app" class="view-map">
@@ -76,7 +79,7 @@
       <div class="brand"><b>Research Techno Plaza</b><span class="sub" id="status">Loading…</span><button id="collapse" type="button" class="phone-only" aria-label="Back to the route"><svg><use href="#i-up"/></svg></button></div>
       <div class="notice" id="notice"></div>
       <div class="fields">
-        <label class="field from" id="fieldfrom"><span class="dot from" aria-hidden="true"></span><span class="sr">Start</span><input id="from" type="text" placeholder="Start (Entrance 1)" autocomplete="off" spellcheck="false" enterkeyhint="search" role="combobox" aria-autocomplete="list" aria-haspopup="listbox" aria-controls="suggest" aria-expanded="false"><button class="clear" type="button" data-for="from" aria-label="Clear start"><svg><use href="#i-close"/></svg></button></label>
+        <label class="field from" id="fieldfrom"><span class="dot from" aria-hidden="true"></span><span class="sr">Start</span><input id="from" type="text" placeholder="Start: any room, or tap the plan" autocomplete="off" spellcheck="false" enterkeyhint="search" role="combobox" aria-autocomplete="list" aria-haspopup="listbox" aria-controls="suggest" aria-expanded="false"><button class="clear" type="button" data-for="from" aria-label="Clear start"><svg><use href="#i-close"/></svg></button></label>
         <label class="field to" id="fieldto"><span class="dot to" aria-hidden="true"></span><span class="sr">Destination</span><input id="to" type="text" placeholder="Where to? Room code or name" autocomplete="off" spellcheck="false" enterkeyhint="search" role="combobox" aria-autocomplete="list" aria-haspopup="listbox" aria-controls="suggest" aria-expanded="false"><button class="clear" type="button" data-for="to" aria-label="Clear destination"><svg><use href="#i-close"/></svg></button></label>
         <button id="swap" type="button" title="Swap start and destination" aria-label="Swap start and destination"><svg><use href="#i-swap"/></svg></button>
       </div>
@@ -130,15 +133,18 @@
   </aside>
 
   <div id="placecard" hidden>
+    <img id="pcphoto" alt="" hidden>
     <div class="pc-head"><div class="pc-name" id="pcname"></div><button id="pcclose" type="button" aria-label="Close"><svg><use href="#i-close"/></svg></button></div>
     <div class="pc-sub" id="pcsub"></div>
+    <div id="pcaccess" class="access" hidden><svg aria-hidden="true"><use id="pcaccessico" href="#i-lock"/></svg><span id="pcaccesstext"></span></div>
+    <div class="pc-id" id="pcid" hidden></div>
     <div class="pc-actions">
       <button id="pcgo" type="button" class="primary"><svg><use href="#i-directions"/></svg>Directions</button>
       <button id="pcstart" type="button"><svg><use href="#i-dot"/></svg>Start here</button>
     </div>
   </div>
-</div>
 <div id="toast" role="status" aria-live="polite"></div>
+</div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.147.0/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>

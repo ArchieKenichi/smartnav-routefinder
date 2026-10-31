@@ -17,7 +17,8 @@ button { cursor:pointer; border:none; background:none; padding:0; -webkit-tap-hi
 button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focus-visible { outline:2px solid var(--primary); outline-offset:2px; }
 h2, h3 { margin:0; font-weight:600; }
 .sprite { position:absolute; width:0; height:0; overflow:hidden; }
-svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; flex:0 0 auto; }
+svg:not(.leaflet-pane *) { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; flex:0 0 auto; }   /* the page's icons; never Leaflet's own SVG layers (the route, the room shapes), which size themselves */
+.leaflet-marker-icon svg { fill:none; stroke:currentColor; stroke-linecap:round; stroke-linejoin:round; }
 .sr { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
 [hidden] { display:none !important; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration:0.01ms !important; animation-duration:0.01ms !important; } }
@@ -66,12 +67,14 @@ svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:2; s
 .stephit { width:36px; height:36px; display:flex; align-items:center; justify-content:center; }
 .stepmark { width:22px; height:22px; border-radius:50%; background:var(--route); color:#fff; border:2px solid #fff; box-shadow:0 1px 3px rgba(0,0,0,.4); font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center; line-height:1; }
 .stepmark svg { width:13px; height:13px; stroke-width:2.4; }
+#app.picking #map { cursor:crosshair; } #app.picking .room-hover { cursor:crosshair; }
 .stepmark.lift { background:var(--lift); } .stepmark.stairs { background:var(--stairs); } .stepmark.arrive { background:var(--ok); } .stepmark.start { background:var(--primary); } .stepmark.pick { background:var(--ink); }
 .stepmark.current { box-shadow:0 0 0 4px rgba(245,158,11,.75), 0 1px 3px rgba(0,0,0,.4); }
 .posmark { width:44px; height:44px; display:flex; align-items:center; justify-content:center; cursor:grab; touch-action:none; position:relative; }
 .posmark .dot { width:18px; height:18px; border-radius:50%; background:var(--primary); border:3px solid #fff; box-shadow:0 0 0 3px rgba(37,99,235,.35), 0 2px 6px rgba(0,0,0,.4); }
 .posmark .dir { position:absolute; width:0; height:0; border-left:7px solid transparent; border-right:7px solid transparent; border-bottom:12px solid var(--primary); top:2px; left:15px; transform-origin:7px 20px; }
 .room-hover { cursor:pointer; }
+.chev { width:16px; height:16px; display:flex; align-items:center; justify-content:center; color:#fff; } .chev svg { width:14px; height:14px; stroke-width:2.6; fill:none; stroke:currentColor; stroke-linecap:round; stroke-linejoin:round; filter:drop-shadow(0 0 1px rgba(0,0,0,.35)); }
 
 /* 3D view furniture */
 #level { position:absolute; right:var(--gutter); top:var(--gutter); padding:5px 12px; background:rgba(15,23,42,.85); color:#fff; border-radius:var(--r-pill); font-weight:600; font-size:12px; display:none; z-index:3; }
@@ -119,6 +122,7 @@ svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:2; s
 .chip.tool.icon { width:36px; padding:0; justify-content:center; } .chip.tool.icon .lbl { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
 .suggest .lvl, .exlist .lvl, #exlm .lvl { color:var(--muted); font-size:11px; font-weight:600; background:var(--hover); border-radius:6px; padding:2px 6px; flex:0 0 auto; }
 .suggest .ico, .exlist .ico, #exlm .ico { color:var(--muted); display:flex; } .ico svg { width:18px; height:18px; }
+.suggest div.act { color:var(--primary-ink); font-weight:600; } .suggest div.act .ico { color:var(--primary-ink); } .suggest div.note { color:var(--muted); font-size:12px; cursor:default; min-height:32px; }
 .chips { display:flex; align-items:center; gap:6px; padding:8px 12px 10px; flex-wrap:wrap; }
 .chips .sp { flex:1 1 auto; }
 .chip { height:36px; padding:0 12px; border:1px solid var(--line); border-radius:var(--r-pill); background:#fff; font-size:12.5px; color:var(--muted); display:inline-flex; align-items:center; gap:6px; transition:background .15s ease, color .15s ease; }
@@ -190,13 +194,21 @@ svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:2; s
 .pc-name { flex:1 1 auto; min-width:0; font-weight:600; font-size:15px; line-height:1.3; }
 #pcclose { width:36px; height:36px; border-radius:50%; color:var(--muted); display:flex; align-items:center; justify-content:center; margin:-6px -8px 0 0; } #pcclose:hover { background:var(--hover); }
 .pc-sub { color:var(--muted); font-size:12.5px; margin-top:2px; }
+#pcphoto { display:block; width:calc(100% + 28px); max-width:none; margin:-12px -14px 10px; height:150px; object-fit:cover; border-radius:var(--r-lg) var(--r-lg) 0 0; background:var(--hover); }
+.access { display:inline-flex; align-items:flex-start; gap:6px; margin-top:8px; padding:5px 10px; border-radius:10px; font-size:12.5px; font-weight:600; line-height:1.35; background:#fef3c7; color:#92400e; }   /* amber: a key card gets you in */
+.access svg { width:15px; height:15px; flex:0 0 auto; margin-top:1px; } .access.staff, .access.closed { background:#fee2e2; color:#991b1b; } .access.info { background:var(--primary-soft); color:var(--primary-ink); font-weight:500; }
+.pc-id { margin-top:6px; font-size:11.5px; color:var(--muted); font-family:ui-monospace, SFMono-Regular, Menlo, monospace; user-select:all; }
+.name .lock { width:13px; height:13px; margin-left:5px; vertical-align:-2px; color:#b45309; display:inline-block; }
+.exlist .thumb, #exlm .thumb { width:44px; height:44px; border-radius:8px; object-fit:cover; flex:0 0 auto; margin:4px 0; background:var(--hover); }
+.acc { display:inline-flex; align-items:center; gap:4px; margin-left:8px; padding:2px 8px; border-radius:var(--r-pill); background:#fef3c7; color:#92400e; font-size:12px; font-weight:600; vertical-align:middle; white-space:nowrap; } .acc svg { width:12px; height:12px; } .acc.staff, .acc.closed { background:#fee2e2; color:#991b1b; }
 .pc-actions { display:flex; gap:8px; margin-top:10px; }
 .pc-actions button { height:40px; padding:0 14px; border-radius:var(--r-pill); border:1px solid var(--line); background:#fff; font-weight:600; display:inline-flex; align-items:center; gap:6px; color:var(--ink); }
 .pc-actions button.primary { background:var(--primary); color:#fff; border-color:var(--primary); }
 .pc-actions button:hover { filter:brightness(.97); }
 .pc-actions svg { width:18px; height:18px; }
 
-#toast { position:fixed; left:50%; top:14px; transform:translateX(-50%); z-index:1000; background:rgba(15,23,42,.92); color:#fff; padding:8px 14px; border-radius:var(--r-pill); font-size:13px; display:none; max-width:90%; word-break:break-word; }
+#toast { position:fixed; left:calc(var(--panel-w) + var(--gl) + var(--gutter)); right:calc(var(--thumb-w) + var(--gr) + var(--gutter)); bottom:calc(var(--gb) + 16px); width:fit-content; margin:0 auto; z-index:1000; background:rgba(15,23,42,.92); color:#fff; padding:8px 14px; border-radius:var(--r-pill); font-size:13px; line-height:1.4; display:none; max-width:calc(100% - var(--panel-w) - var(--thumb-w) - 2 * var(--gutter) - var(--gl) - var(--gr)); word-break:break-word; text-align:center; }   /* over the free middle of the map: never over the search fields or the 3D thumbnail */
+#app.picking #toast { background:var(--primary-ink); }
 
 /* ---------- phones and narrow windows */
 @media (max-width: 760px) {
@@ -250,7 +262,8 @@ svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:2; s
   #view3dwrap #level { top:auto; bottom:12px; right:8px; }
   #banner { top:auto; bottom:48px; right:8px; left:8px; font-size:11px; }
   #hint3d { bottom:auto; top:calc(var(--header-h, 72px) + 4px); left:50%; }
-  #placecard { bottom:calc(var(--sheet-h, 104px) + env(safe-area-inset-bottom, 0px) + 10px); width:calc(100% - 2 * var(--gutter)); }
+  #placecard { left:var(--gutter); right:var(--gutter); transform:none; bottom:calc(var(--sheet-h, 104px) + env(safe-area-inset-bottom, 0px) + 10px); width:auto; }   /* the desktop rule centres it in the free middle of the map; on a phone it spans the width above the sheet */
+  #toast { left:12px; right:72px; bottom:auto; top:calc(var(--header-h, 72px) + 4px); margin:0; max-width:none; text-align:left; }   /* a banner under the search card, clear of the level pills on the right */
   .view-3d #placecard { display:none; }
 }
 
