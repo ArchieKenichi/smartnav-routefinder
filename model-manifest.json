@@ -1,6 +1,6 @@
 {
  "model": "rtp.glb",
- "generated": "2026-10-30",
+ "generated": "2026-10-31",
  "venue": "ntu-rtp",
  "venue_name": "Research Techno Plaza (RTP)",
  "venue_package": "../hints/research-techno-plaza-with-hints.json",
@@ -365,7 +365,7 @@
     "door": 21,
     "lift": 5,
     "stairs": 7,
-    "entrance": 0,
+    "entrance": 1,
     "crossing": 78
    },
    "guessed_doors": [
@@ -377,7 +377,7 @@
     "L2-n94"
    ],
    "bridged_edges": [],
-   "triangles": 19496,
+   "triangles": 19544,
    "arrival_spots": {
     "front": 10,
     "oblique": 2
@@ -386,7 +386,7 @@
    "features": {
     "door_frames": 18,
     "frame_posts": 36,
-    "plain_openings": 15,
+    "plain_openings": 16,
     "side_panes": 1,
     "downlights": 89,
     "columns": 4,
@@ -401,7 +401,7 @@
     117.76
    ],
    "camera_path": {
-    "edges": 113,
+    "edges": 115,
     "min_clear_m": 0.33,
     "edges_under_0.3m": 0,
     "edges_under_0.3m_excluding_door_stubs": 0
@@ -4841,6 +4841,40 @@
    "room": "room 1003236913",
    "wall": "wall",
    "reason": "walk edge L2-n127-L2-n128 crosses the wall wall of room 1003236913",
+   "level": "L2"
+  },
+  {
+   "kind": "entrance",
+   "x": 25.885,
+   "y": 52.164,
+   "dir": [
+    -0.093,
+    0.996
+   ],
+   "width": 2.4,
+   "across": 1.35,
+   "cut_shift": [
+    0.373,
+    0.035
+   ],
+   "node": "L2-n129",
+   "room": "building envelope",
+   "wall": "facade",
+   "reason": "entrance node L2-n129 (0.9 m inside the outline): doorway in the curtain wall",
+   "reveal_m": [
+    -0.1,
+    0.1
+   ],
+   "sign": {
+    "nx": 0.996,
+    "ny": 0.093,
+    "face_m": 0.1,
+    "free_m": [
+     -3.0,
+     3.0
+    ],
+    "h": 2.55
+   },
    "level": "L2"
   },
   {
@@ -17627,6 +17661,6 @@
    ]
   }
  ],
- "triangles": 91207,
- "file_bytes": 4597420
+ "triangles": 91255,
+ "file_bytes": 4600012
 }

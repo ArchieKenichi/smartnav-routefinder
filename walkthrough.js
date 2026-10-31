@@ -58,7 +58,8 @@
   $('#notice').textContent = SURVEY_NOTICE; $('#notice').style.display = SURVEY_NOTICE ? 'block' : 'none';
   if (!paths) toast('camera-paths.json not found: walking the raw graph edges (run build_model.py)', 6000);
   // places: the entrances and every destination; an entrance can be the destination too (a route back out)
-  const entrancePlaces = V.entries.map((n, i) => ({ id: 'entrance:' + (i + 1), name: `Entrance ${i + 1}`, door_node: n, node: V.nodes.get(n), category: 'entrance', entrance: i + 1 }));
+  const entranceName = (node, i) => /^main entrance/i.test(node.label || '') ? 'Main entrance' : `Entrance ${i + 1}`;   // the package lists the main entrance first (the glass doors into the Level 2 foyer); the others are numbered
+  const entrancePlaces = V.entries.map((n, i) => ({ id: 'entrance:' + (i + 1), name: entranceName(V.nodes.get(n), i), door_node: n, node: V.nodes.get(n), category: 'entrance', entrance: i + 1 }));
   const Vplan = Object.assign({}, V, { dests: V.dests.concat(entrancePlaces) });
   const placeOfNode = new Map(); for (const d of V.dests) if (!placeOfNode.has(d.door_node)) placeOfNode.set(d.door_node, d); for (const e of entrancePlaces) placeOfNode.set(e.door_node, e);
   function placeFromParam(v) {   // "entrance:2", "entrance", "dest:RTP-XF-04-20", "node:L1-n21", a destination id or name
@@ -131,7 +132,7 @@
       rows.push({ id: 'note', name: which === 'from' ? 'or type any room, lift or landmark' : 'or type a room code or name, or use Explore below', category: 'note', action: 'note' });
       return rows;
     }
-    for (const e of entrancePlaces) if (`entrance ${e.entrance}`.startsWith(nq) || nq === String(e.entrance) || 'entrance'.startsWith(nq) || nq === 'exit' || 'main entrance'.startsWith(nq)) out.push(e);
+    for (const e of entrancePlaces) if (`entrance ${e.entrance}`.startsWith(nq) || nq === String(e.entrance) || 'entrance'.startsWith(nq) || nq === 'exit' || Wayfind.norm(e.name).startsWith(nq) || (nq === 'main' && e.entrance === 1)) out.push(e);
     const category = /\b(toilet|toilets|wc|loo|restroom|washroom|bathroom|handicap)\b/.test(nq);
     const hits = Wayfind.search(V, nq, { max: category ? 80 : 10, preferLevel: v3.state().level }).map(r => r.dest).filter(d => !out.includes(d));
     if (!category) return out.concat(hits).slice(0, 12);

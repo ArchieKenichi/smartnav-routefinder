@@ -9,6 +9,9 @@
  },
  "entry_points": [
   {
+   "node": "L2-n129"
+  },
+  {
    "node": "L1-n21"
   },
   {
@@ -1327,6 +1330,21 @@
    "x": 74.98,
    "y": 38.55,
    "type": "junction"
+  },
+  {
+   "id": "L2-n129",
+   "level": "L2",
+   "x": 27.3,
+   "y": 51.6,
+   "type": "entrance",
+   "label": "Main entrance (glass doors into the Foyer; exact door to confirm on site)"
+  },
+  {
+   "id": "L2-n130",
+   "level": "L2",
+   "x": 50.6,
+   "y": 37.0,
+   "type": "turn"
   },
   {
    "id": "L3-n0",
@@ -5985,6 +6003,7 @@
    "from": "L2-n30",
    "to": "L2-n38",
    "type": "walk",
+   "hint": "Pass NTUpreneur on your right",
    "hint_reverse": "Pass NTUpreneur on your left"
   },
   {
@@ -6049,7 +6068,8 @@
    "from": "L2-n18",
    "to": "L2-n30",
    "type": "walk",
-   "hint": "NTUpreneur straight ahead"
+   "hint": "NTUpreneur straight ahead",
+   "hint_reverse": "Lifts straight ahead"
   },
   {
    "from": "L2-n34",
@@ -6580,6 +6600,18 @@
    "from": "L2-n127",
    "to": "L2-n128",
    "type": "walk"
+  },
+  {
+   "from": "L2-n129",
+   "to": "L2-n130",
+   "type": "walk",
+   "hint": "Stairs straight ahead"
+  },
+  {
+   "from": "L2-n130",
+   "to": "L2-n30",
+   "type": "walk",
+   "hint_reverse": "Pass NTUpreneur on your right"
   },
   {
    "from": "L2-n25",
@@ -12066,10 +12098,11 @@
  ],
  "beacons": [],
  "build_notes": [
+  "L2: main entrance placed by hand on the foyer's glass front at (27.3, 51.6), walking across the foyer to the corridor ring at L2-n30; the exact door is to be confirmed on site",
   "L5: bridged a 12 m gap between corridor pieces at (38,20)",
   "L6: bridged a 11 m gap between corridor pieces at (33,26)",
   "L7: 2 disconnected corridor pieces remain (nearest gap 23 m)",
   "L9: bridged a 2 m gap between corridor pieces at (25,11)",
-  "hints: hint (from -> to) and hint_reverse (to -> from) drafted by hints/draft_hints.py on 2026-10-22"
+  "hints: hint (from -> to) and hint_reverse (to -> from) drafted by hints/draft_hints.py on 2026-10-31"
  ]
 }
