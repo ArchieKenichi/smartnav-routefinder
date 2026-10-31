@@ -74,6 +74,9 @@ svg:not(.leaflet-pane *) { width:20px; height:20px; fill:none; stroke:currentCol
 .posmark .dot { width:18px; height:18px; border-radius:50%; background:var(--primary); border:3px solid #fff; box-shadow:0 0 0 3px rgba(37,99,235,.35), 0 2px 6px rgba(0,0,0,.4); }
 .posmark .dir { position:absolute; width:0; height:0; border-left:7px solid transparent; border-right:7px solid transparent; border-bottom:12px solid var(--primary); top:2px; left:15px; transform-origin:7px 20px; }
 .room-hover { cursor:pointer; }
+/* a tapped room must not grow a focus ring: browsers draw it as the path's bounding box, a huge square around a room drawn at 45° */
+.leaflet-container path.leaflet-interactive:focus { outline:none; }
+.leaflet-container path.leaflet-interactive:focus-visible { stroke:var(--primary); stroke-width:3px; stroke-opacity:1; }   /* keyboard focus outlines the room itself instead */
 .chev { width:16px; height:16px; display:flex; align-items:center; justify-content:center; color:#fff; } .chev svg { width:14px; height:14px; stroke-width:2.6; fill:none; stroke:currentColor; stroke-linecap:round; stroke-linejoin:round; filter:drop-shadow(0 0 1px rgba(0,0,0,.35)); }
 
 /* 3D view furniture */
