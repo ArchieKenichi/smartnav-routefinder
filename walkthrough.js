@@ -10,7 +10,7 @@
 (async function () {
   'use strict';
   // Survey notices — blank or delete these two constants after the site walk.
-  const SURVEY_NOTICE = 'Preview built from map data; positions typically within 1 m, doors not yet surveyed.';
+  const SURVEY_NOTICE = '';   // the header used to carry "Preview built from map data; positions typically within 1 m, doors not yet surveyed."; the team asked for a clean header (the caveat stays in the README and the handover)
   const BORROWED_CAPTION = 'Corridors on this level are not in the map data yet; the route is approximate.';
   const $ = s => document.querySelector(s);
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -21,7 +21,7 @@
   const FLY_RIDE_MS = 600;        // ... and rides a lift / the stairs in this long (fade + card)
   const SWIPE_M_PER_PX = 0.04;    // sideways drag across the 3D view: metres per pixel
   const WHEEL_M_PER_PX = 0.02;    // mouse wheel over the 3D view
-  const status = m => { $('#status').textContent = m; };
+  const status = m => { const s = $('#status'); s.textContent = m; s.hidden = !m; };   // "Loading…" and load errors only; the header shows no counts once the data is in
   let toastTimer;
   function toast(msg, ms) { const t = $('#toast'); clearTimeout(toastTimer); if (!msg) { t.style.display = 'none'; return; } t.textContent = msg; t.style.display = 'block'; toastTimer = setTimeout(() => t.style.display = 'none', ms || 3500); }
   const fmtM = m => `${Math.round(m)} m`;
@@ -541,7 +541,7 @@
   }
 
   // ------------------------------------------------------------ start
-  status(`${V.dests.length} destinations · ${manifest.levels.length} levels${venueSrc.url.includes('hints') ? '' : ' · no hints'}${paths ? '' : ' · no clearance paths'}`);
+  status(venueSrc.url.includes('hints') && paths ? '' : `${venueSrc.url.includes('hints') ? '' : 'no hints'}${paths ? '' : ' no clearance paths'}`.trim());   // a quiet header; a word only when the package is incomplete
   {   // idle view before a route: look along the first entrance's corridor
     const n0 = V.nodes.get(V.entries[0]) || V.nodes.values().next().value, nb = (V.adj.get(n0.id) || []).map(a => V.nodes.get(a.to)).find(Boolean) || n0;
     v3.idleAt(n0, nb);
