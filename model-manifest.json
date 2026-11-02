@@ -1706,7 +1706,7 @@
     "hall": 914.6
    },
    "openings": {
-    "door": 23,
+    "door": 24,
     "lift": 5,
     "stairs": 4,
     "entrance": 1,
@@ -1718,15 +1718,15 @@
     "L2-n139"
    ],
    "bridged_edges": [],
-   "triangles": 27131,
+   "triangles": 27207,
    "arrival_spots": {
     "front": 14,
-    "oblique": 4
+    "oblique": 5
    },
    "arrival_fallback_blind_doors": 4,
    "features": {
-    "door_frames": 23,
-    "frame_posts": 46,
+    "door_frames": 24,
+    "frame_posts": 48,
     "plain_openings": 8,
     "side_panes": 2,
     "downlights": 48,
@@ -1742,7 +1742,7 @@
     117.76
    ],
    "camera_path": {
-    "edges": 152,
+    "edges": 153,
     "min_clear_m": 0.0,
     "edges_under_0.3m": 1,
     "edges_under_0.3m_excluding_door_stubs": 0
@@ -3922,7 +3922,7 @@
      59.39,
      27.91
     ],
-    "from_node": "L2-n160"
+    "from_node": "L2-n161"
    },
    "level": "L2"
   },
@@ -4264,6 +4264,53 @@
   },
   {
    "kind": "door",
+   "x": 63.891,
+   "y": 47.919,
+   "dir": [
+    -0.718,
+    -0.696
+   ],
+   "width": 1.2,
+   "node": "L2-n140",
+   "room": "NTUpreneur (lift lobby)",
+   "own_wall": true,
+   "destination": "L2-NTUPRENEUR-LIFT-LOBBY",
+   "corner_cut": false,
+   "wall": "wall",
+   "reason": "door node of NTUpreneur (lift lobby)",
+   "reveal_m": [
+    -0.1,
+    0.1
+   ],
+   "frame": {
+    "posts": 2,
+    "depth_m": 0.2
+   },
+   "sign": {
+    "nx": 0.696,
+    "ny": -0.718,
+    "face_m": 0.1,
+    "free_m": [
+     -3.0,
+     3.0
+    ],
+    "h": 2.55
+   },
+   "arrival": {
+    "x": 66.891,
+    "y": 47.874,
+    "distance_m": 3.0,
+    "mode": "oblique",
+    "from": [
+     64.81,
+     47.61
+    ],
+    "from_node": "L2-n58"
+   },
+   "level": "L2"
+  },
+  {
+   "kind": "door",
    "x": 79.448,
    "y": 29.067,
    "dir": [
@@ -4271,7 +4318,7 @@
     -0.713
    ],
    "width": 1.2,
-   "node": "L2-n141",
+   "node": "L2-n142",
    "room": "Meeting Room 2.1",
    "own_wall": true,
    "destination": "L2-MEETING-ROOM-2-1",
@@ -4303,7 +4350,7 @@
      80.49,
      28.57
     ],
-    "from_node": "L2-n142"
+    "from_node": "L2-n143"
    },
    "level": "L2"
   },
@@ -4316,7 +4363,7 @@
     0.713
    ],
    "width": 1.2,
-   "node": "L2-n145",
+   "node": "L2-n146",
    "room": "Seminar Room",
    "own_wall": true,
    "destination": "L2-SEMINAR-ROOM",
@@ -4351,7 +4398,7 @@
      74.85,
      38.66
     ],
-    "from_node": "L2-n146",
+    "from_node": "L2-n147",
     "fallback_blind": [
      "L2-n36"
     ]
@@ -5184,12 +5231,12 @@
    ],
    "width": 2.0,
    "edge": [
-    "L2-n140",
+    "L2-n141",
     "L2-n62"
    ],
    "room": "Executive Training Room",
    "wall": "wall",
-   "reason": "walk edge L2-n140-L2-n62 crosses the wall wall of Executive Training Room",
+   "reason": "walk edge L2-n141-L2-n62 crosses the wall wall of Executive Training Room",
    "level": "L2"
   },
   {
@@ -5202,12 +5249,12 @@
    ],
    "width": 1.75,
    "edge": [
-    "L2-n140",
+    "L2-n141",
     "L2-n62"
    ],
    "room": "room 1003236870",
    "wall": "wall",
-   "reason": "walk edge L2-n140-L2-n62 crosses the wall wall of room 1003236870",
+   "reason": "walk edge L2-n141-L2-n62 crosses the wall wall of room 1003236870",
    "level": "L2"
   },
   {
@@ -5221,11 +5268,11 @@
    "width": 1.4,
    "edge": [
     "L2-n4",
-    "L2-n154"
+    "L2-n155"
    ],
    "room": "generic 1003241009",
    "wall": "wall",
-   "reason": "walk edge L2-n4-L2-n154 crosses the wall wall of generic 1003241009",
+   "reason": "walk edge L2-n4-L2-n155 crosses the wall wall of generic 1003241009",
    "level": "L2"
   },
   {
@@ -5239,11 +5286,11 @@
    "width": 1.71,
    "edge": [
     "L2-n85",
-    "L2-n157"
+    "L2-n158"
    ],
    "room": "room 1003236883",
    "wall": "wall",
-   "reason": "walk edge L2-n85-L2-n157 crosses the wall wall of room 1003236883",
+   "reason": "walk edge L2-n85-L2-n158 crosses the wall wall of room 1003236883",
    "level": "L2"
   },
   {
@@ -5256,12 +5303,12 @@
    ],
    "width": 1.4,
    "edge": [
-    "L2-n153",
-    "L2-n154"
+    "L2-n154",
+    "L2-n155"
    ],
    "room": "generic 1003241009",
    "wall": "wall",
-   "reason": "walk edge L2-n153-L2-n154 crosses the wall wall of generic 1003241009",
+   "reason": "walk edge L2-n154-L2-n155 crosses the wall wall of generic 1003241009",
    "level": "L2"
   },
   {
@@ -5274,12 +5321,12 @@
    ],
    "width": 1.49,
    "edge": [
-    "L2-n154",
-    "L2-n155"
+    "L2-n155",
+    "L2-n156"
    ],
    "room": "generic 1003241009",
    "wall": "wall",
-   "reason": "walk edge L2-n154-L2-n155 crosses the wall wall of generic 1003241009",
+   "reason": "walk edge L2-n155-L2-n156 crosses the wall wall of generic 1003241009",
    "level": "L2"
   },
   {
@@ -5296,10 +5343,10 @@
     0.373,
     0.035
    ],
-   "node": "L2-n149",
+   "node": "L2-n150",
    "room": "building envelope",
    "wall": "facade",
-   "reason": "entrance node L2-n149 (0.9 m inside the outline): doorway in the curtain wall",
+   "reason": "entrance node L2-n150 (0.9 m inside the outline): doorway in the curtain wall",
    "reveal_m": [
     -0.1,
     0.1
@@ -8631,9 +8678,9 @@
     "L4-n102",
     "L4-n61"
    ],
-   "room": "National Integrated Centre for Evaluation [NiCE]",
+   "room": "NiCE Lab 3",
    "wall": "wall",
-   "reason": "walk edge L4-n102-L4-n61 crosses the wall wall of National Integrated Centre for Evaluation [NiCE]",
+   "reason": "walk edge L4-n102-L4-n61 crosses the wall wall of NiCE Lab 3",
    "level": "L4"
   },
   {
@@ -14473,12 +14520,17 @@
    15.53,
    2.45
   ],
-  "L2-n141": [
+  "L2-n140": [
+   64.204,
+   47.596,
+   2.45
+  ],
+  "L2-n142": [
    79.769,
    29.382,
    2.45
   ],
-  "L2-n145": [
+  "L2-n146": [
    76.045,
    37.92,
    2.45
@@ -15689,9 +15741,71 @@
    ]
   },
   {
+   "id": "L2-NTUPRENEUR-LIFT-LOBBY",
+   "name": "NTUpreneur (lift lobby)",
+   "door_node": "L2-n140",
+   "level": "L2",
+   "kind": "room",
+   "area_m2": 107.1,
+   "polygon": [
+    [
+     71.02,
+     55.79
+    ],
+    [
+     66.4,
+     51.31
+    ],
+    [
+     66.04,
+     51.68
+    ],
+    [
+     64.48,
+     50.17
+    ],
+    [
+     65.33,
+     49.31
+    ],
+    [
+     62.44,
+     46.51
+    ],
+    [
+     61.8,
+     47.16
+    ],
+    [
+     58.55,
+     44.01
+    ],
+    [
+     61.14,
+     41.37
+    ],
+    [
+     58.19,
+     38.52
+    ],
+    [
+     52.72,
+     44.08
+    ],
+    [
+     67.96,
+     58.9
+    ],
+    [
+     71.02,
+     55.79
+    ]
+   ]
+  },
+  {
    "id": "L2-EXECUTIVE-TRAINING-ROOM",
    "name": "Executive Training Room",
-   "door_node": "L2-n140",
+   "door_node": "L2-n141",
    "level": "L2",
    "kind": "room",
    "area_m2": 83.2,
@@ -15781,7 +15895,7 @@
   {
    "id": "L2-CHUA-THIAN-POH",
    "name": "Chua Thian Poh Chamber for Entrepreneurship Education",
-   "door_node": "L2-n147",
+   "door_node": "L2-n148",
    "level": "L2",
    "kind": "circulation_room",
    "area_m2": 77.8,
@@ -16062,7 +16176,7 @@
   },
   {
    "id": "RTP-BX-04-02",
-   "name": "National Integrated Centre for Evaluation [NiCE]",
+   "name": "NiCE Lab 3",
    "door_node": "L4-n102",
    "level": "L4",
    "kind": "room",
@@ -17436,7 +17550,7 @@
    "h": 2.3
   },
   {
-   "node": "L2-n140",
+   "node": "L2-n141",
    "destination": "L2-EXECUTIVE-TRAINING-ROOM",
    "level": "L2",
    "x": 48.419,
@@ -17451,7 +17565,7 @@
    "h": 2.3
   },
   {
-   "node": "L2-n143",
+   "node": "L2-n144",
    "destination": "AED-C56",
    "level": "L2",
    "x": 52.506,
@@ -17466,7 +17580,7 @@
    "h": 2.3
   },
   {
-   "node": "L2-n147",
+   "node": "L2-n148",
    "destination": "L2-CHUA-THIAN-POH",
    "level": "L2",
    "x": 47.017,
@@ -17691,6 +17805,1574 @@
    "h": 2.3
   }
  ],
+ "keycard_doors": [
+  {
+   "id": "L2-key1",
+   "level": "L2",
+   "z": 4.5,
+   "kind": "lab",
+   "label": "ANGEL (Alibaba-NTU lab)",
+   "places": [
+    "RTP-XF-02-01"
+   ],
+   "x": 40.07,
+   "y": 75.659,
+   "dir": [
+    -0.718,
+    -0.696
+   ],
+   "inward": [
+    -0.696,
+    0.718
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.203,
+    0.1
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L2-n124",
+    "L2-n123"
+   ],
+   "node": "L2-n123",
+   "reason": "the door opening on the walk L2-n124-L2-n123 into the lab, 1.5 m from the circled door"
+  },
+  {
+   "id": "L2-key2",
+   "level": "L2",
+   "z": 4.5,
+   "kind": "lab",
+   "label": "NTU Entrepreneurship Academy",
+   "places": [
+    "RTP-BX-02-00",
+    "RTP-BX-02-T1",
+    "RTP-BX-02-T2",
+    "RTP-BX-02-T3"
+   ],
+   "x": 33.41,
+   "y": 31.24,
+   "dir": [
+    0.996,
+    0.092
+   ],
+   "inward": [
+    0.092,
+    -0.996
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.1,
+    0.1
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L2-n129",
+    "L2-n73"
+   ],
+   "node": "L2-n128",
+   "reason": "the door opening on the walk L2-n129-L2-n73 into the lab, 0.4 m from the circled door"
+  },
+  {
+   "id": "L2-key3",
+   "level": "L2",
+   "z": 4.5,
+   "kind": "lab",
+   "label": "NTUpreneur (lift lobby)",
+   "places": [
+    "L2-NTUPRENEUR-LIFT-LOBBY"
+   ],
+   "x": 63.891,
+   "y": 47.919,
+   "dir": [
+    -0.718,
+    -0.696
+   ],
+   "inward": [
+    -0.696,
+    0.718
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.1,
+    0.1
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L2-n58",
+    "L2-n140"
+   ],
+   "node": "L2-n140",
+   "reason": "the door opening on the walk L2-n58-L2-n140 into the lab, 0.0 m from the circled door"
+  },
+  {
+   "id": "L2-key4",
+   "level": "L2",
+   "z": 4.5,
+   "kind": "wall",
+   "label": "NTUpreneur (lift lobby)",
+   "places": [],
+   "x": 57.086,
+   "y": 49.065,
+   "dir": [
+    -0.718,
+    -0.696
+   ],
+   "inward": [
+    0.696,
+    -0.718
+   ],
+   "width": 1.0,
+   "leaves": 1,
+   "depth": [
+    -0.1,
+    0.1
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": false,
+   "edge": null,
+   "node": null,
+   "reason": "circled 'Door here to somewhere (Access)' on the level 2 sheet, in the wall it shares with the Training Room"
+  },
+  {
+   "id": "L3-key1",
+   "level": "L3",
+   "z": 9.0,
+   "kind": "lab",
+   "label": "NCDT (Digital Trust Centre)",
+   "places": [
+    "RTP-XF-03-01",
+    "RTP-XF-03-11",
+    "RTP-XF-03-T4",
+    "RTP-XF-03-T5",
+    "RTP-XF-03-T6"
+   ],
+   "x": 63.557,
+   "y": 48.358,
+   "dir": [
+    -0.716,
+    -0.698
+   ],
+   "inward": [
+    -0.698,
+    0.716
+   ],
+   "width": 1.8,
+   "leaves": 2,
+   "depth": [
+    -0.05,
+    0.05
+   ],
+   "screen": [
+    -1.95,
+    2.08
+   ],
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L3-n13",
+    "L3-n90"
+   ],
+   "node": null,
+   "reason": "a glass screen 4.0 m from wall to wall across the walk L3-n13-L3-n90 into the lab, 1.9 m from the circled door"
+  },
+  {
+   "id": "L3-key2",
+   "level": "L3",
+   "z": 9.0,
+   "kind": "lab",
+   "label": "AUMOVIO-NTU Corporate Lab",
+   "places": [
+    "L3-AUMOVIO-NTU-CORPORATE-LAB",
+    "RTP-BX-03-04",
+    "RTP-BX-03-T1",
+    "RTP-BX-03-T2",
+    "RTP-BX-03-T3"
+   ],
+   "x": 47.354,
+   "y": 23.747,
+   "dir": [
+    0.173,
+    -0.985
+   ],
+   "inward": [
+    -0.985,
+    -0.173
+   ],
+   "width": 1.8,
+   "leaves": 2,
+   "depth": [
+    -0.05,
+    0.05
+   ],
+   "screen": [
+    -1.29,
+    1.87
+   ],
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L3-n40",
+    "L3-n5"
+   ],
+   "node": null,
+   "reason": "a glass screen 3.2 m from wall to wall across the walk L3-n40-L3-n5 into the lab, 2.5 m from the circled door"
+  },
+  {
+   "id": "L4-key1",
+   "level": "L4",
+   "z": 13.5,
+   "kind": "lab",
+   "label": "NTU Perovskite Laboratory",
+   "places": [
+    "L4-ERI-N-STAFF-OFFICE-RTP",
+    "L4-PEROVSKITE-LAB",
+    "RTP-XF-04-03",
+    "RTP-XF-04-04",
+    "RTP-XF-04-08",
+    "RTP-XF-04-09",
+    "RTP-XF-04-10",
+    "RTP-XF-04-11",
+    "RTP-XF-04-12",
+    "RTP-XF-04-12A",
+    "RTP-XF-04-12B",
+    "RTP-XF-04-12C",
+    "RTP-XF-04-14",
+    "RTP-XF-04-T4",
+    "RTP-XF-04-T5",
+    "RTP-XF-04-T6"
+   ],
+   "x": 61.838,
+   "y": 51.259,
+   "dir": [
+    -0.879,
+    -0.476
+   ],
+   "inward": [
+    -0.476,
+    0.879
+   ],
+   "width": 1.8,
+   "leaves": 2,
+   "depth": [
+    -0.05,
+    0.05
+   ],
+   "screen": [
+    -1.19,
+    1.33
+   ],
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L4-n14",
+    "L4-n44"
+   ],
+   "node": null,
+   "reason": "a glass screen 2.5 m from wall to wall across the walk L4-n14-L4-n44 into the lab, 2.1 m from the circled door"
+  },
+  {
+   "id": "L4-key2",
+   "level": "L4",
+   "z": 13.5,
+   "kind": "lab",
+   "label": "NTU Perovskite Laboratory",
+   "places": [
+    "L4-ERI-N-STAFF-OFFICE-RTP",
+    "L4-PEROVSKITE-LAB",
+    "RTP-XF-04-03",
+    "RTP-XF-04-04",
+    "RTP-XF-04-08",
+    "RTP-XF-04-09",
+    "RTP-XF-04-10",
+    "RTP-XF-04-11",
+    "RTP-XF-04-12",
+    "RTP-XF-04-12A",
+    "RTP-XF-04-12B",
+    "RTP-XF-04-12C",
+    "RTP-XF-04-14",
+    "RTP-XF-04-T4",
+    "RTP-XF-04-T5",
+    "RTP-XF-04-T6"
+   ],
+   "x": 60.86,
+   "y": 48.06,
+   "dir": [
+    0.701,
+    -0.713
+   ],
+   "inward": [
+    -0.713,
+    -0.701
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.1,
+    0.101
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L4-n129",
+    "L4-n128"
+   ],
+   "node": "L4-n128",
+   "reason": "the door opening on the walk L4-n129-L4-n128 into the lab, 3.3 m from the circled door"
+  },
+  {
+   "id": "L4-key3",
+   "level": "L4",
+   "z": 13.5,
+   "kind": "lab",
+   "label": "SCRIPTS",
+   "places": [
+    "RTP-BX-04-01",
+    "RTP-BX-04-03",
+    "RTP-BX-04-04",
+    "RTP-BX-04-05A",
+    "RTP-BX-04-06",
+    "RTP-BX-04-T1",
+    "RTP-BX-04-T2",
+    "RTP-BX-04-T3"
+   ],
+   "x": 45.41,
+   "y": 23.951,
+   "dir": [
+    -0.267,
+    -0.964
+   ],
+   "inward": [
+    -0.964,
+    0.267
+   ],
+   "width": 1.8,
+   "leaves": 2,
+   "depth": [
+    -0.05,
+    0.05
+   ],
+   "screen": [
+    -1.5,
+    1.5
+   ],
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L4-n46",
+    "L4-n18"
+   ],
+   "node": null,
+   "reason": "a free-standing glass gate 3.0 m wide across the walk L4-n46-L4-n18 into the lab, 2.7 m from the circled door"
+  },
+  {
+   "id": "L4-key4",
+   "level": "L4",
+   "z": 13.5,
+   "kind": "room",
+   "label": "NiCE lab 1",
+   "places": [
+    "RTP-XF-04-23"
+   ],
+   "x": 61.11,
+   "y": 31.7,
+   "dir": [
+    0.718,
+    0.696
+   ],
+   "inward": [
+    0.696,
+    -0.718
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.1,
+    0.101
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L4-n82",
+    "L4-n83"
+   ],
+   "node": "L4-n82",
+   "reason": "a key-card lab without a circled door: its own door"
+  },
+  {
+   "id": "L4-key5",
+   "level": "L4",
+   "z": 13.5,
+   "kind": "lab",
+   "label": "NiCE Lab 3",
+   "places": [
+    "RTP-BX-04-02"
+   ],
+   "x": 49.783,
+   "y": 13.392,
+   "dir": [
+    0.996,
+    0.092
+   ],
+   "inward": [
+    0.092,
+    -0.996
+   ],
+   "width": 1.42,
+   "leaves": 2,
+   "depth": [
+    -0.1,
+    0.1
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L4-n61",
+    "L4-n102"
+   ],
+   "node": null,
+   "reason": "the crossing opening on the walk L4-n61-L4-n102 into the lab, 0.4 m from the circled door"
+  },
+  {
+   "id": "L5-key1",
+   "level": "L5",
+   "z": 18.0,
+   "kind": "lab",
+   "label": "ERI@N",
+   "places": [
+    "L5-CHEMICAL-ROOM-RTP",
+    "L5-ERI-N-ADMIN-OFFICE-RTP",
+    "L5-ERI-N-SEM-ROOM-RTP",
+    "L5-ERI-N-STAFF-OFFICE-RTP",
+    "RTP-XF-05",
+    "RTP-XF-05-01",
+    "RTP-XF-05-05",
+    "RTP-XF-05-06",
+    "RTP-XF-05-07",
+    "RTP-XF-05-08",
+    "RTP-XF-05-10",
+    "RTP-XF-05-11",
+    "RTP-XF-05-13",
+    "RTP-XF-05-T4",
+    "RTP-XF-05-T5",
+    "RTP-XF-05-T6"
+   ],
+   "x": 62.41,
+   "y": 49.683,
+   "dir": [
+    -0.49,
+    -0.872
+   ],
+   "inward": [
+    -0.872,
+    0.49
+   ],
+   "width": 1.8,
+   "leaves": 2,
+   "depth": [
+    -0.05,
+    0.05
+   ],
+   "screen": [
+    -1.85,
+    2.07
+   ],
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L5-n6",
+    "L5-n0"
+   ],
+   "node": null,
+   "reason": "a glass screen 3.9 m from wall to wall across the walk L5-n6-L5-n0 into the lab, 1.9 m from the circled door"
+  },
+  {
+   "id": "L5-key2",
+   "level": "L5",
+   "z": 18.0,
+   "kind": "lab",
+   "label": "TL Advanced Materials Lab",
+   "places": [
+    "L5-TL-ADVANCED-MATERIALS-LAB-RTP",
+    "RTP-BX-05",
+    "RTP-BX-05-01",
+    "RTP-BX-05-04",
+    "RTP-BX-05-05",
+    "RTP-BX-05-T1",
+    "RTP-BX-05-T2",
+    "RTP-BX-05-T3"
+   ],
+   "x": 47.55,
+   "y": 25.163,
+   "dir": [
+    -0.996,
+    -0.092
+   ],
+   "inward": [
+    -0.092,
+    0.996
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.1,
+    0.1
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L5-n77",
+    "L5-n76"
+   ],
+   "node": "L5-n76",
+   "reason": "the door opening on the walk L5-n77-L5-n76 into the lab, 2.6 m from the circled door"
+  },
+  {
+   "id": "L5-key3",
+   "level": "L5",
+   "z": 18.0,
+   "kind": "lab",
+   "label": "TL Advanced Materials Lab",
+   "places": [
+    "L5-TL-ADVANCED-MATERIALS-LAB-RTP",
+    "RTP-BX-05",
+    "RTP-BX-05-01",
+    "RTP-BX-05-04",
+    "RTP-BX-05-05",
+    "RTP-BX-05-T1",
+    "RTP-BX-05-T2",
+    "RTP-BX-05-T3"
+   ],
+   "x": 47.157,
+   "y": 23.586,
+   "dir": [
+    0.098,
+    -0.995
+   ],
+   "inward": [
+    -0.995,
+    -0.098
+   ],
+   "width": 1.8,
+   "leaves": 2,
+   "depth": [
+    -0.05,
+    0.05
+   ],
+   "screen": [
+    -1.43,
+    1.72
+   ],
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L5-n77",
+    "L5-n15"
+   ],
+   "node": null,
+   "reason": "a glass screen 3.2 m from wall to wall across the walk L5-n77-L5-n15 into the lab, 3.2 m from the circled door"
+  },
+  {
+   "id": "L5-key4",
+   "level": "L5",
+   "z": 18.0,
+   "kind": "lab",
+   "label": "NiCE Lab 2",
+   "places": [
+    "RTP-BX-05-08"
+   ],
+   "x": 49.909,
+   "y": 13.403,
+   "dir": [
+    0.996,
+    0.093
+   ],
+   "inward": [
+    0.093,
+    -0.996
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.1,
+    0.1
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L5-n43",
+    "L5-n97"
+   ],
+   "node": "L5-n97",
+   "reason": "the door opening on the walk L5-n43-L5-n97 into the lab, 0.1 m from the circled door"
+  },
+  {
+   "id": "L5-key5",
+   "level": "L5",
+   "z": 18.0,
+   "kind": "room",
+   "label": "Computer Room",
+   "places": [
+    "RTP-BX-05-01"
+   ],
+   "x": 47.55,
+   "y": 25.163,
+   "dir": [
+    -0.996,
+    -0.092
+   ],
+   "inward": [
+    -0.092,
+    0.996
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.1,
+    0.1
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L5-n76",
+    "L5-n77"
+   ],
+   "node": "L5-n76",
+   "reason": "a key-card room (preview3d/places.json): its own door"
+  },
+  {
+   "id": "L5-key6",
+   "level": "L5",
+   "z": 18.0,
+   "kind": "room",
+   "label": "CNRS-International-NTU-Thales Research Alliance @ Level 5 [CINTRA]",
+   "places": [
+    "RTP-XF-05-19"
+   ],
+   "x": 57.665,
+   "y": 25.275,
+   "dir": [
+    0.718,
+    0.696
+   ],
+   "inward": [
+    0.696,
+    -0.718
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.1,
+    0.1
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L5-n112",
+    "L5-n113"
+   ],
+   "node": "L5-n112",
+   "reason": "a key-card room (preview3d/places.json): its own door"
+  },
+  {
+   "id": "L6-key1",
+   "level": "L6",
+   "z": 22.5,
+   "kind": "room",
+   "label": "RTP-BX-06",
+   "places": [
+    "L6-RTP-BX-06"
+   ],
+   "x": 41.381,
+   "y": 24.025,
+   "dir": [
+    -0.996,
+    -0.092
+   ],
+   "inward": [
+    -0.092,
+    0.996
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.1,
+    0.1
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L6-n105",
+    "L6-n38"
+   ],
+   "node": "L6-n105",
+   "reason": "a key-card room (preview3d/places.json): its own door"
+  },
+  {
+   "id": "L6-key2",
+   "level": "L6",
+   "z": 22.5,
+   "kind": "room",
+   "label": "CNRS-International-NTU-Thales Research Alliance [CINTRA]",
+   "places": [
+    "RTP-BX-06-00"
+   ],
+   "x": 38.991,
+   "y": 14.43,
+   "dir": [
+    0.093,
+    -0.996
+   ],
+   "inward": [
+    -0.996,
+    -0.093
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.1,
+    0.1
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L6-n92",
+    "L6-n93"
+   ],
+   "node": "L6-n92",
+   "reason": "a key-card room (preview3d/places.json): its own door"
+  },
+  {
+   "id": "L6-key3",
+   "level": "L6",
+   "z": 22.5,
+   "kind": "room",
+   "label": "Discussion Room",
+   "places": [
+    "RTP-BX-06-01"
+   ],
+   "x": 50.35,
+   "y": 61.85,
+   "dir": [
+    -0.701,
+    0.713
+   ],
+   "inward": [
+    0.713,
+    0.701
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.1,
+    0.1
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L6-n89",
+    "L6-n90"
+   ],
+   "node": "L6-n89",
+   "reason": "a key-card room (preview3d/places.json): its own door"
+  },
+  {
+   "id": "L6-key4",
+   "level": "L6",
+   "z": 22.5,
+   "kind": "room",
+   "label": "Discussion Room",
+   "places": [
+    "RTP-BX-06-01-2"
+   ],
+   "x": 38.574,
+   "y": 22.929,
+   "dir": [
+    -0.996,
+    -0.092
+   ],
+   "inward": [
+    -0.092,
+    0.996
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.1,
+    0.1
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L6-n104",
+    "L6-n48"
+   ],
+   "node": "L6-n104",
+   "reason": "a key-card room (preview3d/places.json): its own door"
+  },
+  {
+   "id": "L6-key5",
+   "level": "L6",
+   "z": 22.5,
+   "kind": "room",
+   "label": "Molecular Engineering",
+   "places": [
+    "RTP-BX-06-02"
+   ],
+   "x": 33.074,
+   "y": 25.908,
+   "dir": [
+    0.094,
+    -0.996
+   ],
+   "inward": [
+    -0.996,
+    -0.094
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.205,
+    0.1
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L6-n110",
+    "L6-n48"
+   ],
+   "node": "L6-n110",
+   "reason": "a key-card room (preview3d/places.json): its own door"
+  },
+  {
+   "id": "L6-key6",
+   "level": "L6",
+   "z": 22.5,
+   "kind": "room",
+   "label": "Tank / Reading / Refence Room",
+   "places": [
+    "RTP-XF-06-01"
+   ],
+   "x": 21.962,
+   "y": 83.132,
+   "dir": [
+    0.701,
+    -0.713
+   ],
+   "inward": [
+    -0.713,
+    -0.701
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.1,
+    0.1
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L6-n87",
+    "L6-n88"
+   ],
+   "node": "L6-n87",
+   "reason": "a key-card room (preview3d/places.json): its own door"
+  },
+  {
+   "id": "L6-key7",
+   "level": "L6",
+   "z": 22.5,
+   "kind": "room",
+   "label": "Clean Room",
+   "places": [
+    "RTP-XF-06-02"
+   ],
+   "x": 29.105,
+   "y": 80.294,
+   "dir": [
+    0.701,
+    -0.713
+   ],
+   "inward": [
+    -0.713,
+    -0.701
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.1,
+    0.101
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L6-n108",
+    "L6-n50"
+   ],
+   "node": "L6-n108",
+   "reason": "a key-card room (preview3d/places.json): its own door"
+  },
+  {
+   "id": "L6-key8",
+   "level": "L6",
+   "z": 22.5,
+   "kind": "room",
+   "label": "Assembly Lab",
+   "places": [
+    "RTP-XF-06-03"
+   ],
+   "x": 31.205,
+   "y": 78.158,
+   "dir": [
+    0.701,
+    -0.713
+   ],
+   "inward": [
+    -0.713,
+    -0.701
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.1,
+    0.1
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L6-n80",
+    "L6-n81"
+   ],
+   "node": "L6-n80",
+   "reason": "a key-card room (preview3d/places.json): its own door"
+  },
+  {
+   "id": "L6-key9",
+   "level": "L6",
+   "z": 22.5,
+   "kind": "room",
+   "label": "Biomaterials Lab",
+   "places": [
+    "RTP-XF-06-04"
+   ],
+   "x": 34.721,
+   "y": 74.581,
+   "dir": [
+    0.701,
+    -0.713
+   ],
+   "inward": [
+    -0.713,
+    -0.701
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.1,
+    0.1
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L6-n102",
+    "L6-n103"
+   ],
+   "node": "L6-n102",
+   "reason": "a key-card room (preview3d/places.json): its own door"
+  },
+  {
+   "id": "L6-key10",
+   "level": "L6",
+   "z": 22.5,
+   "kind": "room",
+   "label": "Materials Lab",
+   "places": [
+    "RTP-XF-06-05A"
+   ],
+   "x": 41.86,
+   "y": 67.32,
+   "dir": [
+    0.701,
+    -0.713
+   ],
+   "inward": [
+    -0.713,
+    -0.701
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.1,
+    0.1
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L6-n115",
+    "L6-n79"
+   ],
+   "node": "L6-n115",
+   "reason": "a key-card room (preview3d/places.json): its own door"
+  },
+  {
+   "id": "L6-key11",
+   "level": "L6",
+   "z": 22.5,
+   "kind": "room",
+   "label": "Darkroom - BMERC",
+   "places": [
+    "RTP-XF-06-05B"
+   ],
+   "x": 38.826,
+   "y": 70.406,
+   "dir": [
+    0.701,
+    -0.713
+   ],
+   "inward": [
+    -0.713,
+    -0.701
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.1,
+    0.1
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L6-n74",
+    "L6-n75"
+   ],
+   "node": "L6-n74",
+   "reason": "a key-card room (preview3d/places.json): its own door"
+  },
+  {
+   "id": "L6-key12",
+   "level": "L6",
+   "z": 22.5,
+   "kind": "room",
+   "label": "Sensor Lab",
+   "places": [
+    "RTP-XF-06-06"
+   ],
+   "x": 46.479,
+   "y": 62.769,
+   "dir": [
+    0.701,
+    -0.713
+   ],
+   "inward": [
+    -0.713,
+    -0.701
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.1,
+    0.1
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L6-n111",
+    "L6-n112"
+   ],
+   "node": "L6-n111",
+   "reason": "a key-card room (preview3d/places.json): its own door"
+  },
+  {
+   "id": "L6-key13",
+   "level": "L6",
+   "z": 22.5,
+   "kind": "room",
+   "label": "Grad Office",
+   "places": [
+    "RTP-XF-06-07"
+   ],
+   "x": 56.19,
+   "y": 52.75,
+   "dir": [
+    0.702,
+    -0.712
+   ],
+   "inward": [
+    -0.712,
+    -0.702
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.1,
+    0.1
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L6-n117",
+    "L6-n118"
+   ],
+   "node": "L6-n117",
+   "reason": "a key-card room (preview3d/places.json): its own door"
+  },
+  {
+   "id": "L6-key14",
+   "level": "L6",
+   "z": 22.5,
+   "kind": "room",
+   "label": "Filing",
+   "places": [
+    "RTP-XF-06-08A"
+   ],
+   "x": 61.421,
+   "y": 43.471,
+   "dir": [
+    -0.13,
+    -0.991
+   ],
+   "inward": [
+    -0.991,
+    0.13
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.126,
+    0.1
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L6-n83",
+    "L6-n84"
+   ],
+   "node": "L6-n83",
+   "reason": "a key-card room (preview3d/places.json): its own door"
+  },
+  {
+   "id": "L6-key15",
+   "level": "L6",
+   "z": 22.5,
+   "kind": "room",
+   "label": "Printing Room",
+   "places": [
+    "RTP-XF-06-14"
+   ],
+   "x": 46.488,
+   "y": 65.778,
+   "dir": [
+    -0.701,
+    0.713
+   ],
+   "inward": [
+    0.713,
+    0.701
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.1,
+    0.1
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L6-n98",
+    "L6-n99"
+   ],
+   "node": "L6-n98",
+   "reason": "a key-card room (preview3d/places.json): its own door"
+  },
+  {
+   "id": "L6-key16",
+   "level": "L6",
+   "z": 22.5,
+   "kind": "room",
+   "label": "Office 1",
+   "places": [
+    "RTP-XF-06-15"
+   ],
+   "x": 46.731,
+   "y": 68.422,
+   "dir": [
+    -0.701,
+    0.713
+   ],
+   "inward": [
+    0.713,
+    0.701
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.216,
+    0.101
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L6-n78",
+    "L6-n79"
+   ],
+   "node": "L6-n78",
+   "reason": "a key-card room (preview3d/places.json): its own door"
+  },
+  {
+   "id": "L6-key17",
+   "level": "L6",
+   "z": 22.5,
+   "kind": "room",
+   "label": "Characterisation Lab III",
+   "places": [
+    "RTP-XF-06-17A"
+   ],
+   "x": 48.299,
+   "y": 71.148,
+   "dir": [
+    -0.701,
+    0.713
+   ],
+   "inward": [
+    0.713,
+    0.701
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.204,
+    0.1
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L6-n86",
+    "L6-n24"
+   ],
+   "node": "L6-n86",
+   "reason": "a key-card room (preview3d/places.json): its own door"
+  },
+  {
+   "id": "L6-key18",
+   "level": "L6",
+   "z": 22.5,
+   "kind": "room",
+   "label": "Characterisation Lab I",
+   "places": [
+    "RTP-XF-06-18"
+   ],
+   "x": 41.173,
+   "y": 71.183,
+   "dir": [
+    -0.701,
+    0.713
+   ],
+   "inward": [
+    0.713,
+    0.701
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.1,
+    0.1
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L6-n85",
+    "L6-n55"
+   ],
+   "node": "L6-n85",
+   "reason": "a key-card room (preview3d/places.json): its own door"
+  },
+  {
+   "id": "L6-key19",
+   "level": "L6",
+   "z": 22.5,
+   "kind": "room",
+   "label": "Characterisation Lab II",
+   "places": [
+    "RTP-XF-06-18A"
+   ],
+   "x": 42.973,
+   "y": 76.904,
+   "dir": [
+    -0.701,
+    0.713
+   ],
+   "inward": [
+    0.713,
+    0.701
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.203,
+    0.101
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L6-n116",
+    "L6-n40"
+   ],
+   "node": "L6-n116",
+   "reason": "a key-card room (preview3d/places.json): its own door"
+  },
+  {
+   "id": "L6-key20",
+   "level": "L6",
+   "z": 22.5,
+   "kind": "room",
+   "label": "Bio Chem Lab",
+   "places": [
+    "RTP-XF-06-19A"
+   ],
+   "x": 30.609,
+   "y": 84.819,
+   "dir": [
+    -0.701,
+    0.713
+   ],
+   "inward": [
+    0.713,
+    0.701
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.1,
+    0.101
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L6-n106",
+    "L6-n107"
+   ],
+   "node": "L6-n106",
+   "reason": "a key-card room (preview3d/places.json): its own door"
+  },
+  {
+   "id": "L6-key21",
+   "level": "L6",
+   "z": 22.5,
+   "kind": "room",
+   "label": "Darkroom - BMERC",
+   "places": [
+    "RTP-XF-06-19B"
+   ],
+   "x": 41.59,
+   "y": 76.719,
+   "dir": [
+    -0.701,
+    0.713
+   ],
+   "inward": [
+    0.713,
+    0.701
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.101,
+    0.102
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L6-n109",
+    "L6-n40"
+   ],
+   "node": "L6-n109",
+   "reason": "a key-card room (preview3d/places.json): its own door"
+  },
+  {
+   "id": "L7-key1",
+   "level": "L7",
+   "z": 27.0,
+   "kind": "room",
+   "label": "Blackout Room",
+   "places": [
+    "RTP-BX-07-05"
+   ],
+   "x": 34.53,
+   "y": 12.133,
+   "dir": [
+    -0.996,
+    -0.093
+   ],
+   "inward": [
+    -0.093,
+    0.996
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.1,
+    0.1
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L7-n25",
+    "L7-n18"
+   ],
+   "node": "L7-n25",
+   "reason": "a key-card room (preview3d/places.json): its own door"
+  },
+  {
+   "id": "L8-key1",
+   "level": "L8",
+   "z": 31.5,
+   "kind": "room",
+   "label": "Temasek Laboratories @ NTU @ Level 8 [TL@NTU]",
+   "places": [
+    "RTP-BX-08-01"
+   ],
+   "x": 41.86,
+   "y": 32.046,
+   "dir": [
+    0.996,
+    0.092
+   ],
+   "inward": [
+    0.092,
+    -0.996
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.1,
+    0.1
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L8-n44",
+    "L8-n45"
+   ],
+   "node": "L8-n44",
+   "reason": "a key-card room (preview3d/places.json): its own door"
+  },
+  {
+   "id": "L9-key1",
+   "level": "L9",
+   "z": 36.0,
+   "kind": "room",
+   "label": "Office of Research & Technology in Defence & Security [ORTDS]",
+   "places": [
+    "RTP-BX-09-09"
+   ],
+   "x": 42.06,
+   "y": 10.553,
+   "dir": [
+    -0.996,
+    -0.092
+   ],
+   "inward": [
+    -0.092,
+    0.996
+   ],
+   "width": 1.2,
+   "leaves": 1,
+   "depth": [
+    -0.1,
+    0.1
+   ],
+   "screen": null,
+   "height": 2.2,
+   "screen_height": 3.0,
+   "opens": true,
+   "edge": [
+    "L9-n42",
+    "L9-n43"
+   ],
+   "node": "L9-n42",
+   "reason": "a key-card room (preview3d/places.json): its own door"
+  }
+ ],
  "check_points": [
   {
    "node": "L1-n32",
@@ -17768,6 +19450,6 @@
    ]
   }
  ],
- "triangles": 126118,
- "file_bytes": 6472712
+ "triangles": 126194,
+ "file_bytes": 6476624
 }

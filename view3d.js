@@ -128,6 +128,7 @@ window.View3D = function (deps) {
       marks[u.level].add(line);
     }
     marker = pin(0, 0, 0, 'next'); marker.visible = false; scene.add(marker);
+    buildKeyDoors();
   }
 
   // ------------------------------------------------------------ signs (the sign policy: unchanged from the walkthrough)
@@ -389,6 +390,7 @@ window.View3D = function (deps) {
     for (const id in labels) labels[id].visible = id === lv;
     for (const id in overlay) overlay[id].visible = id === lv;
     for (const id in marks) marks[id].visible = id === lv;
+    for (const id in keyGroup) keyGroup[id].visible = id === lv;
     $('#level').textContent = levelName(lv); $('#level').style.display = 'inline-block';
     const b = ui.borrowedFrom[lv];
     $('#banner').style.display = b && ui.borrowedCaption ? 'block' : 'none';
@@ -485,6 +487,7 @@ window.View3D = function (deps) {
     const ring = free ? plan.dest.face || R.arrive.door : R.arrive.door;   // a free destination's ring: at its face point (the tapped spot), else the point
     overlay[last.level].add(pin(ring.x, ring.y, zOf[last.level] + floorOff(last.level, ring.x, ring.y), 'dest'));   // the arrival marker: the floor ring at the door (its opening's centre) plus the sign above it
     { const fr = R.runs[R.runs.length - 1], endPt = fr.pts[fr.pts.length - 1]; buildSigns(plan, dest, endPt, free ? approachWay(R, last, endPt) : undefined); }
+    keyRoute(plan, R, dest);
     apply(0, true);
   }
   function setAlready(plan_, dest_) {   // start is the destination: show the room from where a walk to it would end, no walk
@@ -522,9 +525,10 @@ window.View3D = function (deps) {
     pitch = arrivalPitch(cx, cy, ze, door);
     camera.position.copy(toWorld(cx, cy, ze)); camera.lookAt(toWorld(cx + Math.cos(yaw) * Math.cos(pitch), cy + Math.sin(yaw) * Math.cos(pitch), ze + Math.sin(pitch)));
     lamp.position.copy(toWorld(cx, cy, ze + 1.25));
+    keyRoute(plan, null, dest, { x: cx, y: cy, level: last.level });
     return { x: cx, y: cy, level: last.level, door };
   }
-  function clear() { clearOverlays(); clearSigns(); plan = null; R = null; dest = null; arrivedHere = false; resetFade(); }
+  function clear() { clearOverlays(); clearSigns(); plan = null; R = null; dest = null; arrivedHere = false; resetFade(); keyRoute(null); }
   function setTarget(s, run, o) {   // o: {snap, fadeMs, card}
     if (!R) return; o = o || {};
     target.s = Math.max(0, Math.min(R.length, s)); target.run = Math.max(0, Math.min(R.runs.length - 1, run));
@@ -567,9 +571,10 @@ window.View3D = function (deps) {
   }
   function update(now) {
     const dt = Math.min(0.2, (now - lastNow) / 1000); lastNow = now;
-    if (free) { freeTick(dt); resize(); renderer.render(scene, api.debugCamera || camera); return; }
+    if (free) { freeTick(dt); keyTick(dt); resize(); renderer.render(scene, api.debugCamera || camera); return; }
     if (R) apply(dt, false);
     else if (arrivedHere) { lookYaw *= Math.exp(-1.5 * dt); const h = yaw + lookYaw; camera.lookAt(camera.position.x + Math.cos(h) * Math.cos(pitch), camera.position.y + Math.sin(pitch), camera.position.z - Math.sin(h) * Math.cos(pitch)); }
+    keyTick(dt);
     resize(); renderer.render(scene, api.debugCamera || camera);   // debugCamera: an alternative view for screenshots / inspection
   }
   function idleAt(n0, nb) {   // before a route: look along the first entrance's corridor
@@ -577,6 +582,143 @@ window.View3D = function (deps) {
     const ze = zOf[n0.level] + EYE + floorOff(n0.level, n0.x, n0.y);
     camera.position.copy(toWorld(n0.x, n0.y, ze)); camera.lookAt(toWorld(nb.x, nb.y, ze)); yaw = Math.atan2(nb.y - n0.y, nb.x - n0.x);
     lamp.position.copy(toWorld(n0.x, n0.y, zOf[n0.level] + EYE + 1.25));
+  }
+
+  // ------------------------------------------------------------ key-card doors (model-manifest.json keycard_doors, build_model.py)
+  // Drawn shut: a laminate leaf in a key-card room's own opening, framed glass leaves with the key-card amber band at a lab's
+  // entrance (in a glass screen from wall to wall where the lab's corridor runs on from the public one), and a card reader on
+  // the public side whose light is red. A door opens when a walk reaches it: on the route from KEY_OPEN_AHEAD_M before it to
+  // KEY_CLOSE_BEHIND_M past it, at the end of a walk to a place behind it, or within KEY_OPEN_NEAR_M when walking around
+  // yourself and facing it (or standing in the doorway). The card is tapped first (the light turns green, ui.onKeyDoor), the leaves swing in after KEY_TAP_S.
+  const KEY_OPEN_AHEAD_M = 3.2, KEY_CLOSE_BEHIND_M = 2.0, KEY_OPEN_NEAR_M = 2.2, KEY_OPEN_CONE = Math.cos(50 * Math.PI / 180), KEY_IN_DOORWAY_M = 0.9, KEY_ON_ROUTE_M = 0.9, KEY_ARRIVE_M = 6.5;
+  const KEY_TAP_S = 0.45, KEY_SWING_S = 0.9, KEY_SHUT_S = 1.4, KEY_SWING_RAD = Math.PI / 2 * 0.94, KEY_TOP = 2.98;
+  const keyDoors = [], keyGroup = {}, keyBlock = {};   // keyBlock: the screens' fixed glass, which stops you walking around yourself
+  const keyMat = {
+    leaf: new THREE.MeshStandardMaterial({ color: lin(0xd9d3c7), roughness: 0.55 }),          // a pale laminate leaf
+    vision: new THREE.MeshStandardMaterial({ color: lin(0x5d7480), roughness: 0.15, metalness: 0.2 }),
+    glass: new THREE.MeshStandardMaterial({ color: lin(0xd4e6ec), transparent: true, opacity: 0.28, roughness: 0.06, metalness: 0.1, depthWrite: false, side: THREE.DoubleSide }),
+    band: new THREE.MeshStandardMaterial({ color: lin(0xf59f00), roughness: 0.5 }),           // the key-card amber of the plans
+    frame: new THREE.MeshStandardMaterial({ color: lin(0x4a4e52), roughness: 0.45, metalness: 0.6 }),
+    metal: new THREE.MeshStandardMaterial({ color: lin(0xc9cdd0), roughness: 0.25, metalness: 0.9 }),
+    reader: new THREE.MeshStandardMaterial({ color: lin(0x22262a), roughness: 0.4 }),
+  };
+  const LED_RED = new THREE.Color(0xe03131), LED_GREEN = new THREE.Color(0x37b24d);
+  function keyBox(w, h, t, mat, x, y, z) { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, t), mat); m.position.set(x, y, z); return m; }
+  function buildKeyDoors() {   // in a door's own frame: x along dir from its centre, y up from the floor, z across (+z = the key-card side)
+    for (const id in zOf) { keyGroup[id] = new THREE.Group(); keyBlock[id] = []; scene.add(keyGroup[id]); }
+    for (const k of manifest.keycard_doors || []) {
+      if (!keyGroup[k.level]) continue;
+      const [dx, dy] = k.dir, g = new THREE.Group();
+      g.position.copy(toWorld(k.x, k.y, zOf[k.level] + floorOff(k.level, k.x, k.y)));
+      g.rotation.y = Math.atan2(dy, dx);                                    // local +x along dir; local +z is the venue (dy, -dx) side
+      const zs = (dy * k.inward[0] - dx * k.inward[1]) > 0 ? 1 : -1;      // so across-inward = zs * local z
+      const inner = new THREE.Group(); inner.scale.z = zs; g.add(inner);   // mirrored so +z points inward (BoxGeometry is symmetric)
+      const glassy = k.kind === 'lab', W = k.width, H = k.height, [n0, n1] = k.depth;
+      const T = glassy ? 0.03 : 0.045, zLeaf = k.kind === 'wall' ? (n0 + n1) / 2 : n1 - T / 2 - 0.006;
+      const leafT = k.kind === 'wall' ? (n1 - n0) + 0.03 : T;
+      const leaves = [];
+      const nL = k.leaves === 2 ? 2 : 1, len = W / nL;
+      for (let i = 0; i < nL; i++) {
+        const side = i === 0 ? -1 : 1, pivot = new THREE.Group();          // hinged at its jamb: the left leaf at -W/2, the right at +W/2
+        pivot.position.set(side * W / 2, 0, zLeaf); inner.add(pivot);
+        const leaf = new THREE.Group(); leaf.rotation.y = side < 0 ? 0 : Math.PI; pivot.add(leaf);   // in the leaf's frame +x runs from the hinge to the latch
+        const L = len - 0.012;
+        if (glassy) {
+          leaf.add(keyBox(L - 0.1, H - 0.17, 0.012, keyMat.glass, L / 2, H / 2, 0));
+          for (const [w, h, x, y] of [[L, 0.08, L / 2, 0.045], [L, 0.09, L / 2, H - 0.05], [0.05, H, 0.025, H / 2], [0.05, H, L - 0.025, H / 2]]) leaf.add(keyBox(w, h, T, keyMat.frame, x, y, 0));
+          leaf.add(keyBox(L - 0.1, 0.07, 0.016, keyMat.band, L / 2, 1.05, 0));
+          for (const zz of [-1, 1]) { const bar = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.7, 10), keyMat.metal); bar.position.set(L - 0.12, 1.1, zz * (T / 2 + 0.045)); leaf.add(bar); }
+        } else {
+          leaf.add(keyBox(L, H - 0.01, leafT, keyMat.leaf, L / 2, H / 2, 0));
+          leaf.add(keyBox(0.13, 0.7, leafT + 0.006, keyMat.vision, L - 0.28, 1.55, 0));
+          leaf.add(keyBox(0.06, 0.03, leafT + 0.012, keyMat.band, L - 0.28, 1.12, 0));
+          for (const zz of [-1, 1]) leaf.add(keyBox(0.14, 0.022, 0.022, keyMat.metal, L - 0.14, 1.02, zz * (leafT / 2 + 0.035)));
+        }
+        leaves.push({ pivot, side });
+      }
+      const fixed = [];
+      if (k.screen) {   // glass screen: side panels, the transom over the door, mullions and the head
+        const [lo, hi] = k.screen, zt = (n0 + n1) / 2;
+        for (const [a, b] of [[lo, -W / 2], [W / 2, hi]]) {
+          if (b - a < 0.05) continue;
+          fixed.push(keyBox(b - a, KEY_TOP - 0.06, 0.012, keyMat.glass, (a + b) / 2, KEY_TOP / 2, zt));
+          inner.add(keyBox(b - a, 0.07, 0.016, keyMat.band, (a + b) / 2, 1.05, zt));
+          inner.add(keyBox(b - a, 0.06, 0.06, keyMat.frame, (a + b) / 2, 0.03, zt));
+        }
+        fixed.push(keyBox(W, KEY_TOP - H - 0.08, 0.012, keyMat.glass, 0, (KEY_TOP + H) / 2, zt));
+        inner.add(keyBox(W + 0.06, 0.08, 0.07, keyMat.frame, 0, H + 0.02, zt));
+        for (const x of [lo, -W / 2, W / 2, hi]) inner.add(keyBox(0.05, KEY_TOP, 0.07, keyMat.frame, x, KEY_TOP / 2, zt));
+        for (const m of fixed) { inner.add(m); keyBlock[k.level].push(m); }
+      }
+      // the card reader on the public side, by the latch (or the other jamb where a screen has no glass beside the latch)
+      let rx = W / 2 + 0.2;
+      if (k.screen && k.screen[1] - W / 2 < 0.3) rx = k.screen[0] + W / 2 < -0.3 ? -W / 2 - 0.2 : W / 2 - 0.12;
+      const rz = (k.screen ? (n0 + n1) / 2 - 0.02 : n0) - 0.012;
+      inner.add(keyBox(0.085, 0.13, 0.022, keyMat.reader, rx, 1.1, rz));
+      const led = new THREE.Mesh(new THREE.BoxGeometry(0.034, 0.012, 0.006), new THREE.MeshBasicMaterial({ color: LED_RED.clone(), toneMapped: false }));
+      led.position.set(rx, 1.15, rz - 0.013); inner.add(led);
+      keyGroup[k.level].add(g);
+      keyDoors.push({ rec: k, group: g, leaves, led, t: 0, hold: 0, want: false, route: null, arrive: false, told: -1e9 });
+    }
+  }
+  function keyRoute(plan_, R_, destObj, already) {   // which doors this route walks through, and the one at its end
+    for (const k of keyDoors) { k.route = null; k.arrive = false; }
+    if (!plan_) return;
+    const dest_ = destObj && destObj.id, lastN = plan_.nodeOf(plan_.route.nodes[plan_.route.nodes.length - 1]);
+    let end = null;
+    if (R_) { const fr = R_.runs[R_.runs.length - 1], e = fr.pts[fr.pts.length - 1]; end = { x: e.x, y: e.y, level: fr.level }; }
+    else if (already) end = already;
+    let arriveBest = null;
+    const ids = plan_.route.nodes.map(n => typeof n === 'string' ? n : n.id), walked = new Set();
+    for (let i = 0; i + 1 < ids.length; i++) { walked.add(ids[i] + '|' + ids[i + 1]); walked.add(ids[i + 1] + '|' + ids[i]); }
+    for (const k of keyDoors) {
+      const r = k.rec;
+      if (!r.opens) continue;
+      if (R_ && r.edge && walked.has(r.edge[0] + '|' + r.edge[1])) {   // the route walks through it: where its camera path passes nearest
+        let best = null;
+        R_.runs.forEach((run, ri) => {
+          if (run.level !== r.level) return;
+          const P = run.pts;
+          for (let i = 0; i + 1 < P.length; i++) {
+            const a = P[i], b = P[i + 1], vx = b.x - a.x, vy = b.y - a.y, L2 = vx * vx + vy * vy || 1e-9;
+            const u = Math.max(0, Math.min(1, ((r.x - a.x) * vx + (r.y - a.y) * vy) / L2)), d = Math.hypot(r.x - a.x - vx * u, r.y - a.y - vy * u);
+            if (!best || d < best.d) best = { d, run: ri, s: a.s + (b.s - a.s) * u };
+          }
+        });
+        if (best && best.d <= KEY_ON_ROUTE_M + 2) k.route = { run: best.run, s: best.s };
+      }
+      if (end && end.level === r.level && (r.node === lastN.id || (dest_ && r.places.includes(dest_)))) {
+        const d = Math.hypot(end.x - r.x, end.y - r.y);
+        if (r.node === lastN.id || d <= KEY_ARRIVE_M) { if (!arriveBest || d < arriveBest.d) arriveBest = { k, d }; }
+      }
+    }
+    if (arriveBest) arriveBest.k.arrive = true;
+  }
+  function keyTick(dt) {
+    const cx = camera.position.x, cy = -camera.position.z, now = performance.now();
+    for (const k of keyDoors) {
+      const r = k.rec;
+      let want = false;
+      if (r.opens && r.level === shownLevel) {
+        if (free) {   // walking around yourself: the door you walk up to, not every door you pass in a corridor of key-card rooms
+          const dxd = r.x - cx, dyd = r.y - cy, d = Math.hypot(dxd, dyd);
+          want = d <= KEY_IN_DOORWAY_M || (d <= KEY_OPEN_NEAR_M && (dxd * Math.cos(free.yaw) + dyd * Math.sin(free.yaw)) >= KEY_OPEN_CONE * d);
+        }
+        else if (R && !fade) want = !!(k.route && view.run === k.route.run && view.s >= k.route.s - KEY_OPEN_AHEAD_M && view.s <= k.route.s + KEY_CLOSE_BEHIND_M) || (k.arrive && arrivedAtDoor());
+        else if (arrivedHere) want = k.arrive;
+      }
+      if (want && !k.want && now - k.told > 8000) { k.told = now; if (ui.onKeyDoor) ui.onKeyDoor(r); }
+      k.want = want;
+      if (want) {
+        k.hold += dt;
+        if (k.route && Math.abs(view.s - k.route.s) < 1.0 && R && !free) k.hold = Math.max(k.hold, KEY_TAP_S);   // scrubbed right up to it: no waiting in the doorway
+        if (k.hold >= KEY_TAP_S) k.t = Math.min(1, k.t + dt / KEY_SWING_S);
+      } else { k.hold = 0; k.t = Math.max(0, k.t - dt / KEY_SHUT_S); }
+      if (k.route && R && !free && Math.abs(view.s - k.route.s) < 0.6 && view.run === k.route.run) k.t = Math.max(k.t, 0.85);   // never walk through a shut leaf
+      const e = k.t * k.t * (3 - 2 * k.t), th = KEY_SWING_RAD * e;
+      for (const l of k.leaves) l.pivot.rotation.y = l.side < 0 ? -th : th;   // both swing to +z, the key-card side
+      k.led.material.color.copy(want || k.t > 0.02 ? LED_GREEN : LED_RED);
+    }
   }
 
   // ------------------------------------------------------------ free look: walk anywhere on a level yourself (Street View style)
@@ -604,7 +746,7 @@ window.View3D = function (deps) {
     let best = null;
     for (const h of FREE_RAYS_Z) {
       ray.set(toWorld(x, y, floorZ(level, x, y) + h), new THREE.Vector3(ux, 0, -uy)); ray.near = 0; ray.far = len + FREE_R;
-      const hit = ray.intersectObjects(meshesOf(level, BLOCK_MATS), false)[0];
+      const hit = ray.intersectObjects(meshesOf(level, BLOCK_MATS).concat(keyBlock[level] || []), false)[0];   // and a key-card screen's fixed glass
       if (hit && (!best || hit.distance < best.distance)) best = hit;
     }
     return best;
@@ -695,6 +837,7 @@ window.View3D = function (deps) {
     lookOffset: () => lookYaw, lookPitch: () => lookPitch, pitch: () => pitch, heading: () => yaw,
     signs: () => Object.values(labels).flatMap(g => g.children.map(s => s.userData.node)),
     state: () => ({ s: view.s, run: view.run, target: target.s, moving: moving(), transition: !!fade, level: shownLevel, arrivedHere }),
+    keyDoors: () => keyDoors.map(k => ({ id: k.rec.id, level: k.rec.level, label: k.rec.label, open: +k.t.toFixed(2), want: k.want, route: k.route, arrive: k.arrive })),
     scene, camera, renderer, labels, levelObj, debugCamera: null,
   };
   return api;

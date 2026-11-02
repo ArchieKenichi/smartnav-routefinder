@@ -9,7 +9,7 @@
  },
  "entry_points": [
   {
-   "node": "L2-n149"
+   "node": "L2-n150"
   },
   {
    "node": "L1-n32"
@@ -741,7 +741,7 @@
    "level": "L2",
    "x": 64.81,
    "y": 47.61,
-   "type": "turn"
+   "type": "junction"
   },
   {
    "id": "L2-n59",
@@ -1212,13 +1212,21 @@
   {
    "id": "L2-n140",
    "level": "L2",
+   "x": 63.89,
+   "y": 47.92,
+   "type": "door",
+   "label": "NTUpreneur (lift lobby)"
+  },
+  {
+   "id": "L2-n141",
+   "level": "L2",
    "x": 49.4,
    "y": 12.9,
    "type": "door",
    "label": "Executive Training Room"
   },
   {
-   "id": "L2-n141",
+   "id": "L2-n142",
    "level": "L2",
    "x": 79.7,
    "y": 28.81,
@@ -1226,14 +1234,14 @@
    "label": "Meeting Room 2.1"
   },
   {
-   "id": "L2-n142",
+   "id": "L2-n143",
    "level": "L2",
    "x": 80.49,
    "y": 28.57,
    "type": "turn"
   },
   {
-   "id": "L2-n143",
+   "id": "L2-n144",
    "level": "L2",
    "x": 51.94,
    "y": 18.7,
@@ -1241,14 +1249,14 @@
    "label": "AED - C56 (point of interest, no room outline)"
   },
   {
-   "id": "L2-n144",
+   "id": "L2-n145",
    "level": "L2",
    "x": 51.95,
    "y": 18.69,
    "type": "junction"
   },
   {
-   "id": "L2-n145",
+   "id": "L2-n146",
    "level": "L2",
    "x": 76.15,
    "y": 38.45,
@@ -1256,14 +1264,14 @@
    "label": "Seminar Room"
   },
   {
-   "id": "L2-n146",
+   "id": "L2-n147",
    "level": "L2",
    "x": 74.85,
    "y": 38.66,
    "type": "junction"
   },
   {
-   "id": "L2-n147",
+   "id": "L2-n148",
    "level": "L2",
    "x": 46.7,
    "y": 52.7,
@@ -1271,14 +1279,14 @@
    "label": "Chua Thian Poh Chamber for Entrepreneurship Education"
   },
   {
-   "id": "L2-n148",
+   "id": "L2-n149",
    "level": "L2",
    "x": 47.17,
    "y": 51.61,
    "type": "junction"
   },
   {
-   "id": "L2-n149",
+   "id": "L2-n150",
    "level": "L2",
    "x": 27.3,
    "y": 51.6,
@@ -1286,203 +1294,203 @@
    "label": "Main entrance"
   },
   {
-   "id": "L2-n151",
+   "id": "L2-n152",
    "level": "L2",
    "x": 60.7,
    "y": 34.96,
    "type": "junction"
   },
   {
-   "id": "L2-n152",
+   "id": "L2-n153",
    "level": "L2",
    "x": 44.2,
    "y": 55.5,
    "type": "junction"
   },
   {
-   "id": "L2-n153",
+   "id": "L2-n154",
    "level": "L2",
    "x": 31.87,
    "y": 67.32,
    "type": "junction"
   },
   {
-   "id": "L2-n154",
+   "id": "L2-n155",
    "level": "L2",
    "x": 25.51,
    "y": 72.57,
    "type": "junction"
   },
   {
-   "id": "L2-n155",
+   "id": "L2-n156",
    "level": "L2",
    "x": 27.32,
    "y": 71.84,
    "type": "junction"
   },
   {
-   "id": "L2-n156",
+   "id": "L2-n157",
    "level": "L2",
    "x": 52.5,
    "y": 23.1,
    "type": "junction"
   },
   {
-   "id": "L2-n157",
+   "id": "L2-n158",
    "level": "L2",
    "x": 28.01,
    "y": 71.24,
    "type": "turn"
   },
   {
-   "id": "L2-n158",
+   "id": "L2-n159",
    "level": "L2",
    "x": 45.45,
    "y": 54.23,
    "type": "junction"
   },
   {
-   "id": "L2-n159",
+   "id": "L2-n160",
    "level": "L2",
    "x": 55.03,
    "y": 37.93,
    "type": "turn"
   },
   {
-   "id": "L2-n160",
+   "id": "L2-n161",
    "level": "L2",
    "x": 59.39,
    "y": 27.91,
    "type": "junction"
   },
   {
-   "id": "L2-n161",
+   "id": "L2-n162",
    "level": "L2",
    "x": 33.18,
    "y": 32.06,
    "type": "junction"
   },
   {
-   "id": "L2-n162",
+   "id": "L2-n163",
    "level": "L2",
    "x": 38.5,
    "y": 45.04,
    "type": "junction"
   },
   {
-   "id": "L2-n163",
+   "id": "L2-n164",
    "level": "L2",
    "x": 47.09,
    "y": 51.53,
    "type": "junction"
   },
   {
-   "id": "L2-n164",
+   "id": "L2-n165",
    "level": "L2",
    "x": 27.75,
    "y": 51.38,
    "type": "junction"
   },
   {
-   "id": "L2-n165",
+   "id": "L2-n166",
    "level": "L2",
    "x": 40.49,
    "y": 45.22,
    "type": "junction"
   },
   {
-   "id": "L2-n166",
+   "id": "L2-n167",
    "level": "L2",
    "x": 46.97,
    "y": 44.7,
    "type": "turn"
   },
   {
-   "id": "L2-n167",
+   "id": "L2-n168",
    "level": "L2",
    "x": 49.73,
    "y": 33.9,
    "type": "turn"
   },
   {
-   "id": "L2-n168",
+   "id": "L2-n169",
    "level": "L2",
    "x": 35.98,
    "y": 53.44,
    "type": "turn"
   },
   {
-   "id": "L2-n169",
+   "id": "L2-n170",
    "level": "L2",
    "x": 32.31,
    "y": 55.57,
    "type": "turn"
   },
   {
-   "id": "L2-n170",
+   "id": "L2-n171",
    "level": "L2",
    "x": 32.74,
    "y": 43.81,
    "type": "turn"
   },
   {
-   "id": "L2-n171",
+   "id": "L2-n172",
    "level": "L2",
    "x": 35.19,
    "y": 56.18,
    "type": "turn"
   },
   {
-   "id": "L2-n172",
+   "id": "L2-n173",
    "level": "L2",
    "x": 29.81,
    "y": 59.35,
    "type": "turn"
   },
   {
-   "id": "L2-n173",
+   "id": "L2-n174",
    "level": "L2",
    "x": 36.18,
    "y": 56.27,
    "type": "turn"
   },
   {
-   "id": "L2-n174",
+   "id": "L2-n175",
    "level": "L2",
    "x": 49.8,
    "y": 37.31,
    "type": "turn"
   },
   {
-   "id": "L2-n175",
+   "id": "L2-n176",
    "level": "L2",
    "x": 36.6,
    "y": 52.8,
    "type": "turn"
   },
   {
-   "id": "L2-n176",
+   "id": "L2-n177",
    "level": "L2",
    "x": 48.95,
    "y": 36.48,
    "type": "turn"
   },
   {
-   "id": "L2-n177",
+   "id": "L2-n178",
    "level": "L2",
    "x": 30.46,
    "y": 41.72,
    "type": "turn"
   },
   {
-   "id": "L2-n178",
+   "id": "L2-n179",
    "level": "L2",
    "x": 36.84,
    "y": 38.64,
    "type": "turn"
   },
   {
-   "id": "L2-n179",
+   "id": "L2-n180",
    "level": "L2",
    "x": 37.42,
    "y": 51.45,
@@ -2794,7 +2802,7 @@
    "x": 49.9,
    "y": 13.0,
    "type": "door",
-   "label": "National Integrated Centre for Evaluation [NiCE]"
+   "label": "NiCE Lab 3"
   },
   {
    "id": "L4-n103",
@@ -5845,7 +5853,8 @@
   {
    "from": "L2-n26",
    "to": "L2-n31",
-   "type": "walk"
+   "type": "walk",
+   "hint": "Pass NTUpreneur (lift lobby) on your right"
   },
   {
    "from": "L2-n30",
@@ -6009,7 +6018,8 @@
    "from": "L2-n93",
    "to": "L2-n94",
    "type": "walk",
-   "hint_reverse": "Lifts straight ahead"
+   "hint": "Pass NTUpreneur (lift lobby) on your left",
+   "hint_reverse": "NTUpreneur (lift lobby) on your right, lifts ahead"
   },
   {
    "from": "L2-n96",
@@ -6257,230 +6267,225 @@
   },
   {
    "from": "L2-n140",
+   "to": "L2-n58",
+   "type": "walk"
+  },
+  {
+   "from": "L2-n141",
    "to": "L2-n62",
    "type": "walk"
   },
   {
    "from": "L2-n48",
-   "to": "L2-n142",
+   "to": "L2-n143",
    "type": "walk",
    "hint": "Meeting Room 2.1 on your right, stairs ahead"
   },
   {
-   "from": "L2-n141",
-   "to": "L2-n142",
+   "from": "L2-n142",
+   "to": "L2-n143",
    "type": "walk"
   },
   {
    "from": "L2-n12",
-   "to": "L2-n144",
+   "to": "L2-n145",
    "type": "walk",
    "hint": "NTUpreneur Professors' Offices straight ahead"
   },
   {
-   "from": "L2-n144",
+   "from": "L2-n145",
    "to": "L2-n5",
    "type": "walk"
   },
   {
-   "from": "L2-n143",
-   "to": "L2-n144",
+   "from": "L2-n144",
+   "to": "L2-n145",
    "type": "walk"
   },
   {
    "from": "L2-n36",
-   "to": "L2-n146",
+   "to": "L2-n147",
    "type": "walk"
   },
   {
-   "from": "L2-n146",
+   "from": "L2-n147",
    "to": "L2-n52",
    "type": "walk",
    "hint_reverse": "Seminar Room on your right, lifts ahead"
   },
   {
-   "from": "L2-n145",
-   "to": "L2-n146",
+   "from": "L2-n146",
+   "to": "L2-n147",
    "type": "walk"
   },
   {
-   "from": "L2-n148",
+   "from": "L2-n149",
    "to": "L2-n9",
    "type": "walk"
   },
   {
-   "from": "L2-n147",
-   "to": "L2-n148",
+   "from": "L2-n148",
+   "to": "L2-n149",
    "type": "walk"
   },
   {
    "from": "L2-n31",
-   "to": "L2-n151",
+   "to": "L2-n152",
    "type": "walk",
-   "hint_reverse": "Pass NTUpreneur Professors' Offices on your right"
+   "hint_reverse": "Pass NTUpreneur (lift lobby) on your left"
   },
   {
    "from": "L2-n56",
-   "to": "L2-n152",
+   "to": "L2-n153",
    "type": "walk",
    "hint": "Pass Breakout Room A on your right",
    "hint_reverse": "Pass Breakout Room A on your left"
   },
   {
    "from": "L2-n25",
-   "to": "L2-n153",
+   "to": "L2-n154",
    "type": "walk",
    "hint": "Pass Breakout Room C on your left",
    "hint_reverse": "Pass Breakout Room C on your right"
   },
   {
    "from": "L2-n4",
-   "to": "L2-n154",
+   "to": "L2-n155",
    "type": "walk"
   },
   {
    "from": "L2-n6",
-   "to": "L2-n155",
+   "to": "L2-n156",
    "type": "walk",
    "hint_reverse": "Pass ANGEL on your right, toilets ahead"
   },
   {
    "from": "L2-n5",
-   "to": "L2-n156",
+   "to": "L2-n157",
    "type": "walk",
    "hint_reverse": "Pass NTUpreneur Professors' Offices on your left"
   },
   {
    "from": "L2-n85",
-   "to": "L2-n157",
+   "to": "L2-n158",
    "type": "walk"
   },
   {
    "from": "L2-n3",
-   "to": "L2-n158",
+   "to": "L2-n159",
    "type": "walk",
    "hint_reverse": "Pass Training Room on your right"
   },
   {
    "from": "L2-n107",
-   "to": "L2-n159",
-   "type": "walk"
+   "to": "L2-n160",
+   "type": "walk",
+   "hint": "NTUpreneur (lift lobby) straight ahead"
   },
   {
    "from": "L2-n125",
-   "to": "L2-n160",
-   "type": "walk"
-  },
-  {
-   "from": "L2-n129",
    "to": "L2-n161",
    "type": "walk"
   },
   {
-   "from": "L2-n136",
+   "from": "L2-n129",
    "to": "L2-n162",
    "type": "walk"
   },
   {
-   "from": "L2-n148",
+   "from": "L2-n136",
    "to": "L2-n163",
    "type": "walk"
   },
   {
    "from": "L2-n149",
    "to": "L2-n164",
+   "type": "walk"
+  },
+  {
+   "from": "L2-n150",
+   "to": "L2-n165",
    "type": "walk",
    "hint_reverse": "Building exit straight ahead"
   },
   {
-   "from": "L2-n151",
-   "to": "L2-n156",
-   "type": "walk",
-   "hint": "Pass NTUpreneur Professors' Offices on your left",
-   "hint_reverse": "Pass NTUpreneur Professors' Offices on your right"
-  },
-  {
-   "from": "L2-n151",
-   "to": "L2-n160",
+   "from": "L2-n152",
+   "to": "L2-n157",
    "type": "walk",
    "hint": "Pass NTUpreneur Professors' Offices on your left",
    "hint_reverse": "Pass NTUpreneur Professors' Offices on your right"
   },
   {
    "from": "L2-n152",
-   "to": "L2-n166",
+   "to": "L2-n161",
+   "type": "walk",
+   "hint": "Pass NTUpreneur Professors' Offices on your left",
+   "hint_reverse": "Pass NTUpreneur Professors' Offices on your right"
+  },
+  {
+   "from": "L2-n153",
+   "to": "L2-n167",
    "type": "walk",
    "hint": "Pass Training Room on your left"
   },
   {
-   "from": "L2-n166",
-   "to": "L2-n167",
+   "from": "L2-n167",
+   "to": "L2-n168",
    "type": "walk"
   },
   {
-   "from": "L2-n167",
-   "to": "L2-n156",
+   "from": "L2-n168",
+   "to": "L2-n157",
    "type": "walk",
    "hint_reverse": "Pass NTUpreneur Professors' Offices on your right"
   },
   {
-   "from": "L2-n152",
-   "to": "L2-n158",
+   "from": "L2-n153",
+   "to": "L2-n159",
    "type": "walk",
    "hint_reverse": "Breakout Room A straight ahead"
-  },
-  {
-   "from": "L2-n152",
-   "to": "L2-n162",
-   "type": "walk",
-   "hint_reverse": "Breakout Room A straight ahead"
-  },
-  {
-   "from": "L2-n152",
-   "to": "L2-n168",
-   "type": "walk",
-   "hint": "Pass Breakout Room A on your right"
-  },
-  {
-   "from": "L2-n168",
-   "to": "L2-n164",
-   "type": "walk"
-  },
-  {
-   "from": "L2-n152",
-   "to": "L2-n165",
-   "type": "walk",
-   "hint": "Pass Training Room on your left",
-   "hint_reverse": "Pass Training Room on your right"
   },
   {
    "from": "L2-n153",
-   "to": "L2-n154",
+   "to": "L2-n163",
    "type": "walk",
-   "hint": "Pass ANGEL on your right",
-   "hint_reverse": "ANGEL on your left, Breakout Room C ahead"
+   "hint_reverse": "Breakout Room A straight ahead"
   },
   {
    "from": "L2-n153",
    "to": "L2-n169",
    "type": "walk",
-   "hint": "Pass Breakout Room C on your left"
+   "hint": "Pass Breakout Room A on your right"
   },
   {
    "from": "L2-n169",
-   "to": "L2-n170",
-   "type": "walk"
-  },
-  {
-   "from": "L2-n170",
-   "to": "L2-n161",
+   "to": "L2-n165",
    "type": "walk"
   },
   {
    "from": "L2-n153",
-   "to": "L2-n171",
+   "to": "L2-n166",
+   "type": "walk",
+   "hint": "Pass Training Room on your left",
+   "hint_reverse": "Pass Training Room on your right"
+  },
+  {
+   "from": "L2-n154",
+   "to": "L2-n155",
+   "type": "walk",
+   "hint": "Pass ANGEL on your right",
+   "hint_reverse": "ANGEL on your left, Breakout Room C ahead"
+  },
+  {
+   "from": "L2-n154",
+   "to": "L2-n170",
    "type": "walk",
    "hint": "Pass Breakout Room C on your left"
+  },
+  {
+   "from": "L2-n170",
+   "to": "L2-n171",
+   "type": "walk"
   },
   {
    "from": "L2-n171",
@@ -6488,18 +6493,18 @@
    "type": "walk"
   },
   {
-   "from": "L2-n153",
+   "from": "L2-n154",
    "to": "L2-n172",
    "type": "walk",
    "hint": "Pass Breakout Room C on your left"
   },
   {
    "from": "L2-n172",
-   "to": "L2-n164",
+   "to": "L2-n163",
    "type": "walk"
   },
   {
-   "from": "L2-n153",
+   "from": "L2-n154",
    "to": "L2-n173",
    "type": "walk",
    "hint": "Pass Breakout Room C on your left"
@@ -6507,88 +6512,83 @@
   {
    "from": "L2-n173",
    "to": "L2-n165",
+   "type": "walk"
+  },
+  {
+   "from": "L2-n154",
+   "to": "L2-n174",
+   "type": "walk",
+   "hint": "Pass Breakout Room C on your left"
+  },
+  {
+   "from": "L2-n174",
+   "to": "L2-n166",
    "type": "walk",
    "hint_reverse": "Pass Breakout Room A on your right"
   },
   {
-   "from": "L2-n154",
-   "to": "L2-n155",
+   "from": "L2-n155",
+   "to": "L2-n156",
    "type": "walk",
    "hint": "Pass ANGEL on your left",
    "hint_reverse": "Pass ANGEL on your right"
   },
   {
-   "from": "L2-n155",
-   "to": "L2-n157",
+   "from": "L2-n156",
+   "to": "L2-n158",
    "type": "walk",
    "hint": "Pass ANGEL on your left"
   },
   {
-   "from": "L2-n156",
-   "to": "L2-n160",
+   "from": "L2-n157",
+   "to": "L2-n161",
    "type": "walk",
    "hint": "Pass NTUpreneur Professors' Offices on your right",
    "hint_reverse": "Pass NTUpreneur Professors' Offices on your left"
   },
   {
-   "from": "L2-n156",
-   "to": "L2-n174",
+   "from": "L2-n157",
+   "to": "L2-n175",
    "type": "walk",
    "hint": "Pass NTUpreneur Professors' Offices on your right"
   },
   {
-   "from": "L2-n174",
-   "to": "L2-n163",
+   "from": "L2-n175",
+   "to": "L2-n164",
    "type": "walk",
    "hint_reverse": "Pass Training Room on your left, stairs ahead"
   },
   {
-   "from": "L2-n158",
-   "to": "L2-n162",
-   "type": "walk",
-   "hint": "Pass Training Room on your left",
-   "hint_reverse": "Pass Training Room on your right"
-  },
-  {
-   "from": "L2-n158",
+   "from": "L2-n159",
    "to": "L2-n163",
    "type": "walk",
    "hint": "Pass Training Room on your left",
    "hint_reverse": "Pass Training Room on your right"
   },
   {
-   "from": "L2-n158",
-   "to": "L2-n175",
-   "type": "walk",
-   "hint": "Pass Breakout Room A on your right"
-  },
-  {
-   "from": "L2-n175",
+   "from": "L2-n159",
    "to": "L2-n164",
-   "type": "walk"
-  },
-  {
-   "from": "L2-n158",
-   "to": "L2-n165",
    "type": "walk",
    "hint": "Pass Training Room on your left",
    "hint_reverse": "Pass Training Room on your right"
   },
   {
-   "from": "L2-n160",
+   "from": "L2-n159",
    "to": "L2-n176",
-   "type": "walk"
+   "type": "walk",
+   "hint": "Pass Breakout Room A on your right"
   },
   {
    "from": "L2-n176",
-   "to": "L2-n162",
-   "type": "walk",
-   "hint_reverse": "Stairs straight ahead"
+   "to": "L2-n165",
+   "type": "walk"
   },
   {
-   "from": "L2-n161",
-   "to": "L2-n162",
-   "type": "walk"
+   "from": "L2-n159",
+   "to": "L2-n166",
+   "type": "walk",
+   "hint": "Pass Training Room on your left",
+   "hint_reverse": "Pass Training Room on your right"
   },
   {
    "from": "L2-n161",
@@ -6597,11 +6597,17 @@
   },
   {
    "from": "L2-n177",
-   "to": "L2-n164",
+   "to": "L2-n163",
+   "type": "walk",
+   "hint_reverse": "Stairs straight ahead"
+  },
+  {
+   "from": "L2-n162",
+   "to": "L2-n163",
    "type": "walk"
   },
   {
-   "from": "L2-n161",
+   "from": "L2-n162",
    "to": "L2-n178",
    "type": "walk"
   },
@@ -6612,45 +6618,55 @@
   },
   {
    "from": "L2-n162",
-   "to": "L2-n163",
+   "to": "L2-n179",
    "type": "walk"
   },
   {
-   "from": "L2-n162",
+   "from": "L2-n179",
+   "to": "L2-n166",
+   "type": "walk"
+  },
+  {
+   "from": "L2-n163",
    "to": "L2-n164",
    "type": "walk"
   },
   {
-   "from": "L2-n162",
+   "from": "L2-n163",
    "to": "L2-n165",
    "type": "walk"
   },
   {
    "from": "L2-n163",
-   "to": "L2-n179",
+   "to": "L2-n166",
+   "type": "walk"
+  },
+  {
+   "from": "L2-n164",
+   "to": "L2-n180",
    "type": "walk",
    "hint": "Pass Breakout Room A on your right"
   },
   {
-   "from": "L2-n179",
-   "to": "L2-n164",
-   "type": "walk"
-  },
-  {
-   "from": "L2-n163",
+   "from": "L2-n180",
    "to": "L2-n165",
    "type": "walk"
   },
   {
    "from": "L2-n164",
-   "to": "L2-n165",
+   "to": "L2-n166",
    "type": "walk"
   },
   {
-   "from": "L2-n159",
-   "to": "L2-n151",
+   "from": "L2-n165",
+   "to": "L2-n166",
+   "type": "walk"
+  },
+  {
+   "from": "L2-n160",
+   "to": "L2-n152",
    "type": "walk",
-   "hint_reverse": "Stairs straight ahead"
+   "hint_reverse": "NTUpreneur (lift lobby) on your right, stairs ahead"
   },
   {
    "from": "L3-n4",
@@ -7181,7 +7197,7 @@
    "from": "L4-n65",
    "to": "L4-n40",
    "type": "walk",
-   "hint_reverse": "Pass Demo Room on your right, NiCE ahead"
+   "hint_reverse": "Pass Demo Room on your right"
   },
   {
    "from": "L4-n27",
@@ -7278,7 +7294,7 @@
    "from": "L4-n49",
    "to": "L4-n56",
    "type": "walk",
-   "hint_reverse": "NiCE straight ahead"
+   "hint_reverse": "NiCE Lab 3 straight ahead"
   },
   {
    "from": "L4-n50",
@@ -7387,7 +7403,7 @@
    "from": "L4-n61",
    "to": "L4-n41",
    "type": "walk",
-   "hint_reverse": "NiCE straight ahead"
+   "hint_reverse": "NiCE Lab 3 straight ahead"
   },
   {
    "from": "L4-n11",
@@ -7452,8 +7468,8 @@
    "from": "L4-n76",
    "to": "L4-n49",
    "type": "walk",
-   "hint": "Pass NiCE on your right",
-   "hint_reverse": "Pass NiCE on your left, lifts ahead"
+   "hint": "Pass NiCE Lab 3 on your right",
+   "hint_reverse": "NiCE Lab 3 on your left, lifts ahead"
   },
   {
    "from": "L4-n77",
@@ -7464,8 +7480,8 @@
    "from": "L4-n78",
    "to": "L4-n49",
    "type": "walk",
-   "hint": "Pass NiCE on your right",
-   "hint_reverse": "Pass NiCE on your left, stairs ahead"
+   "hint": "Pass NiCE Lab 3 on your right",
+   "hint_reverse": "NiCE Lab 3 on your left, stairs ahead"
   },
   {
    "from": "L4-n79",
@@ -10304,11 +10320,21 @@
    "door_node": "L2-n139"
   },
   {
+   "id": "L2-NTUPRENEUR-LIFT-LOBBY",
+   "name": "NTUpreneur (lift lobby)",
+   "aliases": [
+    "NTU Entrepreneurship Academy",
+    "NTUpreneur"
+   ],
+   "category": "lab",
+   "door_node": "L2-n140"
+  },
+  {
    "id": "L2-EXECUTIVE-TRAINING-ROOM",
    "name": "Executive Training Room",
    "aliases": [],
    "category": "room",
-   "door_node": "L2-n140"
+   "door_node": "L2-n141"
   },
   {
    "id": "L2-MEETING-ROOM-2-1",
@@ -10321,7 +10347,7 @@
     "Meeting Room 2-1"
    ],
    "category": "room",
-   "door_node": "L2-n141"
+   "door_node": "L2-n142"
   },
   {
    "id": "AED-C56",
@@ -10330,14 +10356,14 @@
     "AED-C56"
    ],
    "category": "help_point",
-   "door_node": "L2-n143"
+   "door_node": "L2-n144"
   },
   {
    "id": "L2-SEMINAR-ROOM",
    "name": "Seminar Room",
    "aliases": [],
    "category": "lecture_theatre",
-   "door_node": "L2-n145"
+   "door_node": "L2-n146"
   },
   {
    "id": "L2-CHUA-THIAN-POH",
@@ -10349,7 +10375,7 @@
     "L2-CHUA-THIAN-POH"
    ],
    "category": "room",
-   "door_node": "L2-n147"
+   "door_node": "L2-n148"
   },
   {
    "id": "RTP-BX-03-04",
@@ -10682,9 +10708,11 @@
   },
   {
    "id": "RTP-BX-04-02",
-   "name": "National Integrated Centre for Evaluation [NiCE]",
+   "name": "NiCE Lab 3",
    "aliases": [
     "BX-04-02",
+    "National Integrated Centre for Evaluation",
+    "National Integrated Centre for Evaluation [NiCE]",
     "NiCE",
     "RTP-BX-04-02"
    ],
@@ -11796,10 +11824,11 @@
   "L2: stairs at (26,18) left out of the routes: inside a key-card area (team site notes)",
   "L2: stairs at (25,109) left out of the routes: inside a key-card area (team site notes)",
   "L2: Main entrance placed by hand at (27.3, 51.6) (team site notes), 6.3 m from the corridor",
-  "L2: hall way L2-n159 sees no way across the hall that is connected; joined to L2-n151 straight",
+  "L2: hall way L2-n160 sees no way across the hall that is connected; joined to L2-n152 straight",
   "L2: open hall crossed in straight lines: 26 skeleton nodes replaced by 30 walks between 15 ways in and out",
   "L2: ANGEL (Alibaba-NTU lab) (key card) entered only at its circled door: 0 other walk(s) across its outline cut",
   "L2: NTU Entrepreneurship Academy (key card) entered only at its circled door: 0 other walk(s) across its outline cut",
+  "L2: NTUpreneur (lift lobby) (key card) entered only at its circled door: 0 other walk(s) across its outline cut",
   "L3: stairs at (23,108) left out of the routes: inside the NCDT (Digital Trust Centre) key-card area (team plans)",
   "L3: stairs at (21,92) left out of the routes: inside a key-card area (team site notes)",
   "L3: stairs at (26,18) left out of the routes: inside the AUMOVIO-NTU Corporate Lab key-card area (team plans)",
@@ -11809,11 +11838,13 @@
   "L4: stairs at (26,18) left out of the routes: inside the SCRIPTS key-card area (team plans)",
   "L4: NTU Perovskite Laboratory (key card) entered only at its circled door: 0 other walk(s) across its outline cut",
   "L4: SCRIPTS (key card) entered only at its circled door: 1 other walk(s) across its outline cut",
+  "L4: NiCE Lab 3 (key card) entered only at its circled door: 0 other walk(s) across its outline cut",
   "L5: stairs at (21,92) left out of the routes: inside a key-card area (team site notes)",
   "L5: stairs at (26,18) left out of the routes: inside the TL Advanced Materials Lab key-card area (team plans)",
   "L5: bridged a 12 m gap between corridor pieces at (38,20)",
   "L5: ERI@N (key card) entered only at its circled door: 0 other walk(s) across its outline cut",
   "L5: TL Advanced Materials Lab (key card) entered only at its circled door: 4 other walk(s) across its outline cut",
+  "L5: NiCE Lab 2 (key card) entered only at its circled door: 0 other walk(s) across its outline cut",
   "L6: stairs at (21,92) left out of the routes: inside a key-card area (team site notes)",
   "L6: bridged a 11 m gap between corridor pieces at (33,26)",
   "L9: bridged a 2 m gap between corridor pieces at (25,11)",

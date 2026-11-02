@@ -26,6 +26,10 @@
   function toast(msg, ms) { const t = $('#toast'); clearTimeout(toastTimer); if (!msg) { t.style.display = 'none'; return; } t.textContent = msg; t.style.display = 'block'; toastTimer = setTimeout(() => t.style.display = 'none', ms || 3500); }
   const fmtM = m => `${Math.round(m)} m`;
   const isPhone = () => window.matchMedia('(max-width: 760px)').matches;
+  {   // a phone's search fields are narrow: the short placeholder, so it is never cut off under the swap button
+    const mq = window.matchMedia('(max-width: 760px)'), fit = () => document.querySelectorAll('input[data-short]').forEach(i => { i.dataset.long = i.dataset.long || i.placeholder; i.placeholder = mq.matches ? i.dataset.short : i.dataset.long; });
+    fit(); mq.addEventListener('change', fit);
+  }
 
   // ------------------------------------------------------------ data
   async function fetchFirst(urls) { for (const u of urls) { try { const r = await fetch(u); if (r.ok) return { url: u, json: await r.json() }; } catch (e) {} } throw new Error('venue package not found'); }
@@ -114,7 +118,7 @@
     const app = $('#app'); app.style.setProperty('--sheet-h', (isPhone() ? sheetHeight(sheetState) : 0) + 'px');   // the sheet's target height, not its rect: it may still be sliding
     app.style.setProperty('--header-h', (isPhone() ? $('#searchcard').getBoundingClientRect().height + 16 : 0) + 'px');
   }
-  const v3 = View3D({ canvas, manifest, V, paths, ui: { headerPx, panelFrac, levelName, borrowedFrom, borrowedCaption: BORROWED_CAPTION, onFree: st => { if (v2 && v2.setFree) v2.setFree(st); } } });
+  const v3 = View3D({ canvas, manifest, V, paths, ui: { headerPx, panelFrac, levelName, borrowedFrom, borrowedCaption: BORROWED_CAPTION, onFree: st => { if (v2 && v2.setFree) v2.setFree(st); }, onKeyDoor: k => toast(k.opens === false ? '' : `Key card: the ${k.label} door opens`, 2200) } });
   let v2 = null;
   if (typeof L !== 'undefined') v2 = View2D({ el: $('#map'), levelsEl: $('#levels'), msgEl: $('#mapmsg'), plans, PLANS, levels: byFloor.map(l => ({ id: l.id, name: levelName(l.id), floor: l.floor })), esc, onScrub: (s, run, lv) => { stopFly(); setS(s, lv); }, onClickStep: i => goToStep(i), overlaps, rooms, onPickRoom: (rm, lv) => pickRoom(rm, lv), onPickPoint: (lv, x, y) => pickPoint(lv, x, y), isThumb: () => viewMode === '3d', labelOf: rm => (rm.kind === 'lift' || rm.kind === 'stairs' ? kindLabel(rm) : 'Unnamed ' + kindLabel(rm).toLowerCase()) });
   else { $('#mapmsg').textContent = 'The map library (Leaflet) could not be loaded; the 2D plan needs internet access for it once.'; $('#mapmsg').style.display = 'block'; }
@@ -156,7 +160,7 @@
     sugItems.forEach((p, i) => {
       const d = document.createElement('div'); d.className = (i === sugActive ? 'active' : '') + (p.action ? ' ' + (p.action === 'pick' ? 'act' : 'note') : ''); d.id = 'sug-' + i; d.setAttribute('aria-selected', String(i === sugActive));
       if (p.action) { d.innerHTML = p.action === 'pick' ? `<span class="ico"><svg aria-hidden="true"><use href="#i-target"/></svg></span><span class="name">${esc(p.name)}</span>` : `<span class="name">${esc(p.name)}</span>`; if (p.action === 'note') d.setAttribute('aria-disabled', 'true'); }
-      else { const a = infoOf(p).access; d.innerHTML = `<span class="ico">${icon(p)}</span><span class="name">${esc(p.name)}${a ? lockSvg(a) : ''}</span>${p.category === 'entrance' ? '' : `<span class="code">${esc(p.id)}</span>`}<span class="lvl">${esc(p.node.level)}</span>`; }
+      else { const a = infoOf(p).access; d.innerHTML = `<span class="ico">${icon(p)}</span><span class="txt"><span class="name">${esc(p.name)}${a ? lockSvg(a) : ''}</span>${p.category === 'entrance' ? '' : `<span class="code">${esc(p.id)}</span>`}</span><span class="lvl">${esc(p.node.level)}</span>`; }
       d.setAttribute('role', 'option');
       d.onmousedown = e => { e.preventDefault(); choose(sugFor, p); }; sug.appendChild(d);
     });
@@ -212,7 +216,7 @@
     const li = document.createElement('li'); li.setAttribute('role', 'button'); li.tabIndex = 0;
     li.title = p.name;
     const info = infoOf(p);
-    li.innerHTML = `<span class="ico">${icon(p)}</span><span class="name">${esc(p.name)}${info.access ? lockSvg(info.access) : ''}</span>${p.category === 'entrance' ? '' : `<span class="code">${esc(p.id.replace(/^node:/, ''))}</span>`}<span class="lvl">${esc(p.node.level)}</span>${info.photo ? `<img class="thumb" src="${esc(info.photo)}" alt="" loading="lazy">` : ''}`;
+    li.innerHTML = `<span class="ico">${icon(p)}</span><span class="txt"><span class="name">${esc(p.name)}${info.access ? lockSvg(info.access) : ''}</span>${p.category === 'entrance' ? '' : `<span class="code">${esc(p.id.replace(/^node:/, ''))}</span>`}</span><span class="lvl">${esc(p.node.level)}</span>${info.photo ? `<img class="thumb" src="${esc(info.photo)}" alt="" loading="lazy">` : ''}`;
     li.onclick = () => choose('to', p); li.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choose('to', p); } };
     return li;
   }
@@ -645,7 +649,7 @@
   });
   window.walkthrough = {
     V, manifest, places: entrancePlaces.concat(V.dests), plan: () => plan, timeline: () => R, seek: (s, lv) => setS(s, lv, { snap: true }), setS, nudge, jump, route, fly: setFly, setView,
-    showLevel: v3.showLevel, scene: v3.scene, camera: v3.camera, renderer: v3.renderer, THREE, labels: v3.labels, look: a => v3.look(a, null, true), signs: v3.signs, pitch: v3.pitch, headerPx, panelFrac, map: v2 ? v2.map : null,
+    showLevel: v3.showLevel, keyDoors: v3.keyDoors, scene: v3.scene, camera: v3.camera, renderer: v3.renderer, THREE, labels: v3.labels, look: a => v3.look(a, null, true), signs: v3.signs, pitch: v3.pitch, headerPx, panelFrac, map: v2 ? v2.map : null,
     frame: () => { const now = performance.now(); flyTick(now, 1 / 60); v3.update(now); },   // one animation step on demand (tests in a hidden pane, where requestAnimationFrame is paused)
     flyPause: ms => { fly.pauseUntil = performance.now() + (ms || 0); },   // hold the fly-through where it is (screenshots of a decision-point pause)
     setDest: id => { const d = V.dests.find(d => d.id === id) || entrancePlaces.find(e => e.id === id) || placeFromParam(id); if (d) choose('to', d); return !!d; },

@@ -1,7 +1,7 @@
 {
- "_about": "Hand-kept facts per place for the route finder. Keys: a room code (RTP-XF-05-10), a plan room id shown on an unnamed room's card as Map id (L2-p1003236572), entrance:1, or node:L1-n52 for a lift or stairs. Fields: name (labels an unnamed room or corrects a name), access (keycard | staff | closed), note (one short line shown with the place). Rooms inside a key-card lab (map/site-corrections.json restricted_zones, the team's red outlines) show the key card and 'Inside the ... key-card area' without a line here; a line here wins. Photos are not listed here: save photos/<key>.jpg and run make_shotlist.py; see photos/README.md and photos/SHOTLIST.md.",
+ "_about": "Hand-kept facts per place for the route finder. Keys: a room code (RTP-XF-05-10), a plan room id shown on an unnamed room's card as Map id (L2-p1003236572), entrance:1, or node:L1-n52 for a lift or stairs. Fields: name (labels an unnamed room or corrects a name), access (keycard | staff | closed), note (one short line shown with the place). Rooms inside a key-card lab (map/site-corrections.json restricted_zones, the team's red outlines) show the key card and 'Inside the ... key-card area' without a line here; a line here wins. Level 6: every room but the toilets, the conference room and the discussion rooms (team, 2 Nov 2026; to confirm against the team's list of names). Photos are not listed here: save photos/<key>.jpg and run make_shotlist.py; see photos/README.md and photos/SHOTLIST.md.",
  "_example": {"name": "Store room", "access": "keycard", "note": "ERI@N staff only"},
- "L2-p1003236826": {"name": "NTU Entrepreneurship Academy", "access": "keycard"},
+ "L2-NTUPRENEUR-LIFT-LOBBY": {"access": "keycard"},
  "L3-AUMOVIO-NTU-CORPORATE-LAB": {"access": "keycard"},
  "L4-ERI-N-STAFF-OFFICE-RTP": {"access": "keycard"},
  "L4-PEROVSKITE-LAB": {"access": "keycard"},
@@ -54,16 +54,20 @@
  "RTP-XF-05-11": {"access": "keycard"},
  "RTP-XF-05-19": {"access": "keycard"},
  "RTP-XF-06": {"access": "keycard"},
+ "RTP-XF-06-01": {"access": "keycard"},
  "RTP-XF-06-02": {"access": "keycard"},
  "RTP-XF-06-03": {"access": "keycard"},
  "RTP-XF-06-04": {"access": "keycard"},
  "RTP-XF-06-05A": {"access": "keycard"},
  "RTP-XF-06-05B": {"access": "keycard"},
  "RTP-XF-06-06": {"access": "keycard"},
+ "RTP-XF-06-07": {"access": "keycard"},
  "RTP-XF-06-08A": {"access": "keycard"},
  "RTP-XF-06-14": {"access": "keycard"},
+ "RTP-XF-06-15": {"access": "keycard"},
  "RTP-XF-06-17A": {"access": "keycard"},
  "RTP-XF-06-18": {"access": "keycard"},
  "RTP-XF-06-18A": {"access": "keycard"},
- "RTP-XF-06-19A": {"access": "keycard"}
+ "RTP-XF-06-19A": {"access": "keycard"},
+ "RTP-XF-06-19B": {"access": "keycard"}
 }
