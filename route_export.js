@@ -200,7 +200,7 @@
       const ride = ri > 0 ? rides.find(x => x.afterRun === ri - 1) : null;
       r.pts.forEach((p, pi) => {
         const n = p.node != null ? N[p.node] : null;
-        const w = { i: waypoints.length, level: r.level, x: +p.x.toFixed(3), y: +p.y.toFixed(3), z: zOf[r.level], s: +p.s.toFixed(2),
+        const w = { i: waypoints.length, level: r.level, x: +p.x.toFixed(3), y: +p.y.toFixed(3), z: +(zOf[r.level] + floorOffset(manifest, r.level, p.x, p.y)).toFixed(3), s: +p.s.toFixed(2),
           node: n ? n.id : '', type: n ? n.type : '', label: n ? (n.label || '').replace(/\s*\(.*\)$/, '') : '',
           action: waypoints.length === 0 ? 'start' : (pi === 0 && ride) ? ride.type : 'walk', step: stepOfEdge[p.k] };
         if (pi === 0 && ride) { w.ride_step = ride.step; ride.landing_waypoint = waypoints.length; }
@@ -234,5 +234,25 @@
     return { json, runs, rides, length, stepS, stepOfEdge, N, E, arrive };
   }
 
-  return { build, edgePath, nodePos, hasOpening, openingOf, doorPoint, arriveCut, WALK_SPEED, RIDE_S, EYE_M, ARRIVE_M, ARRIVE_NO_WALL_M, ARRIVE_MIN_WALK_M, SPOT_BEND_DEG, SPOT_NEAR_M };
+  // raised floor on a level (the model manifest's floor_offsets: level 2's steps and landing up to the Alibaba lab): the
+  // height above the level's floor at (x, y), a flat area {poly, z} or a ramp {poly, z0, z1, from, dir, len}; 0 elsewhere
+  function inRing(ring, x, y) { let c = false; for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) { const [xi, yi] = ring[i], [xj, yj] = ring[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; }
+  function floorOffset(manifest, level, x, y) {
+    const lv = manifest.levels.find(l => l.id === level);
+    for (const o of (lv && lv.floor_offsets) || []) {
+      if (!inRing(o.poly, x, y)) continue;
+      if (o.z != null) return o.z;
+      const t = Math.max(0, Math.min(1, ((x - o.from[0]) * o.dir[0] + (y - o.from[1]) * o.dir[1]) / o.len));
+      return o.z0 + t * (o.z1 - o.z0);
+    }
+    return 0;
+  }
+  // The name an entrance goes by: its label without a bracketed note ('Main entrance', 'Carpark entrance',
+  // 'Carpark lift lobby 1'), or 'Entrance <n>' (1-based) when it has none. make_shotlist.py and make_labelled.py use the same rule.
+  function entranceName(label, i) {
+    const s = String(label || '').replace(/\s*\(.*\)\s*$/, '').trim();
+    return s && !/^entrances?(\s*\d+)?$/i.test(s) ? s.charAt(0).toUpperCase() + s.slice(1) : `Entrance ${i + 1}`;
+  }
+
+  return { build, edgePath, nodePos, hasOpening, openingOf, doorPoint, arriveCut, floorOffset, entranceName, WALK_SPEED, RIDE_S, EYE_M, ARRIVE_M, ARRIVE_NO_WALL_M, ARRIVE_MIN_WALK_M, SPOT_BEND_DEG, SPOT_NEAR_M };
 });

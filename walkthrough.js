@@ -58,7 +58,7 @@
   $('#notice').textContent = SURVEY_NOTICE; $('#notice').style.display = SURVEY_NOTICE ? 'block' : 'none';
   if (!paths) toast('camera-paths.json not found: walking the raw graph edges (run build_model.py)', 6000);
   // places: the entrances and every destination; an entrance can be the destination too (a route back out)
-  const entranceName = (node, i) => /^main entrance/i.test(node.label || '') ? 'Main entrance' : `Entrance ${i + 1}`;   // the package lists the main entrance first (the glass doors into the Level 2 foyer); the others are numbered
+  const entranceName = (node, i) => RouteExport.entranceName(node && node.label, i);   // 'Main entrance' (the Level 2 foyer, listed first), 'Carpark entrance', …; unlabelled ones are numbered
   const entrancePlaces = V.entries.map((n, i) => ({ id: 'entrance:' + (i + 1), name: entranceName(V.nodes.get(n), i), door_node: n, node: V.nodes.get(n), category: 'entrance', entrance: i + 1 }));
   const Vplan = Object.assign({}, V, { dests: V.dests.concat(entrancePlaces) });
   const placeOfNode = new Map(); for (const d of V.dests) if (!placeOfNode.has(d.door_node)) placeOfNode.set(d.door_node, d); for (const e of entrancePlaces) placeOfNode.set(e.door_node, e);

@@ -98,7 +98,7 @@ window.View3D = function (deps) {
       const dpr = renderer.getPixelRatio(), rw = Math.round(Math.min(1280, window.innerWidth * dpr * 0.75)), rh = Math.round(Math.min(960, window.innerHeight * dpr * 0.75));
       for (const id in levelObj) {
         levelObj[id].traverse(o => {
-          if (!o.isMesh || !o.material || o.material.name !== 'corridor') return;
+          if (!o.isMesh || !o.material || (o.material.name !== 'corridor' && o.material.name !== 'granite')) return;   // polished floors: terrazzo corridors, level 2's granite
           const pos = o.geometry.attributes.position, idx = o.geometry.index, pts = [], top = [];
           for (let t = 0; t < idx.count; t += 3) {     // the plate's top faces (normal +Y) become the mirror plane, in the plane's local XY
             const a = idx.getX(t), b = idx.getX(t + 1), c = idx.getX(t + 2);
@@ -112,6 +112,7 @@ window.View3D = function (deps) {
           const mirror = new THREE.Reflector(g, { color: 0xd6d6d4, textureWidth: rw, textureHeight: rh, clipBias: 0.003, shader });
           mirror.rotation.x = -Math.PI / 2; mirror.position.y = Math.max(...top) + 0.004;
           mirror.material.transparent = true; mirror.material.depthWrite = false; mirror.material.name = 'corridor_reflector'; mirror.renderOrder = 0.5;
+          if (o.material.name === 'granite') { mirror.material.uniforms.strength.value = 0.1; mirror.material.uniforms.grazing.value = 0.4; }   // the foyer is tall: a softer mirror so the facades don't read as a second building underfoot
           o.parent.add(mirror);
         });
       }
@@ -214,7 +215,7 @@ window.View3D = function (deps) {
     const span = p.free ? p.free[1] - p.free[0] - 0.1 : null;   // the plate must not run through a side wall: no wider than the free span, and shifted along the wall to fit in it
     const sp = tagSprite(main, subs, bg || 'rgba(107,45,143,0.92)', p.nx != null, p.maxW || (span != null ? Math.max(0.6, Math.min(SIGN_MAX_W_M, span)) : (hanging ? SIGN_MAX_W_HANGING_M : undefined)));
     const H = sp.userData.height, h = Math.min(p.h, SIGN_TOP_MAX_M - H + SIGN_LINE_M / 2);   // a tall sign hangs lower, under the ceiling plate
-    const zc = zOf[node.level] + h + (H - SIGN_LINE_M) / 2;
+    const zc = zOf[node.level] + floorOff(node.level, p.x, p.y) + h + (H - SIGN_LINE_M) / 2;
     let px = p.x, py = p.y;
     if (p.free && p.dx != null) { const W = sp.userData.width, shift = Math.max(p.free[0] + 0.05 + W / 2, Math.min(p.free[1] - 0.05 - W / 2, 0)); px += p.dx * shift; py += p.dy * shift; sp.userData.shift = +shift.toFixed(2); }
     sp.position.copy(toWorld(px, py, zc));
@@ -398,11 +399,13 @@ window.View3D = function (deps) {
   // ------------------------------------------------------------ route overlays (ribbon, pins, decision marker)
   const ribbonMat = new THREE.MeshBasicMaterial({ color: lin(0xd62828), depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 });
   const pinMat = { start: new THREE.MeshStandardMaterial({ color: lin(0x1d4ed8) }), dest: new THREE.MeshStandardMaterial({ color: lin(0x15803d) }), next: new THREE.MeshStandardMaterial({ color: lin(0xd97706), transparent: true }) };
+  const floorOff = (level, x, y) => RouteExport.floorOffset(manifest, level, x, y);   // raised floor (level 2's steps and landing)
   function ribbon(run) {
     const pos = [], W = 0.18, z = zOf[run.level] + 0.045;
     for (let i = 0; i + 1 < run.pts.length; i++) {
       const a = run.pts[i], b = run.pts[i + 1], L = Math.hypot(b.x - a.x, b.y - a.y) || 1, nx = -(b.y - a.y) / L * W, ny = (b.x - a.x) / L * W;
-      const p = [[a.x + nx, a.y + ny], [b.x + nx, b.y + ny], [b.x - nx, b.y - ny], [a.x - nx, a.y - ny]].map(([x, y]) => [x, z, -y]);
+      const za = z + floorOff(run.level, a.x, a.y), zb = z + floorOff(run.level, b.x, b.y);
+      const p = [[a.x + nx, a.y + ny, za], [b.x + nx, b.y + ny, zb], [b.x - nx, b.y - ny, zb], [a.x - nx, a.y - ny, za]].map(([x, y, zz]) => [x, zz, -y]);
       pos.push(...p[0], ...p[1], ...p[2], ...p[0], ...p[2], ...p[3]);
     }
     const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.computeVertexNormals();
@@ -447,7 +450,7 @@ window.View3D = function (deps) {
     const elev = [[-W / 2, H / 2], [W / 2, H / 2]].map(([x, y]) => { const c = s.isSprite ? s.position.clone().setY(s.position.y + y) : new THREE.Vector3(x, y, 0).applyMatrix4(s.matrixWorld); return Math.atan2(c.y - z, Math.max(0.2, (c.x - px) * fx + (-c.z - py) * fy)); });
     const half = camera.fov / 2 * Math.PI / 180, usable = Math.atan(Math.tan(half) * (1 - 2 * ui.headerPx() / (canvas.clientHeight || 600)));
     const forSign = Math.max(0, Math.max(...elev) - usable + 0.03);
-    const ringFar = Math.atan2(zOf[door.level] + 0.05 - z, Math.hypot(door.x - px, door.y - py) + 0.55);   // the far edge of the ring
+    const ringFar = Math.atan2(zOf[door.level] + floorOff(door.level, door.x, door.y) + 0.05 - z, Math.hypot(door.x - px, door.y - py) + 0.55);   // the far edge of the ring
     return Math.max(forSign, Math.min(forSign, Math.max(0, ringFar + half - 0.02)));
   }
   function headingAt(run, s, p) {
@@ -478,9 +481,9 @@ window.View3D = function (deps) {
     const last = plan.nodeOf(plan.route.nodes[plan.route.nodes.length - 1]), free = isFree(plan);
     for (const run of R.runs) overlay[run.level].add(ribbon(run));
     const first = R.runs[0].pts[0];
-    overlay[R.runs[0].level].add(pin(first.x, first.y, zOf[R.runs[0].level], 'start'));
+    overlay[R.runs[0].level].add(pin(first.x, first.y, zOf[R.runs[0].level] + floorOff(R.runs[0].level, first.x, first.y), 'start'));
     const ring = free ? plan.dest.face || R.arrive.door : R.arrive.door;   // a free destination's ring: at its face point (the tapped spot), else the point
-    overlay[last.level].add(pin(ring.x, ring.y, zOf[last.level], 'dest'));   // the arrival marker: the floor ring at the door (its opening's centre) plus the sign above it
+    overlay[last.level].add(pin(ring.x, ring.y, zOf[last.level] + floorOff(last.level, ring.x, ring.y), 'dest'));   // the arrival marker: the floor ring at the door (its opening's centre) plus the sign above it
     { const fr = R.runs[R.runs.length - 1], endPt = fr.pts[fr.pts.length - 1]; buildSigns(plan, dest, endPt, free ? approachWay(R, last, endPt) : undefined); }
     apply(0, true);
   }
@@ -512,12 +515,13 @@ window.View3D = function (deps) {
       way = { x: -Math.cos(h), y: -Math.sin(h), back: -1.5 };
     }
     const ring = way ? plan.dest.face || door : door;
-    overlay[last.level].add(pin(ring.x, ring.y, zOf[last.level], 'dest')); buildSigns(plan, dest, { x: cx, y: cy }, way); fadeSigns(cx, -cy);
+    overlay[last.level].add(pin(ring.x, ring.y, zOf[last.level] + floorOff(last.level, ring.x, ring.y), 'dest')); buildSigns(plan, dest, { x: cx, y: cy }, way); fadeSigns(cx, -cy);
     const ds0 = destSign(), aim = ds0 ? { x: (door.x + ds0.position.x) / 2, y: (door.y - ds0.position.z) / 2 } : door;
     yaw = framed(opened || !ds0 ? Math.atan2(aim.y - cy, aim.x - cx) : Math.atan2(-ds0.position.z - cy, ds0.position.x - cx));
-    pitch = arrivalPitch(cx, cy, zOf[last.level] + EYE, door);
-    camera.position.copy(toWorld(cx, cy, zOf[last.level] + EYE)); camera.lookAt(toWorld(cx + Math.cos(yaw) * Math.cos(pitch), cy + Math.sin(yaw) * Math.cos(pitch), zOf[last.level] + EYE + Math.sin(pitch)));
-    lamp.position.copy(toWorld(cx, cy, zOf[last.level] + EYE + 1.25));
+    const ze = zOf[last.level] + EYE + floorOff(last.level, cx, cy);
+    pitch = arrivalPitch(cx, cy, ze, door);
+    camera.position.copy(toWorld(cx, cy, ze)); camera.lookAt(toWorld(cx + Math.cos(yaw) * Math.cos(pitch), cy + Math.sin(yaw) * Math.cos(pitch), ze + Math.sin(pitch)));
+    lamp.position.copy(toWorld(cx, cy, ze + 1.25));
     return { x: cx, y: cy, level: last.level, door };
   }
   function clear() { clearOverlays(); clearSigns(); plan = null; R = null; dest = null; arrivedHere = false; resetFade(); }
@@ -554,7 +558,7 @@ window.View3D = function (deps) {
     const heading = headingAt(run, view.s, p);
     if (snap) yaw = heading; else yaw += wrap(heading - yaw) * (1 - Math.exp(-TURN_RATE * dt));
     if (moving() || fade) { lookYaw *= Math.exp(-2.5 * dt); lookPitch *= Math.exp(-2.5 * dt); }          // moving again eases the view back onto the route
-    const z = zOf[run.level] + EYE, h = yaw + lookYaw;
+    const z = zOf[run.level] + EYE + floorOff(run.level, p.x, p.y), h = yaw + lookYaw;
     camera.position.set(p.x, z, -p.y);
     const pt = (arrivedAtDoor() ? arrivalPitch(p.x, p.y, z, R.arrive.door) : 0) + lookPitch; pitch = snap ? pt : pitch + (pt - pitch) * (1 - Math.exp(-6 * dt));
     camera.lookAt(p.x + Math.cos(h) * Math.cos(pitch), z + Math.sin(pitch), -(p.y + Math.sin(h) * Math.cos(pitch)));
@@ -569,7 +573,8 @@ window.View3D = function (deps) {
   }
   function idleAt(n0, nb) {   // before a route: look along the first entrance's corridor
     showLevel(n0.level);
-    camera.position.copy(toWorld(n0.x, n0.y, zOf[n0.level] + EYE)); camera.lookAt(toWorld(nb.x, nb.y, zOf[n0.level] + EYE)); yaw = Math.atan2(nb.y - n0.y, nb.x - n0.x);
+    const ze = zOf[n0.level] + EYE + floorOff(n0.level, n0.x, n0.y);
+    camera.position.copy(toWorld(n0.x, n0.y, ze)); camera.lookAt(toWorld(nb.x, nb.y, ze)); yaw = Math.atan2(nb.y - n0.y, nb.x - n0.x);
     lamp.position.copy(toWorld(n0.x, n0.y, zOf[n0.level] + EYE + 1.25));
   }
   const api = {

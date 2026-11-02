@@ -1,7 +1,7 @@
 {
  "venue": "ntu-rtp",
  "name": "Research Techno Plaza (RTP)",
- "generated": "2026-10-20",
+ "generated": "2026-11-02",
  "source": "MazeMap building 1014912 (map/source/mazemap/), rendered by plans2d/render_plans.py",
  "frame": {
   "note": "Same frame as map/research-techno-plaza.json: x = metres east, y = metres north of geo_origin (SW corner of the building outline's bounding box). All levels share one canvas.",
@@ -98,16 +98,15 @@
     ]
    },
    "content": {
-    "corridors": 0,
-    "rooms": 106,
-    "labelled_rooms": 11,
+    "corridors": 12,
+    "rooms": 100,
+    "labelled_rooms": 14,
     "lifts": 5,
     "stairs": 7
    },
    "notes": [
-    "MazeMap has no corridor polygons for this floor; only rooms, lifts and stairs are drawn. No corridors were invented.",
-    "The route graph for this level (map/research-techno-plaza.json) was built on corridors copied from floor 3, so on this plan it runs through the foyer and rooms rather than along drawn corridors.",
-    "Labels that do not fit their room and were left off: Breakout Room A; Breakout Room B; Breakout Room D; Breakout Room E; Breakout Room F; Handicap Toilet; Male Toilet; NTU Entrepreneurship Academy [NTUpreneur]; The Alibaba-NTU Global e-Sustainability CorpLab [ANGEL]"
+    "MazeMap has no corridors for this level; the walkways drawn here (the foyer, the lift lobbies, the landing at the top of the steps, the Chua Thian Poh Chamber lobby) and several names come from the team's site notes (map/site-corrections.json).",
+    "Labels that do not fit their room and were left off: Breakout Room A; Breakout Room B; Breakout Room D; Breakout Room E; Breakout Room F; Chua Thian Poh Chamber for Entrepreneurship Education; Executive Training Room; Handicap Toilet; Male Toilet; NTU Entrepreneurship Academy [NTUpreneur]"
    ]
   },
   {
