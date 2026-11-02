@@ -397,7 +397,7 @@ window.View3D = function (deps) {
   }
 
   // ------------------------------------------------------------ route overlays (ribbon, pins, decision marker)
-  const ribbonMat = new THREE.MeshBasicMaterial({ color: lin(0xd62828), depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 });
+  const ribbonMat = new THREE.MeshBasicMaterial({ color: lin(0xd62828), side: THREE.DoubleSide, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 });   // double-sided: the strip's quads wind clockwise seen from above (before, only its mirror image showed, on the polished floors)
   const pinMat = { start: new THREE.MeshStandardMaterial({ color: lin(0x1d4ed8) }), dest: new THREE.MeshStandardMaterial({ color: lin(0x15803d) }), next: new THREE.MeshStandardMaterial({ color: lin(0xd97706), transparent: true }) };
   const floorOff = (level, x, y) => RouteExport.floorOffset(manifest, level, x, y);   // raised floor (level 2's steps and landing)
   function ribbon(run) {

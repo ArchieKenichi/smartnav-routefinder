@@ -67,7 +67,8 @@
     "rooms": 40,
     "labelled_rooms": 0,
     "lifts": 5,
-    "stairs": 3
+    "stairs": 3,
+    "roof_m2": 0
    },
    "notes": [
     "MazeMap has no room names for this floor, so there are no labels."
@@ -100,13 +101,15 @@
    "content": {
     "corridors": 12,
     "rooms": 100,
-    "labelled_rooms": 14,
+    "labelled_rooms": 15,
     "lifts": 5,
-    "stairs": 7
+    "stairs": 7,
+    "roof_m2": 0
    },
    "notes": [
     "MazeMap has no corridors for this level; the walkways drawn here (the foyer, the lift lobbies, the landing at the top of the steps, the Chua Thian Poh Chamber lobby) and several names come from the team's site notes (map/site-corrections.json).",
-    "Labels that do not fit their room and were left off: Breakout Room A; Breakout Room B; Breakout Room D; Breakout Room E; Breakout Room F; Chua Thian Poh Chamber for Entrepreneurship Education; Executive Training Room; Handicap Toilet; Male Toilet; NTU Entrepreneurship Academy [NTUpreneur]"
+    "Labels that do not fit their room and were left off: Breakout Room A; Breakout Room B; Breakout Room D; Breakout Room E; Breakout Room F; Chua Thian Poh Chamber for Entrepreneurship Education; Executive Training Room; Handicap Toilet; Male Toilet",
+    "Labels shortened to fit: NTU Entrepreneurship Academy [NTUpreneur] as \"NTUpreneur\""
    ]
   },
   {
@@ -136,12 +139,14 @@
    "content": {
     "corridors": 14,
     "rooms": 101,
-    "labelled_rooms": 12,
+    "labelled_rooms": 13,
     "lifts": 5,
-    "stairs": 6
+    "stairs": 6,
+    "roof_m2": 0
    },
    "notes": [
-    "Labels that do not fit their room and were left off: Handicap Toilet; Male Toilet; National Centre for Research in Digital Trust [NCDT]"
+    "Labels that do not fit their room and were left off: Handicap Toilet; Male Toilet",
+    "Labels shortened to fit: National Centre for Research in Digital Trust [NCDT] as \"NCDT\""
    ]
   },
   {
@@ -171,12 +176,14 @@
    "content": {
     "corridors": 14,
     "rooms": 114,
-    "labelled_rooms": 27,
+    "labelled_rooms": 28,
     "lifts": 5,
-    "stairs": 5
+    "stairs": 5,
+    "roof_m2": 0
    },
    "notes": [
-    "Labels that do not fit their room and were left off: Handicap Toilet; Male Toilet; Strategic Centre for Research in Privacy-Preserving Technologies & System [SCRIPTS]"
+    "Labels that do not fit their room and were left off: Handicap Toilet; Male Toilet",
+    "Labels shortened to fit: Strategic Centre for Research in Privacy-Preserving Technologies & System [SCRIPTS] as \"SCRIPTS\""
    ]
   },
   {
@@ -206,12 +213,14 @@
    "content": {
     "corridors": 12,
     "rooms": 96,
-    "labelled_rooms": 26,
+    "labelled_rooms": 27,
     "lifts": 5,
-    "stairs": 5
+    "stairs": 5,
+    "roof_m2": 0
    },
    "notes": [
-    "Labels that do not fit their room and were left off: CNRS-International-NTU-Thales Research Alliance @ Level 5 [CINTRA]; Compressor Room; Cylinder Room; Handicap Toilet; Male Toilet; Translational Materials Innovation Group [TMIG] Lab"
+    "Labels that do not fit their room and were left off: Compressor Room; Cylinder Room; Handicap Toilet; Male Toilet; Translational Materials Innovation Group [TMIG] Lab",
+    "Labels shortened to fit: CNRS-International-NTU-Thales Research Alliance @ Level 5 [CINTRA] as \"CINTRA\""
    ]
   },
   {
@@ -239,17 +248,17 @@
     ]
    },
    "content": {
-    "corridors": 0,
-    "rooms": 32,
-    "labelled_rooms": 23,
-    "lifts": 0,
-    "stairs": 0
+    "corridors": 12,
+    "rooms": 73,
+    "labelled_rooms": 26,
+    "lifts": 5,
+    "stairs": 4,
+    "roof_m2": 452.0
    },
    "notes": [
-    "MazeMap has no corridor polygons for this floor; only rooms, lifts and stairs are drawn. No corridors were invented.",
-    "No lift or stair polygons in MazeMap for this floor.",
-    "The route graph for this level was built on corridors, lifts and stairs copied from floor 5; this plan shows only floor 6's own rooms, so the graph will not sit on drawn corridors.",
-    "Labels that do not fit their room and were left off: CNRS-International-NTU-Thales Research Alliance [CINTRA]; Characterisation Lab I; Characterisation Lab II; Characterisation Lab III; Discussion Room; Handicap Toilet; Male Toilet; Tank / Reading / Refence Room"
+    "MazeMap draws this level as loose rooms only. Its corridors, lifts and stairs are level 5's, cut back where level 6's rooms stand; rooms are copied only where floors 3-5 agree; area 2 is set back to its roof's outline; the undivided space in area 1 is CINTRA's restricted area (team notes; map/derive_level6.py writes these into map/site-corrections.json). Blue: the glass sides of the link from area 1 to area 2. Hatched: the roof of level 5.",
+    "Labels that do not fit their room and were left off: Characterisation Lab I; Characterisation Lab II; Characterisation Lab III; Discussion Room; Handicap Toilet; Male Toilet; Tank / Reading / Refence Room",
+    "Labels shortened to fit: Center for Sustainable Materials (SusMat-B2R2) as \"SusMat-B2R2\""
    ]
   },
   {
@@ -277,13 +286,15 @@
     ]
    },
    "content": {
-    "corridors": 8,
-    "rooms": 39,
-    "labelled_rooms": 5,
+    "corridors": 5,
+    "rooms": 33,
+    "labelled_rooms": 6,
     "lifts": 2,
-    "stairs": 4
+    "stairs": 2,
+    "roof_m2": 1470.3
    },
    "notes": [
+    "Floors 7-9 are area 1 only (team). Hatched: the roof of area 2, whose top floor is 6, with its rooflight, lantern, lift overruns, plant and stair housings (MazeMap draws them as level 7).",
     "Labels that do not fit their room and were left off: Discussion Room 1 - SRC II; Discussion Room 2 - SRC II; Handicap Toilet"
    ]
   },
@@ -316,7 +327,8 @@
     "rooms": 23,
     "labelled_rooms": 3,
     "lifts": 2,
-    "stairs": 2
+    "stairs": 2,
+    "roof_m2": 0
    },
    "notes": [
     "MazeMap corridor data for this floor is fragmentary (45 m2); only those fragments are drawn.",
@@ -351,12 +363,14 @@
    "content": {
     "corridors": 6,
     "rooms": 32,
-    "labelled_rooms": 2,
+    "labelled_rooms": 4,
     "lifts": 2,
-    "stairs": 2
+    "stairs": 2,
+    "roof_m2": 0
    },
    "notes": [
-    "Labels that do not fit their room and were left off: Female Toilet; Handicap Toilet; Male Toilet; Office of Research & Technology in Defence & Security [ORTDS]; Temasek Laboratories @ NTU [TL@NTU]"
+    "Labels that do not fit their room and were left off: Female Toilet; Handicap Toilet; Male Toilet",
+    "Labels shortened to fit: Office of Research & Technology in Defence & Security [ORTDS] as \"ORTDS\"; Temasek Laboratories @ NTU [TL@NTU] as \"TL@NTU\""
    ]
   }
  ]

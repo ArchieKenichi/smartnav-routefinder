@@ -86,7 +86,7 @@
   },
   {
    "id": "L6",
-   "name": "Level 6 (corridors and cores copied from floor 5)",
+   "name": "Level 6",
    "floor": 6,
    "plan": {
     "image": "plans/L6.png",
@@ -3899,424 +3899,423 @@
   {
    "id": "L6-n0",
    "level": "L6",
-   "x": 61.74,
-   "y": 50.06,
+   "x": 33.94,
+   "y": 78.39,
    "type": "turn"
   },
   {
    "id": "L6-n1",
    "level": "L6",
-   "x": 39.7,
-   "y": 19.97,
-   "type": "junction"
-  },
-  {
-   "id": "L6-n2",
-   "level": "L6",
-   "x": 41.05,
-   "y": 71.12,
-   "type": "junction"
+   "x": 76.81,
+   "y": 35.01,
+   "type": "turn"
   },
   {
    "id": "L6-n3",
    "level": "L6",
-   "x": 54.3,
-   "y": 57.62,
-   "type": "turn"
+   "x": 81.5,
+   "y": 32.1,
+   "type": "junction"
   },
   {
    "id": "L6-n4",
    "level": "L6",
-   "x": 74.12,
-   "y": 47.74,
+   "x": 27.88,
+   "y": 90.7,
    "type": "turn"
   },
   {
    "id": "L6-n5",
    "level": "L6",
-   "x": 21.97,
-   "y": 87.83,
-   "type": "turn"
+   "x": 39.58,
+   "y": 20.12,
+   "type": "junction"
   },
   {
    "id": "L6-n6",
    "level": "L6",
-   "x": 64.32,
-   "y": 48.61,
-   "type": "junction"
+   "x": 48.69,
+   "y": 62.14,
+   "type": "turn"
   },
   {
    "id": "L6-n7",
    "level": "L6",
-   "x": 76.35,
-   "y": 39.52,
-   "type": "turn"
+   "x": 50.33,
+   "y": 23.12,
+   "type": "junction"
   },
   {
    "id": "L6-n8",
    "level": "L6",
-   "x": 60.44,
-   "y": 32.86,
+   "x": 57.88,
+   "y": 30.45,
    "type": "turn"
   },
   {
    "id": "L6-n9",
    "level": "L6",
-   "x": 19.74,
-   "y": 82.56,
+   "x": 30.0,
+   "y": 86.57,
    "type": "turn"
   },
   {
    "id": "L6-n10",
    "level": "L6",
-   "x": 71.24,
-   "y": 48.81,
+   "x": 42.0,
+   "y": 20.32,
    "type": "junction"
   },
   {
    "id": "L6-n11",
    "level": "L6",
-   "x": 63.28,
-   "y": 37.12,
-   "type": "junction"
+   "x": 22.45,
+   "y": 88.51,
+   "type": "turn"
   },
   {
    "id": "L6-n12",
    "level": "L6",
-   "x": 84.24,
-   "y": 28.35,
+   "x": 46.25,
+   "y": 20.0,
    "type": "junction"
   },
   {
    "id": "L6-n13",
    "level": "L6",
-   "x": 43.96,
-   "y": 20.88,
-   "type": "junction"
+   "x": 75.55,
+   "y": 49.19,
+   "type": "turn"
   },
   {
    "id": "L6-n15",
    "level": "L6",
-   "x": 44.87,
-   "y": 23.36,
-   "type": "junction"
+   "x": 25.75,
+   "y": 82.57,
+   "type": "turn"
   },
   {
    "id": "L6-n16",
    "level": "L6",
-   "x": 67.62,
-   "y": 49.18,
+   "x": 81.07,
+   "y": 29.84,
+   "type": "junction"
+  },
+  {
+   "id": "L6-n17",
+   "level": "L6",
+   "x": 54.63,
+   "y": 57.45,
    "type": "turn"
   },
   {
    "id": "L6-n18",
    "level": "L6",
-   "x": 27.87,
-   "y": 90.43,
-   "type": "turn"
+   "x": 62.49,
+   "y": 36.57,
+   "type": "junction"
   },
   {
    "id": "L6-n19",
    "level": "L6",
-   "x": 66.37,
-   "y": 36.93,
+   "x": 62.75,
+   "y": 49.57,
    "type": "turn"
   },
   {
    "id": "L6-n20",
    "level": "L6",
-   "x": 46.37,
-   "y": 19.74,
-   "type": "junction"
+   "x": 26.5,
+   "y": 16.2,
+   "type": "turn"
   },
   {
    "id": "L6-n21",
    "level": "L6",
-   "x": 66.62,
-   "y": 48.68,
-   "type": "turn"
+   "x": 43.42,
+   "y": 23.12,
+   "type": "junction"
   },
   {
    "id": "L6-n22",
    "level": "L6",
-   "x": 47.67,
-   "y": 64.36,
+   "x": 43.42,
+   "y": 20.53,
    "type": "junction"
+  },
+  {
+   "id": "L6-n23",
+   "level": "L6",
+   "x": 60.69,
+   "y": 51.14,
+   "type": "turn"
   },
   {
    "id": "L6-n24",
    "level": "L6",
-   "x": 49.3,
-   "y": 20.06,
+   "x": 43.38,
+   "y": 68.95,
    "type": "junction"
   },
   {
    "id": "L6-n25",
    "level": "L6",
-   "x": 26.62,
-   "y": 16.06,
-   "type": "turn"
+   "x": 29.68,
+   "y": 82.88,
+   "type": "junction"
   },
   {
    "id": "L6-n26",
    "level": "L6",
-   "x": 43.12,
-   "y": 23.24,
-   "type": "junction"
+   "x": 44.25,
+   "y": 23.57,
+   "type": "turn"
   },
   {
    "id": "L6-n28",
    "level": "L6",
-   "x": 84.12,
-   "y": 25.31,
-   "type": "turn"
+   "x": 74.92,
+   "y": 36.78,
+   "type": "junction"
   },
   {
    "id": "L6-n29",
    "level": "L6",
-   "x": 85.89,
-   "y": 28.78,
+   "x": 84.63,
+   "y": 28.72,
    "type": "turn"
   },
   {
    "id": "L6-n30",
    "level": "L6",
-   "x": 24.67,
-   "y": 90.26,
+   "x": 24.88,
+   "y": 91.07,
    "type": "turn"
   },
   {
-   "id": "L6-n31",
+   "id": "L6-n32",
    "level": "L6",
-   "x": 81.06,
-   "y": 29.33,
-   "type": "turn"
-  },
-  {
-   "id": "L6-n33",
-   "level": "L6",
-   "x": 28.87,
-   "y": 78.12,
-   "type": "junction"
-  },
-  {
-   "id": "L6-n34",
-   "level": "L6",
-   "x": 76.49,
-   "y": 35.31,
+   "x": 71.38,
+   "y": 48.95,
    "type": "turn"
   },
   {
    "id": "L6-n35",
    "level": "L6",
-   "x": 39.45,
-   "y": 23.22,
+   "x": 24.13,
+   "y": 82.07,
+   "type": "turn"
+  },
+  {
+   "id": "L6-n36",
+   "level": "L6",
+   "x": 63.45,
+   "y": 48.6,
    "type": "junction"
   },
   {
    "id": "L6-n37",
    "level": "L6",
-   "x": 25.72,
-   "y": 91.59,
+   "x": 86.75,
+   "y": 29.7,
    "type": "turn"
   },
   {
    "id": "L6-n38",
    "level": "L6",
-   "x": 38.99,
-   "y": 24.56,
+   "x": 41.5,
+   "y": 22.82,
    "type": "junction"
   },
   {
    "id": "L6-n39",
    "level": "L6",
-   "x": 50.2,
-   "y": 22.97,
-   "type": "junction"
+   "x": 67.5,
+   "y": 49.32,
+   "type": "turn"
   },
   {
    "id": "L6-n40",
    "level": "L6",
-   "x": 86.87,
-   "y": 29.56,
-   "type": "turn"
+   "x": 37.38,
+   "y": 75.07,
+   "type": "junction"
   },
   {
    "id": "L6-n43",
    "level": "L6",
-   "x": 49.37,
-   "y": 14.56,
+   "x": 82.75,
+   "y": 32.7,
    "type": "turn"
   },
   {
-   "id": "L6-n44",
+   "id": "L6-n45",
    "level": "L6",
-   "x": 46.37,
-   "y": 18.56,
+   "x": 49.17,
+   "y": 20.12,
    "type": "turn"
   },
   {
    "id": "L6-n46",
    "level": "L6",
-   "x": 59.12,
-   "y": 32.06,
-   "type": "junction"
+   "x": 46.25,
+   "y": 18.7,
+   "type": "turn"
+  },
+  {
+   "id": "L6-n47",
+   "level": "L6",
+   "x": 78.5,
+   "y": 26.2,
+   "type": "turn"
   },
   {
    "id": "L6-n48",
    "level": "L6",
-   "x": 56.12,
-   "y": 35.06,
-   "type": "turn"
-  },
-  {
-   "id": "L6-n49",
-   "level": "L6",
-   "x": 38.87,
-   "y": 26.06,
+   "x": 39.0,
+   "y": 22.2,
    "type": "turn"
   },
   {
    "id": "L6-n50",
    "level": "L6",
-   "x": 80.99,
-   "y": 31.43,
-   "type": "junction"
+   "x": 31.0,
+   "y": 80.7,
+   "type": "turn"
   },
   {
-   "id": "L6-n52",
+   "id": "L6-n51",
    "level": "L6",
-   "x": 75.12,
-   "y": 36.81,
-   "type": "junction"
+   "x": 60.5,
+   "y": 32.95,
+   "type": "turn"
   },
   {
    "id": "L6-n53",
    "level": "L6",
-   "x": 75.37,
-   "y": 44.31,
+   "x": 20.5,
+   "y": 85.7,
    "type": "turn"
   },
   {
    "id": "L6-n54",
    "level": "L6",
-   "x": 62.37,
-   "y": 42.56,
+   "x": 38.25,
+   "y": 72.95,
    "type": "turn"
   },
   {
    "id": "L6-n55",
    "level": "L6",
-   "x": 49.37,
-   "y": 23.81,
+   "x": 41.0,
+   "y": 70.2,
    "type": "turn"
   },
   {
    "id": "L6-n56",
    "level": "L6",
-   "x": 30.87,
-   "y": 86.56,
+   "x": 49.5,
+   "y": 23.95,
    "type": "turn"
   },
   {
    "id": "L6-n58",
    "level": "L6",
-   "x": 22.62,
-   "y": 79.81,
+   "x": 80.5,
+   "y": 28.2,
    "type": "turn"
   },
   {
    "id": "L6-n59",
    "level": "L6",
-   "x": 51.62,
-   "y": 23.56,
+   "x": 75.5,
+   "y": 43.95,
    "type": "turn"
   },
   {
    "id": "L6-n60",
    "level": "L6",
-   "x": 31.37,
-   "y": 78.06,
+   "x": 30.5,
+   "y": 88.2,
    "type": "turn"
   },
   {
    "id": "L6-n61",
    "level": "L6",
-   "x": 72.46,
-   "y": 43.62,
+   "x": 70.34,
+   "y": 45.78,
    "type": "lift",
-   "label": "Lift (position copied from floor 5)"
+   "label": "Lift"
   },
   {
    "id": "L6-n62",
    "level": "L6",
-   "x": 89.45,
-   "y": 31.81,
-   "type": "lift",
-   "label": "Lift (position copied from floor 5)"
+   "x": 70.65,
+   "y": 49.02,
+   "type": "junction"
   },
   {
    "id": "L6-n63",
    "level": "L6",
-   "x": 44.56,
-   "y": 17.68,
+   "x": 72.46,
+   "y": 43.62,
    "type": "lift",
-   "label": "Lift (position copied from floor 5)"
+   "label": "Lift"
   },
   {
    "id": "L6-n64",
    "level": "L6",
-   "x": 70.34,
-   "y": 45.77,
+   "x": 89.45,
+   "y": 31.81,
    "type": "lift",
-   "label": "Lift (position copied from floor 5)"
+   "label": "Lift"
   },
   {
    "id": "L6-n65",
    "level": "L6",
-   "x": 42.19,
-   "y": 17.46,
+   "x": 44.56,
+   "y": 17.68,
    "type": "lift",
-   "label": "Lift (position copied from floor 5)"
+   "label": "Lift"
   },
   {
    "id": "L6-n66",
    "level": "L6",
-   "x": 39.83,
-   "y": 17.35,
-   "type": "turn"
+   "x": 44.67,
+   "y": 20.3,
+   "type": "junction"
   },
   {
    "id": "L6-n67",
    "level": "L6",
-   "x": 26.2,
-   "y": 18.02,
-   "type": "stairs",
-   "label": "Stairs (position copied from floor 5)"
+   "x": 42.19,
+   "y": 17.46,
+   "type": "lift",
+   "label": "Lift"
   },
   {
    "id": "L6-n68",
    "level": "L6",
-   "x": 53.27,
-   "y": 36.8,
+   "x": 80.9,
+   "y": 23.32,
    "type": "stairs",
-   "label": "Stairs (position copied from floor 5)"
+   "label": "Stairs"
   },
   {
    "id": "L6-n69",
    "level": "L6",
-   "x": 80.9,
-   "y": 23.32,
+   "x": 44.65,
+   "y": 15.16,
    "type": "stairs",
-   "label": "Stairs (position copied from floor 5)"
+   "label": "Stairs"
   },
   {
    "id": "L6-n70",
    "level": "L6",
-   "x": 44.65,
-   "y": 15.16,
+   "x": 26.2,
+   "y": 18.02,
    "type": "stairs",
-   "label": "Stairs (position copied from floor 5)"
+   "label": "Stairs"
   },
   {
    "id": "L6-n71",
@@ -4329,8 +4328,8 @@
   {
    "id": "L6-n72",
    "level": "L6",
-   "x": 24.18,
-   "y": 15.95,
+   "x": 24.26,
+   "y": 16.25,
    "type": "turn"
   },
   {
@@ -4352,53 +4351,53 @@
   {
    "id": "L6-n75",
    "level": "L6",
-   "x": 39.92,
-   "y": 71.93,
+   "x": 39.81,
+   "y": 71.39,
    "type": "junction"
   },
   {
    "id": "L6-n76",
    "level": "L6",
    "x": 28.0,
-   "y": 89.11,
+   "y": 89.12,
    "type": "door",
    "label": "Female Toilet"
   },
   {
    "id": "L6-n77",
    "level": "L6",
-   "x": 28.56,
-   "y": 89.54,
+   "x": 28.73,
+   "y": 89.88,
    "type": "junction"
   },
   {
    "id": "L6-n78",
    "level": "L6",
-   "x": 48.01,
-   "y": 67.12,
+   "x": 46.48,
+   "y": 68.68,
    "type": "door",
    "label": "Office 1"
   },
   {
    "id": "L6-n79",
    "level": "L6",
-   "x": 46.46,
-   "y": 65.6,
+   "x": 43.88,
+   "y": 67.67,
    "type": "junction"
   },
   {
    "id": "L6-n80",
    "level": "L6",
-   "x": 30.06,
-   "y": 75.08,
+   "x": 31.09,
+   "y": 78.27,
    "type": "door",
    "label": "Assembly Lab"
   },
   {
    "id": "L6-n81",
    "level": "L6",
-   "x": 30.14,
-   "y": 78.09,
+   "x": 32.23,
+   "y": 79.73,
    "type": "junction"
   },
   {
@@ -4420,13 +4419,20 @@
   {
    "id": "L6-n84",
    "level": "L6",
+   "x": 62.5,
+   "y": 43.34,
+   "type": "junction"
+  },
+  {
+   "id": "L6-n85",
+   "level": "L6",
    "x": 41.17,
    "y": 71.18,
    "type": "door",
    "label": "Characterisation Lab I"
   },
   {
-   "id": "L6-n85",
+   "id": "L6-n86",
    "level": "L6",
    "x": 48.55,
    "y": 70.89,
@@ -4434,53 +4440,60 @@
    "label": "Characterisation Lab III (door position guessed)"
   },
   {
-   "id": "L6-n86",
-   "level": "L6",
-   "x": 44.84,
-   "y": 67.25,
-   "type": "junction"
-  },
-  {
    "id": "L6-n87",
    "level": "L6",
-   "x": 21.37,
-   "y": 78.99,
+   "x": 21.96,
+   "y": 83.13,
    "type": "door",
    "label": "Tank / Reading / Refence Room"
   },
   {
    "id": "L6-n88",
    "level": "L6",
-   "x": 49.29,
-   "y": 62.93,
-   "type": "door",
-   "label": "Discussion Room"
+   "x": 22.52,
+   "y": 83.68,
+   "type": "junction"
   },
   {
    "id": "L6-n89",
    "level": "L6",
-   "x": 49.18,
-   "y": 62.82,
-   "type": "junction"
+   "x": 50.35,
+   "y": 61.85,
+   "type": "door",
+   "label": "Discussion Room"
   },
   {
    "id": "L6-n90",
    "level": "L6",
-   "x": 27.4,
-   "y": 15.88,
-   "type": "door",
-   "label": "Handicap Toilet"
+   "x": 49.86,
+   "y": 61.22,
+   "type": "junction"
   },
   {
    "id": "L6-n91",
    "level": "L6",
-   "x": 48.5,
-   "y": 11.66,
+   "x": 27.4,
+   "y": 15.87,
    "type": "door",
-   "label": "CNRS-International-NTU-Thales Research Alliance [CINTRA] (door position guessed)"
+   "label": "Handicap Toilet"
   },
   {
    "id": "L6-n92",
+   "level": "L6",
+   "x": 38.99,
+   "y": 14.43,
+   "type": "door",
+   "label": "CNRS-International-NTU-Thales Research Alliance [CINTRA]"
+  },
+  {
+   "id": "L6-n93",
+   "level": "L6",
+   "x": 39.85,
+   "y": 14.47,
+   "type": "turn"
+  },
+  {
+   "id": "L6-n94",
    "level": "L6",
    "x": 68.58,
    "y": 50.29,
@@ -4488,14 +4501,14 @@
    "label": "Conference Room - L6"
   },
   {
-   "id": "L6-n93",
+   "id": "L6-n95",
    "level": "L6",
-   "x": 68.46,
-   "y": 49.09,
+   "x": 68.48,
+   "y": 49.23,
    "type": "junction"
   },
   {
-   "id": "L6-n94",
+   "id": "L6-n96",
    "level": "L6",
    "x": 23.97,
    "y": 88.15,
@@ -4503,29 +4516,29 @@
    "label": "Handicap Toilet"
   },
   {
-   "id": "L6-n95",
-   "level": "L6",
-   "x": 23.24,
-   "y": 88.97,
-   "type": "junction"
-  },
-  {
-   "id": "L6-n96",
-   "level": "L6",
-   "x": 48.35,
-   "y": 63.73,
-   "type": "door",
-   "label": "Printing Room"
-  },
-  {
    "id": "L6-n97",
    "level": "L6",
-   "x": 48.32,
-   "y": 63.7,
+   "x": 22.99,
+   "y": 89.08,
    "type": "junction"
   },
   {
    "id": "L6-n98",
+   "level": "L6",
+   "x": 46.49,
+   "y": 65.78,
+   "type": "door",
+   "label": "Printing Room"
+  },
+  {
+   "id": "L6-n99",
+   "level": "L6",
+   "x": 45.8,
+   "y": 65.11,
+   "type": "junction"
+  },
+  {
+   "id": "L6-n100",
    "level": "L6",
    "x": 70.52,
    "y": 34.9,
@@ -4533,52 +4546,45 @@
    "label": "Discussion Room 2"
   },
   {
-   "id": "L6-n99",
-   "level": "L6",
-   "x": 70.55,
-   "y": 36.87,
-   "type": "junction"
-  },
-  {
-   "id": "L6-n100",
-   "level": "L6",
-   "x": 32.58,
-   "y": 76.76,
-   "type": "door",
-   "label": "Biomaterials Lab"
-  },
-  {
    "id": "L6-n101",
    "level": "L6",
-   "x": 32.79,
-   "y": 77.04,
+   "x": 70.44,
+   "y": 36.57,
    "type": "junction"
   },
   {
    "id": "L6-n102",
    "level": "L6",
-   "x": 39.04,
-   "y": 24.42,
+   "x": 34.72,
+   "y": 74.58,
    "type": "door",
-   "label": "Discussion Room"
+   "label": "Biomaterials Lab"
   },
   {
    "id": "L6-n103",
    "level": "L6",
-   "x": 40.11,
-   "y": 23.07,
-   "type": "door",
-   "label": "RTP-BX-06"
+   "x": 36.25,
+   "y": 76.16,
+   "type": "junction"
   },
   {
    "id": "L6-n104",
    "level": "L6",
-   "x": 40.11,
-   "y": 23.22,
-   "type": "junction"
+   "x": 38.68,
+   "y": 22.94,
+   "type": "door",
+   "label": "Discussion Room"
   },
   {
    "id": "L6-n105",
+   "level": "L6",
+   "x": 41.12,
+   "y": 24.0,
+   "type": "door",
+   "label": "RTP-BX-06"
+  },
+  {
+   "id": "L6-n106",
    "level": "L6",
    "x": 30.61,
    "y": 84.82,
@@ -4586,34 +4592,27 @@
    "label": "Bio Chem Lab"
   },
   {
-   "id": "L6-n106",
+   "id": "L6-n107",
    "level": "L6",
-   "x": 30.15,
-   "y": 85.04,
+   "x": 29.85,
+   "y": 84.89,
    "type": "junction"
   },
   {
-   "id": "L6-n107",
+   "id": "L6-n108",
    "level": "L6",
-   "x": 28.57,
-   "y": 76.58,
+   "x": 29.36,
+   "y": 80.04,
    "type": "door",
    "label": "Clean Room"
   },
   {
-   "id": "L6-n108",
+   "id": "L6-n109",
    "level": "L6",
    "x": 41.84,
    "y": 76.46,
    "type": "door",
    "label": "Darkroom - BMERC (door position guessed)"
-  },
-  {
-   "id": "L6-n109",
-   "level": "L6",
-   "x": 39.05,
-   "y": 72.56,
-   "type": "junction"
   },
   {
    "id": "L6-n110",
@@ -4626,13 +4625,20 @@
   {
    "id": "L6-n111",
    "level": "L6",
-   "x": 46.55,
-   "y": 62.7,
+   "x": 46.48,
+   "y": 62.77,
    "type": "door",
    "label": "Sensor Lab"
   },
   {
    "id": "L6-n112",
+   "level": "L6",
+   "x": 47.3,
+   "y": 63.57,
+   "type": "junction"
+  },
+  {
+   "id": "L6-n113",
    "level": "L6",
    "x": 21.96,
    "y": 85.19,
@@ -4640,44 +4646,30 @@
    "label": "Male Toilet"
   },
   {
-   "id": "L6-n113",
-   "level": "L6",
-   "x": 21.02,
-   "y": 85.59,
-   "type": "junction"
-  },
-  {
    "id": "L6-n114",
    "level": "L6",
-   "x": 41.87,
-   "y": 67.31,
-   "type": "door",
-   "label": "Materials Lab"
+   "x": 21.49,
+   "y": 84.71,
+   "type": "junction"
   },
   {
    "id": "L6-n115",
    "level": "L6",
-   "x": 43.35,
-   "y": 68.77,
-   "type": "junction"
+   "x": 41.86,
+   "y": 67.32,
+   "type": "door",
+   "label": "Materials Lab"
   },
   {
    "id": "L6-n116",
    "level": "L6",
-   "x": 45.68,
-   "y": 74.15,
+   "x": 42.72,
+   "y": 77.16,
    "type": "door",
    "label": "Characterisation Lab II (door position guessed)"
   },
   {
    "id": "L6-n117",
-   "level": "L6",
-   "x": 41.8,
-   "y": 70.35,
-   "type": "junction"
-  },
-  {
-   "id": "L6-n118",
    "level": "L6",
    "x": 56.19,
    "y": 52.75,
@@ -4685,14 +4677,14 @@
    "label": "Grad Office"
   },
   {
-   "id": "L6-n119",
+   "id": "L6-n118",
    "level": "L6",
-   "x": 57.66,
-   "y": 54.2,
+   "x": 57.73,
+   "y": 54.23,
    "type": "junction"
   },
   {
-   "id": "L6-n120",
+   "id": "L6-n119",
    "level": "L6",
    "x": 81.21,
    "y": 33.33,
@@ -4700,14 +4692,14 @@
    "label": "Female Toilet"
   },
   {
-   "id": "L6-n121",
+   "id": "L6-n120",
    "level": "L6",
-   "x": 80.18,
-   "y": 32.13,
+   "x": 80.74,
+   "y": 32.57,
    "type": "junction"
   },
   {
-   "id": "L6-n122",
+   "id": "L6-n121",
    "level": "L6",
    "x": 76.96,
    "y": 40.6,
@@ -4715,14 +4707,14 @@
    "label": "Discussion Room 1"
   },
   {
-   "id": "L6-n123",
+   "id": "L6-n122",
    "level": "L6",
-   "x": 76.16,
-   "y": 40.44,
+   "x": 75.24,
+   "y": 40.74,
    "type": "junction"
   },
   {
-   "id": "L6-n124",
+   "id": "L6-n123",
    "level": "L6",
    "x": 83.88,
    "y": 33.8,
@@ -4730,281 +4722,127 @@
    "label": "Handicap Toilet (point of interest, no room outline)"
   },
   {
-   "id": "L6-n125",
+   "id": "L6-n124",
    "level": "L6",
-   "x": 29.65,
-   "y": 82.91,
+   "x": 35.69,
+   "y": 76.54,
    "type": "door",
-   "label": "Center for Sustainable Materials (SusMat-B2R2) (point of interest, no room outline)"
+   "label": "Center for Sustainable Materials (SusMat-B2R2)"
   },
   {
-   "id": "L6-n126",
+   "id": "L6-n125",
    "level": "L6",
-   "x": 29.24,
-   "y": 83.1,
+   "x": 35.77,
+   "y": 76.62,
    "type": "junction"
   },
   {
    "id": "L7-n0",
    "level": "L7",
-   "x": 53.7,
-   "y": 50.69,
-   "type": "turn"
+   "x": 39.72,
+   "y": 17.58,
+   "type": "junction"
   },
   {
-   "id": "L7-n2",
+   "id": "L7-n1",
    "level": "L7",
-   "x": 81.54,
-   "y": 35.56,
-   "type": "junction"
+   "x": 33.75,
+   "y": 9.05,
+   "type": "turn"
   },
   {
    "id": "L7-n3",
    "level": "L7",
-   "x": 27.45,
-   "y": 10.47,
+   "x": 38.03,
+   "y": 10.39,
+   "type": "turn"
+  },
+  {
+   "id": "L7-n4",
+   "level": "L7",
+   "x": 46.35,
+   "y": 19.76,
    "type": "junction"
   },
   {
    "id": "L7-n6",
    "level": "L7",
-   "x": 39.2,
-   "y": 65.44,
+   "x": 35.35,
+   "y": 9.7,
    "type": "turn"
   },
   {
    "id": "L7-n7",
    "level": "L7",
-   "x": 76.86,
-   "y": 28.89,
-   "type": "junction"
+   "x": 38.97,
+   "y": 14.33,
+   "type": "turn"
+  },
+  {
+   "id": "L7-n8",
+   "level": "L7",
+   "x": 21.41,
+   "y": 15.83,
+   "type": "turn"
   },
   {
    "id": "L7-n9",
    "level": "L7",
-   "x": 82.28,
-   "y": 32.75,
-   "type": "turn"
+   "x": 21.91,
+   "y": 10.33,
+   "type": "junction"
   },
   {
    "id": "L7-n10",
    "level": "L7",
-   "x": 39.58,
-   "y": 17.63,
-   "type": "turn"
+   "x": 27.42,
+   "y": 10.5,
+   "type": "junction"
   },
   {
    "id": "L7-n11",
    "level": "L7",
-   "x": 79.92,
-   "y": 35.71,
+   "x": 40.6,
+   "y": 20.01,
+   "type": "junction"
+  },
+  {
+   "id": "L7-n14",
+   "level": "L7",
+   "x": 27.1,
+   "y": 7.83,
    "type": "turn"
   },
   {
-   "id": "L7-n12",
+   "id": "L7-n16",
    "level": "L7",
-   "x": 33.83,
-   "y": 9.04,
-   "type": "turn"
-  },
-  {
-   "id": "L7-n13",
-   "level": "L7",
-   "x": 24.7,
-   "y": 80.19,
-   "type": "turn"
-  },
-  {
-   "id": "L7-n15",
-   "level": "L7",
-   "x": 39.47,
-   "y": 19.83,
+   "x": 46.35,
+   "y": 18.58,
    "type": "turn"
   },
   {
    "id": "L7-n17",
    "level": "L7",
-   "x": 21.9,
-   "y": 10.31,
+   "x": 26.6,
+   "y": 16.08,
+   "type": "turn"
+  },
+  {
+   "id": "L7-n18",
+   "level": "L7",
+   "x": 32.35,
+   "y": 11.08,
    "type": "turn"
   },
   {
    "id": "L7-n19",
    "level": "L7",
-   "x": 35.45,
-   "y": 9.69,
+   "x": 38.35,
+   "y": 19.58,
    "type": "turn"
   },
   {
    "id": "L7-n20",
-   "level": "L7",
-   "x": 38.2,
-   "y": 10.69,
-   "type": "turn"
-  },
-  {
-   "id": "L7-n21",
-   "level": "L7",
-   "x": 80.02,
-   "y": 37.96,
-   "type": "junction"
-  },
-  {
-   "id": "L7-n22",
-   "level": "L7",
-   "x": 79.16,
-   "y": 40.44,
-   "type": "junction"
-  },
-  {
-   "id": "L7-n23",
-   "level": "L7",
-   "x": 19.7,
-   "y": 89.31,
-   "type": "turn"
-  },
-  {
-   "id": "L7-n24",
-   "level": "L7",
-   "x": 77.86,
-   "y": 40.69,
-   "type": "turn"
-  },
-  {
-   "id": "L7-n25",
-   "level": "L7",
-   "x": 78.09,
-   "y": 38.75,
-   "type": "junction"
-  },
-  {
-   "id": "L7-n26",
-   "level": "L7",
-   "x": 64.33,
-   "y": 34.56,
-   "type": "turn"
-  },
-  {
-   "id": "L7-n27",
-   "level": "L7",
-   "x": 76.64,
-   "y": 39.06,
-   "type": "turn"
-  },
-  {
-   "id": "L7-n28",
-   "level": "L7",
-   "x": 21.26,
-   "y": 15.81,
-   "type": "turn"
-  },
-  {
-   "id": "L7-n29",
-   "level": "L7",
-   "x": 46.2,
-   "y": 19.75,
-   "type": "junction"
-  },
-  {
-   "id": "L7-n30",
-   "level": "L7",
-   "x": 27.2,
-   "y": 7.81,
-   "type": "turn"
-  },
-  {
-   "id": "L7-n31",
-   "level": "L7",
-   "x": 84.52,
-   "y": 36.27,
-   "type": "turn"
-  },
-  {
-   "id": "L7-n32",
-   "level": "L7",
-   "x": 61.08,
-   "y": 37.81,
-   "type": "turn"
-  },
-  {
-   "id": "L7-n34",
-   "level": "L7",
-   "x": 84.58,
-   "y": 37.44,
-   "type": "turn"
-  },
-  {
-   "id": "L7-n35",
-   "level": "L7",
-   "x": 73.76,
-   "y": 31.47,
-   "type": "turn"
-  },
-  {
-   "id": "L7-n39",
-   "level": "L7",
-   "x": 39.08,
-   "y": 14.31,
-   "type": "turn"
-  },
-  {
-   "id": "L7-n44",
-   "level": "L7",
-   "x": 26.7,
-   "y": 16.06,
-   "type": "turn"
-  },
-  {
-   "id": "L7-n45",
-   "level": "L7",
-   "x": 63.08,
-   "y": 36.69,
-   "type": "turn"
-  },
-  {
-   "id": "L7-n46",
-   "level": "L7",
-   "x": 46.45,
-   "y": 18.56,
-   "type": "turn"
-  },
-  {
-   "id": "L7-n48",
-   "level": "L7",
-   "x": 84.83,
-   "y": 34.44,
-   "type": "turn"
-  },
-  {
-   "id": "L7-n54",
-   "level": "L7",
-   "x": 21.7,
-   "y": 86.81,
-   "type": "turn"
-  },
-  {
-   "id": "L7-n55",
-   "level": "L7",
-   "x": 21.95,
-   "y": 83.06,
-   "type": "turn"
-  },
-  {
-   "id": "L7-n56",
-   "level": "L7",
-   "x": 58.95,
-   "y": 45.31,
-   "type": "turn"
-  },
-  {
-   "id": "L7-n58",
-   "level": "L7",
-   "x": 32.45,
-   "y": 11.06,
-   "type": "turn"
-  },
-  {
-   "id": "L7-n59",
    "level": "L7",
    "x": 44.55,
    "y": 17.69,
@@ -5012,14 +4850,7 @@
    "label": "Lift"
   },
   {
-   "id": "L7-n60",
-   "level": "L7",
-   "x": 44.58,
-   "y": 19.77,
-   "type": "junction"
-  },
-  {
-   "id": "L7-n61",
+   "id": "L7-n21",
    "level": "L7",
    "x": 42.18,
    "y": 17.47,
@@ -5027,22 +4858,14 @@
    "label": "Lift"
   },
   {
-   "id": "L7-n62",
+   "id": "L7-n22",
    "level": "L7",
-   "x": 42.21,
-   "y": 19.8,
+   "x": 39.97,
+   "y": 18.27,
    "type": "junction"
   },
   {
-   "id": "L7-n63",
-   "level": "L7",
-   "x": 20.7,
-   "y": 91.86,
-   "type": "stairs",
-   "label": "Stairs"
-  },
-  {
-   "id": "L7-n64",
+   "id": "L7-n23",
    "level": "L7",
    "x": 44.64,
    "y": 15.16,
@@ -5050,7 +4873,7 @@
    "label": "Stairs"
   },
   {
-   "id": "L7-n65",
+   "id": "L7-n24",
    "level": "L7",
    "x": 26.17,
    "y": 18.02,
@@ -5058,22 +4881,7 @@
    "label": "Stairs"
   },
   {
-   "id": "L7-n66",
-   "level": "L7",
-   "x": 81.27,
-   "y": 22.62,
-   "type": "stairs",
-   "label": "Stairs"
-  },
-  {
-   "id": "L7-n67",
-   "level": "L7",
-   "x": 82.9,
-   "y": 25.84,
-   "type": "turn"
-  },
-  {
-   "id": "L7-n68",
+   "id": "L7-n25",
    "level": "L7",
    "x": 34.53,
    "y": 12.13,
@@ -5081,7 +4889,7 @@
    "label": "Blackout Room"
   },
   {
-   "id": "L7-n69",
+   "id": "L7-n26",
    "level": "L7",
    "x": 46.9,
    "y": 21.1,
@@ -5089,14 +4897,14 @@
    "label": "TL@SaRC II"
   },
   {
-   "id": "L7-n70",
+   "id": "L7-n27",
    "level": "L7",
-   "x": 47.08,
-   "y": 19.88,
+   "x": 47.06,
+   "y": 19.85,
    "type": "junction"
   },
   {
-   "id": "L7-n71",
+   "id": "L7-n28",
    "level": "L7",
    "x": 31.63,
    "y": 9.98,
@@ -5104,14 +4912,14 @@
    "label": "Discussion Room 2 - SRC II \u00a0(RTP)"
   },
   {
-   "id": "L7-n72",
+   "id": "L7-n29",
    "level": "L7",
-   "x": 31.52,
-   "y": 10.95,
+   "x": 31.51,
+   "y": 10.98,
    "type": "junction"
   },
   {
-   "id": "L7-n73",
+   "id": "L7-n30",
    "level": "L7",
    "x": 46.9,
    "y": 21.1,
@@ -5119,7 +4927,7 @@
    "label": "Satellite Research Centre II [SaRC II]"
   },
   {
-   "id": "L7-n74",
+   "id": "L7-n31",
    "level": "L7",
    "x": 27.39,
    "y": 15.88,
@@ -5127,7 +4935,7 @@
    "label": "Handicap Toilet"
   },
   {
-   "id": "L7-n75",
+   "id": "L7-n32",
    "level": "L7",
    "x": 25.45,
    "y": 11.3,
@@ -5135,14 +4943,14 @@
    "label": "Female Toilet"
   },
   {
-   "id": "L7-n76",
+   "id": "L7-n33",
    "level": "L7",
    "x": 25.48,
-   "y": 10.41,
+   "y": 10.44,
    "type": "junction"
   },
   {
-   "id": "L7-n77",
+   "id": "L7-n34",
    "level": "L7",
    "x": 27.64,
    "y": 6.54,
@@ -5150,7 +4958,7 @@
    "label": "Conference Room - L7"
   },
   {
-   "id": "L7-n78",
+   "id": "L7-n35",
    "level": "L7",
    "x": 23.07,
    "y": 9.21,
@@ -5158,14 +4966,14 @@
    "label": "Discussion Room 1 - SRC II"
   },
   {
-   "id": "L7-n79",
+   "id": "L7-n36",
    "level": "L7",
-   "x": 23.04,
-   "y": 10.34,
-   "type": "junction"
+   "x": 21.98,
+   "y": 9.14,
+   "type": "turn"
   },
   {
-   "id": "L7-n80",
+   "id": "L7-n37",
    "level": "L7",
    "x": 27.47,
    "y": 14.11,
@@ -8790,282 +8598,275 @@
    "hint": "(corridor data incomplete here: link added across a 12 m gap, confirm on site)"
   },
   {
-   "from": "L6-n1",
-   "to": "L6-n13",
+   "from": "L6-n5",
+   "to": "L6-n48",
    "type": "walk",
-   "hint": "Pass Discussion Room on your left, lifts ahead",
-   "hint_reverse": "Pass Discussion Room on your right"
+   "hint": "Pass CINTRA on your left, Discussion Room ahead"
   },
   {
-   "from": "L6-n4",
-   "to": "L6-n53",
-   "type": "walk",
-   "hint_reverse": "Keep left around the lift core"
-  },
-  {
-   "from": "L6-n12",
-   "to": "L6-n28",
-   "type": "walk",
-   "hint": "Stairs straight ahead"
-  },
-  {
-   "from": "L6-n15",
-   "to": "L6-n13",
-   "type": "walk",
-   "hint": "Pass Discussion Room on your right, lifts ahead",
-   "hint_reverse": "Pass Discussion Room on your left"
-  },
-  {
-   "from": "L6-n1",
-   "to": "L6-n35",
-   "type": "walk",
-   "hint": "Discussion Room straight ahead",
-   "hint_reverse": "Lifts straight ahead"
-  },
-  {
-   "from": "L6-n20",
-   "to": "L6-n44",
-   "type": "walk",
-   "hint": "Lifts straight ahead"
-  },
-  {
-   "from": "L6-n15",
-   "to": "L6-n26",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n6",
-   "to": "L6-n54",
-   "type": "walk",
-   "hint": "Keep left around the lift core"
-  },
-  {
-   "from": "L6-n54",
-   "to": "L6-n11",
-   "type": "walk",
-   "hint_reverse": "Keep right around the lift core"
-  },
-  {
-   "from": "L6-n24",
-   "to": "L6-n43",
-   "type": "walk",
-   "hint": "CINTRA straight ahead"
-  },
-  {
-   "from": "L6-n13",
-   "to": "L6-n20",
-   "type": "walk",
-   "hint_reverse": "Lifts straight ahead"
-  },
-  {
-   "from": "L6-n29",
-   "to": "L6-n40",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n21",
-   "to": "L6-n6",
-   "type": "walk",
-   "hint_reverse": "Conference Room on your left, lifts ahead"
-  },
-  {
-   "from": "L6-n13",
-   "to": "L6-n26",
-   "type": "walk",
-   "hint_reverse": "Lifts straight ahead"
-  },
-  {
-   "from": "L6-n15",
-   "to": "L6-n55",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n55",
-   "to": "L6-n39",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n20",
-   "to": "L6-n24",
-   "type": "walk",
-   "hint_reverse": "Lifts straight ahead"
-  },
-  {
-   "from": "L6-n38",
-   "to": "L6-n35",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n21",
-   "to": "L6-n16",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n33",
-   "to": "L6-n58",
-   "type": "walk",
-   "hint": "Pass Reading Room on your right"
-  },
-  {
-   "from": "L6-n58",
-   "to": "L6-n9",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n30",
-   "to": "L6-n37",
+   "from": "L6-n48",
+   "to": "L6-n38",
    "type": "walk"
   },
   {
    "from": "L6-n7",
-   "to": "L6-n52",
-   "type": "walk",
-   "hint_reverse": "Pass Discussion Room 1 on your right"
-  },
-  {
-   "from": "L6-n11",
-   "to": "L6-n19",
-   "type": "walk",
-   "hint": "Keep left around the lift core"
-  },
-  {
-   "from": "L6-n39",
-   "to": "L6-n59",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n59",
-   "to": "L6-n46",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n34",
-   "to": "L6-n52",
-   "type": "walk",
-   "hint_reverse": "Pass Discussion Room 1 on your left"
-  },
-  {
-   "from": "L6-n24",
-   "to": "L6-n39",
-   "type": "walk",
-   "hint_reverse": "Lifts straight ahead"
-  },
-  {
-   "from": "L6-n6",
-   "to": "L6-n0",
-   "type": "walk",
-   "hint": "Conference Room on your right, Grad Office ahead"
-  },
-  {
-   "from": "L6-n46",
-   "to": "L6-n48",
-   "type": "walk",
-   "hint": "Stairs straight ahead"
-  },
-  {
-   "from": "L6-n46",
    "to": "L6-n8",
    "type": "walk"
   },
   {
-   "from": "L6-n38",
-   "to": "L6-n49",
-   "type": "walk"
+   "from": "L6-n10",
+   "to": "L6-n5",
+   "type": "walk",
+   "hint": "Pass CINTRA on your left",
+   "hint_reverse": "Pass CINTRA on your right, lifts ahead"
+  },
+  {
+   "from": "L6-n21",
+   "to": "L6-n26",
+   "type": "walk",
+   "hint": "Pass CINTRA on your right"
+  },
+  {
+   "from": "L6-n25",
+   "to": "L6-n15",
+   "type": "walk",
+   "hint": "Clean Room on your left, Reading Room ahead"
   },
   {
    "from": "L6-n10",
-   "to": "L6-n4",
+   "to": "L6-n22",
    "type": "walk",
-   "hint": "Keep right around the lift core"
+   "hint": "Pass CINTRA on your right, lifts ahead",
+   "hint_reverse": "Pass CINTRA on your left, lifts ahead"
+  },
+  {
+   "from": "L6-n25",
+   "to": "L6-n50",
+   "type": "walk",
+   "hint": "Clean Room on your right, Biomaterials Lab ahead"
+  },
+  {
+   "from": "L6-n21",
+   "to": "L6-n38",
+   "type": "walk",
+   "hint": "Pass CINTRA on your left"
+  },
+  {
+   "from": "L6-n28",
+   "to": "L6-n1",
+   "type": "walk",
+   "hint": "Pass Discussion Room 1 on your left"
   },
   {
    "from": "L6-n18",
-   "to": "L6-n37",
+   "to": "L6-n51",
+   "type": "walk",
+   "hint": "Pass Discussion Room 2 on your left"
+  },
+  {
+   "from": "L6-n51",
+   "to": "L6-n8",
    "type": "walk"
   },
   {
-   "from": "L6-n12",
-   "to": "L6-n31",
-   "type": "walk",
-   "hint": "Toilets on your right"
-  },
-  {
-   "from": "L6-n8",
-   "to": "L6-n11",
-   "type": "walk",
-   "hint_reverse": "Pass Discussion Room 2 on your left"
-  },
-  {
-   "from": "L6-n50",
-   "to": "L6-n31",
+   "from": "L6-n4",
+   "to": "L6-n30",
    "type": "walk"
   },
   {
-   "from": "L6-n12",
+   "from": "L6-n35",
+   "to": "L6-n15",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n36",
+   "to": "L6-n19",
+   "type": "walk",
+   "hint": "Pass Conference Room on your right"
+  },
+  {
+   "from": "L6-n37",
    "to": "L6-n29",
-   "type": "walk",
-   "hint": "Toilets on your left, lifts ahead"
+   "type": "walk"
   },
   {
-   "from": "L6-n61",
-   "to": "L6-n53",
+   "from": "L6-n53",
+   "to": "L6-n11",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n40",
+   "to": "L6-n54",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n55",
+   "to": "L6-n24",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n7",
+   "to": "L6-n56",
+   "type": "walk",
+   "hint": "Pass CINTRA on your left"
+  },
+  {
+   "from": "L6-n56",
+   "to": "L6-n26",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n21",
+   "to": "L6-n22",
+   "type": "walk",
+   "hint": "Pass Discussion Room on your right, lifts ahead",
+   "hint_reverse": "Pass CINTRA on your left"
+  },
+  {
+   "from": "L6-n43",
+   "to": "L6-n3",
+   "type": "walk",
+   "hint_reverse": "Discussion Room 1 on your left, toilets ahead"
+  },
+  {
+   "from": "L6-n45",
+   "to": "L6-n7",
+   "type": "walk",
+   "hint_reverse": "Pass CINTRA on your right, lifts ahead"
+  },
+  {
+   "from": "L6-n39",
+   "to": "L6-n36",
+   "type": "walk",
+   "hint_reverse": "Conference Room on your left, lifts ahead"
+  },
+  {
+   "from": "L6-n46",
+   "to": "L6-n12",
    "type": "walk",
    "hint_reverse": "Lifts straight ahead"
   },
   {
-   "from": "L6-n62",
-   "to": "L6-n40",
+   "from": "L6-n32",
+   "to": "L6-n13",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n16",
+   "to": "L6-n3",
    "type": "walk",
-   "hint": "Toilets on your right"
+   "hint": "Toilets on your right, Discussion Room 1 ahead",
+   "hint_reverse": "Toilets on your left"
+  },
+  {
+   "from": "L6-n16",
+   "to": "L6-n29",
+   "type": "walk",
+   "hint": "Toilets on your left"
+  },
+  {
+   "from": "L6-n47",
+   "to": "L6-n58",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n58",
+   "to": "L6-n16",
+   "type": "walk",
+   "hint_reverse": "Stairs straight ahead"
+  },
+  {
+   "from": "L6-n23",
+   "to": "L6-n19",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n59",
+   "to": "L6-n13",
+   "type": "walk",
+   "hint": "Pass Discussion Room 1 on your right"
+  },
+  {
+   "from": "L6-n9",
+   "to": "L6-n60",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n45",
+   "to": "L6-n12",
+   "type": "walk",
+   "hint_reverse": "Pass CINTRA on your right"
+  },
+  {
+   "from": "L6-n32",
+   "to": "L6-n62",
+   "type": "walk",
+   "hint_reverse": "Conference Room on your left, lift core right"
+  },
+  {
+   "from": "L6-n61",
+   "to": "L6-n62",
+   "type": "walk",
+   "hint": "Conference Room straight ahead",
+   "hint_reverse": "Lifts straight ahead"
   },
   {
    "from": "L6-n63",
-   "to": "L6-n44",
+   "to": "L6-n59",
    "type": "walk",
    "hint_reverse": "Lifts straight ahead"
   },
   {
    "from": "L6-n64",
+   "to": "L6-n37",
+   "type": "walk",
+   "hint": "Toilets on your right"
+  },
+  {
+   "from": "L6-n12",
+   "to": "L6-n66",
+   "type": "walk",
+   "hint": "Pass CINTRA on your left, lifts ahead",
+   "hint_reverse": "Pass CINTRA on your right"
+  },
+  {
+   "from": "L6-n66",
+   "to": "L6-n22",
+   "type": "walk",
+   "hint": "Pass CINTRA on your left, lifts ahead",
+   "hint_reverse": "Pass CINTRA on your right, lifts ahead"
+  },
+  {
+   "from": "L6-n65",
+   "to": "L6-n66",
+   "type": "walk",
+   "hint_reverse": "Lifts straight ahead"
+  },
+  {
+   "from": "L6-n67",
    "to": "L6-n10",
    "type": "walk",
    "hint_reverse": "Lifts straight ahead"
   },
   {
-   "from": "L6-n1",
-   "to": "L6-n66",
-   "type": "walk",
-   "hint": "Lifts straight ahead"
-  },
-  {
-   "from": "L6-n65",
-   "to": "L6-n66",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n67",
-   "to": "L6-n25",
-   "type": "walk",
-   "hint": "Toilets on your left, more ahead"
-  },
-  {
    "from": "L6-n68",
-   "to": "L6-n48",
+   "to": "L6-n47",
    "type": "walk"
   },
   {
    "from": "L6-n69",
-   "to": "L6-n28",
+   "to": "L6-n46",
    "type": "walk"
   },
   {
    "from": "L6-n70",
-   "to": "L6-n44",
+   "to": "L6-n20",
    "type": "walk",
-   "hint_reverse": "Stairs straight ahead"
+   "hint": "Pass CINTRA on your left, toilets ahead"
   },
   {
    "from": "L6-n72",
-   "to": "L6-n25",
+   "to": "L6-n20",
    "type": "walk"
   },
   {
@@ -9075,12 +8876,17 @@
   },
   {
    "from": "L6-n73",
-   "to": "L6-n40",
+   "to": "L6-n37",
    "type": "walk"
   },
   {
-   "from": "L6-n2",
+   "from": "L6-n54",
    "to": "L6-n75",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n75",
+   "to": "L6-n55",
    "type": "walk"
   },
   {
@@ -9089,13 +8895,13 @@
    "type": "walk"
   },
   {
-   "from": "L6-n18",
+   "from": "L6-n4",
    "to": "L6-n77",
    "type": "walk"
   },
   {
    "from": "L6-n77",
-   "to": "L6-n56",
+   "to": "L6-n60",
    "type": "walk"
   },
   {
@@ -9104,8 +8910,8 @@
    "type": "walk"
   },
   {
-   "from": "L6-n79",
-   "to": "L6-n22",
+   "from": "L6-n24",
+   "to": "L6-n79",
    "type": "walk"
   },
   {
@@ -9114,14 +8920,13 @@
    "type": "walk"
   },
   {
-   "from": "L6-n33",
+   "from": "L6-n0",
    "to": "L6-n81",
-   "type": "walk",
-   "hint": "Pass Assembly Lab on your right"
+   "type": "walk"
   },
   {
    "from": "L6-n81",
-   "to": "L6-n60",
+   "to": "L6-n50",
    "type": "walk"
   },
   {
@@ -9131,63 +8936,63 @@
   },
   {
    "from": "L6-n82",
-   "to": "L6-n25",
+   "to": "L6-n20",
    "type": "walk"
+  },
+  {
+   "from": "L6-n18",
+   "to": "L6-n84",
+   "type": "walk",
+   "hint": "Filing on your left, lift core right"
   },
   {
    "from": "L6-n83",
-   "to": "L6-n54",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n84",
-   "to": "L6-n2",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n86",
-   "to": "L6-n79",
+   "to": "L6-n84",
    "type": "walk"
   },
   {
    "from": "L6-n85",
-   "to": "L6-n86",
+   "to": "L6-n55",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n86",
+   "to": "L6-n24",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n35",
+   "to": "L6-n88",
    "type": "walk"
   },
   {
    "from": "L6-n87",
-   "to": "L6-n58",
+   "to": "L6-n88",
    "type": "walk"
   },
   {
-   "from": "L6-n89",
-   "to": "L6-n3",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n88",
-   "to": "L6-n89",
+   "from": "L6-n17",
+   "to": "L6-n90",
    "type": "walk"
   },
   {
    "from": "L6-n90",
-   "to": "L6-n25",
+   "to": "L6-n6",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n89",
+   "to": "L6-n90",
    "type": "walk"
   },
   {
    "from": "L6-n91",
-   "to": "L6-n43",
+   "to": "L6-n20",
    "type": "walk"
   },
   {
-   "from": "L6-n10",
-   "to": "L6-n93",
-   "type": "walk",
-   "hint": "Conference Room on your right, lift core left"
-  },
-  {
    "from": "L6-n93",
-   "to": "L6-n16",
+   "to": "L6-n5",
    "type": "walk"
   },
   {
@@ -9196,14 +9001,15 @@
    "type": "walk"
   },
   {
-   "from": "L6-n30",
+   "from": "L6-n39",
    "to": "L6-n95",
    "type": "walk"
   },
   {
    "from": "L6-n95",
-   "to": "L6-n5",
-   "type": "walk"
+   "to": "L6-n62",
+   "type": "walk",
+   "hint_reverse": "Conference Room on your right, lift core left"
   },
   {
    "from": "L6-n94",
@@ -9211,13 +9017,13 @@
    "type": "walk"
   },
   {
-   "from": "L6-n22",
+   "from": "L6-n11",
    "to": "L6-n97",
    "type": "walk"
   },
   {
    "from": "L6-n97",
-   "to": "L6-n89",
+   "to": "L6-n30",
    "type": "walk"
   },
   {
@@ -9226,25 +9032,15 @@
    "type": "walk"
   },
   {
-   "from": "L6-n19",
-   "to": "L6-n99",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n99",
-   "to": "L6-n52",
-   "type": "walk",
-   "hint_reverse": "Keep right around the lift core"
-  },
-  {
    "from": "L6-n98",
    "to": "L6-n99",
    "type": "walk"
   },
   {
-   "from": "L6-n60",
+   "from": "L6-n28",
    "to": "L6-n101",
-   "type": "walk"
+   "type": "walk",
+   "hint": "Keep right around the lift core"
   },
   {
    "from": "L6-n100",
@@ -9252,498 +9048,374 @@
    "type": "walk"
   },
   {
-   "from": "L6-n102",
-   "to": "L6-n38",
+   "from": "L6-n103",
+   "to": "L6-n40",
    "type": "walk"
   },
   {
-   "from": "L6-n26",
-   "to": "L6-n104",
-   "type": "walk",
-   "hint": "Discussion Room straight ahead"
+   "from": "L6-n102",
+   "to": "L6-n103",
+   "type": "walk"
   },
   {
    "from": "L6-n104",
-   "to": "L6-n35",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n103",
-   "to": "L6-n104",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n56",
-   "to": "L6-n106",
+   "to": "L6-n48",
    "type": "walk"
   },
   {
    "from": "L6-n105",
-   "to": "L6-n106",
+   "to": "L6-n38",
    "type": "walk"
+  },
+  {
+   "from": "L6-n25",
+   "to": "L6-n107",
+   "type": "walk",
+   "hint": "Bio Chem Lab on your right, more ahead"
   },
   {
    "from": "L6-n107",
-   "to": "L6-n33",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n101",
-   "to": "L6-n109",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n109",
-   "to": "L6-n75",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n108",
-   "to": "L6-n109",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n110",
-   "to": "L6-n49",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n111",
-   "to": "L6-n22",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n5",
-   "to": "L6-n113",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n113",
    "to": "L6-n9",
    "type": "walk"
   },
   {
-   "from": "L6-n112",
-   "to": "L6-n113",
+   "from": "L6-n106",
+   "to": "L6-n107",
    "type": "walk"
   },
   {
-   "from": "L6-n115",
-   "to": "L6-n86",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n114",
-   "to": "L6-n115",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n115",
-   "to": "L6-n117",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n117",
-   "to": "L6-n2",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n116",
-   "to": "L6-n117",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n0",
-   "to": "L6-n119",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n119",
-   "to": "L6-n3",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n118",
-   "to": "L6-n119",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n34",
-   "to": "L6-n121",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n121",
+   "from": "L6-n108",
    "to": "L6-n50",
    "type": "walk"
   },
   {
-   "from": "L6-n120",
-   "to": "L6-n121",
+   "from": "L6-n109",
+   "to": "L6-n40",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n110",
+   "to": "L6-n48",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n6",
+   "to": "L6-n112",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n112",
+   "to": "L6-n99",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n111",
+   "to": "L6-n112",
    "type": "walk"
   },
   {
    "from": "L6-n53",
-   "to": "L6-n123",
-   "type": "walk",
-   "hint": "Pass Discussion Room 1 on your left"
+   "to": "L6-n114",
+   "type": "walk"
   },
   {
-   "from": "L6-n123",
-   "to": "L6-n7",
+   "from": "L6-n114",
+   "to": "L6-n88",
    "type": "walk"
+  },
+  {
+   "from": "L6-n113",
+   "to": "L6-n114",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n115",
+   "to": "L6-n79",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n116",
+   "to": "L6-n40",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n17",
+   "to": "L6-n118",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n118",
+   "to": "L6-n23",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n117",
+   "to": "L6-n118",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n1",
+   "to": "L6-n120",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n120",
+   "to": "L6-n3",
+   "type": "walk",
+   "hint_reverse": "Toilets on your right"
+  },
+  {
+   "from": "L6-n119",
+   "to": "L6-n120",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n28",
+   "to": "L6-n122",
+   "type": "walk",
+   "hint": "Discussion Room 1 on your right, lifts ahead"
   },
   {
    "from": "L6-n122",
-   "to": "L6-n123",
+   "to": "L6-n59",
+   "type": "walk",
+   "hint_reverse": "Pass Discussion Room 1 on your left"
+  },
+  {
+   "from": "L6-n121",
+   "to": "L6-n122",
    "type": "walk"
   },
   {
-   "from": "L6-n124",
-   "to": "L6-n50",
+   "from": "L6-n123",
+   "to": "L6-n43",
    "type": "walk"
   },
   {
-   "from": "L6-n106",
-   "to": "L6-n126",
+   "from": "L6-n0",
+   "to": "L6-n125",
    "type": "walk"
   },
   {
    "from": "L6-n125",
-   "to": "L6-n126",
+   "to": "L6-n103",
    "type": "walk"
   },
   {
-   "from": "L6-n33",
-   "to": "L6-n126",
+   "from": "L6-n124",
+   "to": "L6-n125",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n36",
+   "to": "L6-n84",
    "type": "walk",
-   "hint": "Pass Reading Room on your left, toilets ahead"
+   "hint": "Keep left around the lift core"
+  },
+  {
+   "from": "L6-n18",
+   "to": "L6-n101",
+   "type": "walk",
+   "hint": "Pass Discussion Room 2 on your right"
+  },
+  {
+   "from": "L6-n79",
+   "to": "L6-n99",
+   "type": "walk"
   },
   {
    "from": "L6-n110",
-   "to": "L6-n90",
+   "to": "L6-n91",
    "type": "walk",
    "hint": "(corridor data incomplete here: link added across a 11 m gap, confirm on site)"
   },
   {
-   "from": "L7-n12",
-   "to": "L7-n19",
+   "from": "L7-n1",
+   "to": "L7-n18",
    "type": "walk"
   },
   {
-   "from": "L7-n21",
-   "to": "L7-n11",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n22",
-   "to": "L7-n21",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n23",
-   "to": "L7-n54",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n54",
-   "to": "L7-n55",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n55",
-   "to": "L7-n13",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n25",
-   "to": "L7-n21",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n10",
-   "to": "L7-n15",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n25",
-   "to": "L7-n22",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n27",
-   "to": "L7-n24",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n6",
-   "to": "L7-n13",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n0",
-   "to": "L7-n56",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n56",
-   "to": "L7-n32",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n30",
-   "to": "L7-n3",
-   "type": "walk",
-   "hint_reverse": "Pass Discussion Room 2 on your left"
-  },
-  {
-   "from": "L7-n0",
+   "from": "L7-n3",
    "to": "L7-n6",
    "type": "walk"
   },
   {
-   "from": "L7-n32",
-   "to": "L7-n45",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n21",
-   "to": "L7-n2",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n2",
-   "to": "L7-n34",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n11",
-   "to": "L7-n2",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n34",
-   "to": "L7-n31",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n9",
-   "to": "L7-n7",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n12",
-   "to": "L7-n58",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n24",
-   "to": "L7-n22",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n7",
-   "to": "L7-n2",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n31",
-   "to": "L7-n48",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n44",
-   "to": "L7-n28",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n29",
-   "to": "L7-n46",
+   "from": "L7-n4",
+   "to": "L7-n16",
    "type": "walk",
    "hint": "Lifts straight ahead"
   },
   {
-   "from": "L7-n35",
+   "from": "L7-n7",
+   "to": "L7-n0",
+   "type": "walk",
+   "hint_reverse": "Pass Blackout Room on your right"
+  },
+  {
+   "from": "L7-n8",
+   "to": "L7-n17",
+   "type": "walk"
+  },
+  {
+   "from": "L7-n8",
+   "to": "L7-n9",
+   "type": "walk",
+   "hint_reverse": "Toilets on your right"
+  },
+  {
+   "from": "L7-n0",
+   "to": "L7-n19",
+   "type": "walk",
+   "hint": "TL@SaRC II on your right, SaRC II ahead"
+  },
+  {
+   "from": "L7-n19",
+   "to": "L7-n11",
+   "type": "walk",
+   "hint_reverse": "TL@SaRC II on your right, Blackout Room ahead"
+  },
+  {
+   "from": "L7-n6",
+   "to": "L7-n1",
+   "type": "walk"
+  },
+  {
+   "from": "L7-n10",
+   "to": "L7-n14",
+   "type": "walk",
+   "hint": "Pass Discussion Room 2 on your left"
+  },
+  {
+   "from": "L7-n11",
+   "to": "L7-n4",
+   "type": "walk",
+   "hint": "Pass TL@SaRC II on your left",
+   "hint_reverse": "Pass TL@SaRC II on your right"
+  },
+  {
+   "from": "L7-n3",
    "to": "L7-n7",
    "type": "walk"
   },
   {
-   "from": "L7-n9",
-   "to": "L7-n48",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n39",
-   "to": "L7-n10",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n17",
-   "to": "L7-n28",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n19",
-   "to": "L7-n20",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n26",
-   "to": "L7-n45",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n39",
-   "to": "L7-n20",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n27",
-   "to": "L7-n25",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n35",
-   "to": "L7-n26",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n60",
-   "to": "L7-n29",
+   "from": "L7-n20",
+   "to": "L7-n16",
    "type": "walk",
    "hint": "Pass TL@SaRC II on your left",
    "hint_reverse": "Pass TL@SaRC II on your right, lifts ahead"
   },
   {
-   "from": "L7-n59",
-   "to": "L7-n60",
+   "from": "L7-n0",
+   "to": "L7-n22",
    "type": "walk",
-   "hint_reverse": "Lifts straight ahead"
+   "hint": "Pass Blackout Room on your left, lifts ahead",
+   "hint_reverse": "Pass Blackout Room on your right"
   },
   {
-   "from": "L7-n15",
-   "to": "L7-n62",
+   "from": "L7-n22",
+   "to": "L7-n11",
    "type": "walk",
-   "hint_reverse": "TL@SaRC II on your right, Blackout Room ahead"
+   "hint": "Pass TL@SaRC II on your left",
+   "hint_reverse": "Pass TL@SaRC II on your right, lifts ahead"
   },
   {
-   "from": "L7-n62",
-   "to": "L7-n60",
+   "from": "L7-n21",
+   "to": "L7-n22",
    "type": "walk",
-   "hint": "Pass TL@SaRC II on your left, lifts ahead",
-   "hint_reverse": "TL@SaRC II on your right, Blackout Room ahead"
+   "hint": "Pass TL@SaRC II on your right",
+   "hint_reverse": "Pass TL@SaRC II on your left, lifts ahead"
   },
   {
-   "from": "L7-n61",
-   "to": "L7-n62",
+   "from": "L7-n23",
+   "to": "L7-n16",
    "type": "walk",
-   "hint": "Blackout Room on your left, TL@SaRC II ahead",
-   "hint_reverse": "Pass Blackout Room on your right, lifts ahead"
+   "hint": "Pass TL@SaRC II on your left",
+   "hint_reverse": "Pass TL@SaRC II on your right, stairs ahead"
   },
   {
-   "from": "L7-n63",
-   "to": "L7-n23",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n64",
-   "to": "L7-n46",
-   "type": "walk",
-   "hint": "Pass TL@SaRC II on your left"
-  },
-  {
-   "from": "L7-n65",
-   "to": "L7-n44",
+   "from": "L7-n24",
+   "to": "L7-n17",
    "type": "walk",
    "hint": "Pass Blackout Room on your left, toilets ahead"
   },
   {
-   "from": "L7-n67",
-   "to": "L7-n7",
+   "from": "L7-n25",
+   "to": "L7-n18",
+   "type": "walk"
+  },
+  {
+   "from": "L7-n27",
+   "to": "L7-n4",
    "type": "walk",
-   "hint_reverse": "Stairs straight ahead"
+   "hint_reverse": "Pass TL@SaRC II on your left"
   },
   {
-   "from": "L7-n66",
-   "to": "L7-n67",
+   "from": "L7-n26",
+   "to": "L7-n27",
    "type": "walk"
   },
   {
-   "from": "L7-n68",
-   "to": "L7-n58",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n29",
-   "to": "L7-n70",
-   "type": "walk",
-   "hint": "Pass TL@SaRC II on your left"
-  },
-  {
-   "from": "L7-n69",
-   "to": "L7-n70",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n3",
-   "to": "L7-n72",
+   "from": "L7-n10",
+   "to": "L7-n29",
    "type": "walk",
    "hint": "Discussion Room 2 on your right, toilets left"
   },
   {
-   "from": "L7-n72",
-   "to": "L7-n58",
+   "from": "L7-n29",
+   "to": "L7-n18",
    "type": "walk"
   },
   {
-   "from": "L7-n71",
-   "to": "L7-n72",
+   "from": "L7-n28",
+   "to": "L7-n29",
    "type": "walk"
   },
   {
-   "from": "L7-n73",
-   "to": "L7-n70",
+   "from": "L7-n30",
+   "to": "L7-n27",
    "type": "walk"
   },
   {
-   "from": "L7-n74",
-   "to": "L7-n44",
+   "from": "L7-n31",
+   "to": "L7-n17",
    "type": "walk"
   },
   {
-   "from": "L7-n76",
-   "to": "L7-n3",
+   "from": "L7-n10",
+   "to": "L7-n33",
    "type": "walk",
-   "hint_reverse": "Conference Room on your left, toilets right"
+   "hint": "Conference Room on your left, toilets right"
   },
   {
-   "from": "L7-n75",
-   "to": "L7-n76",
+   "from": "L7-n33",
+   "to": "L7-n9",
+   "type": "walk",
+   "hint_reverse": "Discussion Room 1 on your right, toilets left"
+  },
+  {
+   "from": "L7-n32",
+   "to": "L7-n33",
    "type": "walk"
   },
   {
-   "from": "L7-n77",
-   "to": "L7-n30",
+   "from": "L7-n34",
+   "to": "L7-n14",
    "type": "walk"
   },
   {
-   "from": "L7-n17",
-   "to": "L7-n79",
+   "from": "L7-n36",
+   "to": "L7-n9",
+   "type": "walk",
+   "hint_reverse": "Discussion Room 1 straight ahead"
+  },
+  {
+   "from": "L7-n35",
+   "to": "L7-n36",
    "type": "walk"
   },
   {
-   "from": "L7-n79",
-   "to": "L7-n76",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n78",
-   "to": "L7-n79",
-   "type": "walk"
-  },
-  {
-   "from": "L7-n80",
-   "to": "L7-n44",
+   "from": "L7-n37",
+   "to": "L7-n17",
    "type": "walk"
   },
   {
@@ -10242,48 +9914,48 @@
   },
   {
    "from": "L1-n52",
-   "to": "L2-n91",
+   "to": "L2-n95",
    "type": "lift",
    "length_m": 4.5,
    "hint": "Take the lift to Level 2"
   },
   {
-   "from": "L2-n91",
-   "to": "L3-n78",
+   "from": "L2-n95",
+   "to": "L3-n82",
    "type": "lift",
    "length_m": 4.5,
    "hint": "Take the lift to Level 3"
   },
   {
-   "from": "L3-n78",
-   "to": "L4-n76",
+   "from": "L3-n82",
+   "to": "L4-n77",
    "type": "lift",
    "length_m": 4.5,
    "hint": "Take the lift to Level 4"
   },
   {
-   "from": "L4-n76",
-   "to": "L5-n63",
+   "from": "L4-n77",
+   "to": "L5-n65",
    "type": "lift",
    "length_m": 4.5,
    "hint": "Take the lift to Level 5"
   },
   {
-   "from": "L5-n63",
-   "to": "L6-n63",
+   "from": "L5-n65",
+   "to": "L6-n67",
    "type": "lift",
    "length_m": 4.5,
    "hint": "Take the lift to Level 6"
   },
   {
-   "from": "L6-n63",
-   "to": "L7-n59",
+   "from": "L6-n67",
+   "to": "L7-n21",
    "type": "lift",
    "length_m": 4.5,
    "hint": "Take the lift to Level 7"
   },
   {
-   "from": "L7-n59",
+   "from": "L7-n21",
    "to": "L8-n38",
    "type": "lift",
    "length_m": 4.5,
@@ -10291,7 +9963,7 @@
   },
   {
    "from": "L8-n38",
-   "to": "L9-n38",
+   "to": "L9-n39",
    "type": "lift",
    "length_m": 4.5,
    "hint": "Take the lift to Level 9"
@@ -10326,41 +9998,41 @@
   },
   {
    "from": "L5-n62",
-   "to": "L6-n62",
+   "to": "L6-n64",
    "type": "lift",
    "length_m": 4.5,
    "hint": "Take the lift to Level 6"
   },
   {
    "from": "L1-n56",
-   "to": "L2-n95",
+   "to": "L2-n91",
    "type": "lift",
    "length_m": 4.5,
    "hint": "Take the lift to Level 2"
   },
   {
-   "from": "L2-n95",
-   "to": "L3-n82",
+   "from": "L2-n91",
+   "to": "L3-n78",
    "type": "lift",
    "length_m": 4.5,
    "hint": "Take the lift to Level 3"
   },
   {
-   "from": "L3-n82",
-   "to": "L4-n77",
+   "from": "L3-n78",
+   "to": "L4-n76",
    "type": "lift",
    "length_m": 4.5,
    "hint": "Take the lift to Level 4"
   },
   {
-   "from": "L4-n77",
-   "to": "L5-n65",
+   "from": "L4-n76",
+   "to": "L5-n63",
    "type": "lift",
    "length_m": 4.5,
    "hint": "Take the lift to Level 5"
   },
   {
-   "from": "L5-n65",
+   "from": "L5-n63",
    "to": "L6-n65",
    "type": "lift",
    "length_m": 4.5,
@@ -10368,13 +10040,13 @@
   },
   {
    "from": "L6-n65",
-   "to": "L7-n61",
+   "to": "L7-n20",
    "type": "lift",
    "length_m": 4.5,
    "hint": "Take the lift to Level 7"
   },
   {
-   "from": "L7-n61",
+   "from": "L7-n20",
    "to": "L8-n39",
    "type": "lift",
    "length_m": 4.5,
@@ -10382,7 +10054,7 @@
   },
   {
    "from": "L8-n39",
-   "to": "L9-n39",
+   "to": "L9-n38",
    "type": "lift",
    "length_m": 4.5,
    "hint": "Take the lift to Level 9"
@@ -10417,7 +10089,7 @@
   },
   {
    "from": "L5-n64",
-   "to": "L6-n64",
+   "to": "L6-n61",
    "type": "lift",
    "length_m": 4.5,
    "hint": "Take the lift to Level 6"
@@ -10452,7 +10124,7 @@
   },
   {
    "from": "L5-n61",
-   "to": "L6-n61",
+   "to": "L6-n63",
    "type": "lift",
    "length_m": 4.5,
    "hint": "Take the lift to Level 6"
@@ -10499,18 +10171,10 @@
   },
   {
    "from": "L5-n69",
-   "to": "L6-n69",
+   "to": "L6-n68",
    "type": "stairs",
    "length_m": 9.9,
    "hint": "Take the stairs to Level 6",
-   "step_free": false
-  },
-  {
-   "from": "L6-n69",
-   "to": "L7-n66",
-   "type": "stairs",
-   "length_m": 9.9,
-   "hint": "Take the stairs to Level 7",
    "step_free": false
   },
   {
@@ -10547,22 +10211,22 @@
   },
   {
    "from": "L5-n70",
-   "to": "L6-n70",
+   "to": "L6-n69",
    "type": "stairs",
    "length_m": 9.9,
    "hint": "Take the stairs to Level 6",
    "step_free": false
   },
   {
-   "from": "L6-n70",
-   "to": "L7-n64",
+   "from": "L6-n69",
+   "to": "L7-n23",
    "type": "stairs",
    "length_m": 9.9,
    "hint": "Take the stairs to Level 7",
    "step_free": false
   },
   {
-   "from": "L7-n64",
+   "from": "L7-n23",
    "to": "L8-n41",
    "type": "stairs",
    "length_m": 9.9,
@@ -10602,14 +10266,6 @@
    "step_free": false
   },
   {
-   "from": "L5-n68",
-   "to": "L6-n68",
-   "type": "stairs",
-   "length_m": 9.9,
-   "hint": "Take the stairs to Level 6",
-   "step_free": false
-  },
-  {
    "from": "L3-n86",
    "to": "L4-n80",
    "type": "stairs",
@@ -10627,22 +10283,22 @@
   },
   {
    "from": "L5-n67",
-   "to": "L6-n67",
+   "to": "L6-n70",
    "type": "stairs",
    "length_m": 9.9,
    "hint": "Take the stairs to Level 6",
    "step_free": false
   },
   {
-   "from": "L6-n67",
-   "to": "L7-n65",
+   "from": "L6-n70",
+   "to": "L7-n24",
    "type": "stairs",
    "length_m": 9.9,
    "hint": "Take the stairs to Level 7",
    "step_free": false
   },
   {
-   "from": "L7-n65",
+   "from": "L7-n24",
    "to": "L8-n40",
    "type": "stairs",
    "length_m": 9.9,
@@ -11882,7 +11538,7 @@
     "XF-06-18"
    ],
    "category": "lab",
-   "door_node": "L6-n84"
+   "door_node": "L6-n85"
   },
   {
    "id": "RTP-XF-06-17A",
@@ -11892,7 +11548,7 @@
     "XF-06-17A"
    ],
    "category": "lab",
-   "door_node": "L6-n85"
+   "door_node": "L6-n86"
   },
   {
    "id": "RTP-XF-06-01",
@@ -11912,7 +11568,7 @@
     "RTP-BX-06-01"
    ],
    "category": "room",
-   "door_node": "L6-n88"
+   "door_node": "L6-n89"
   },
   {
    "id": "RTP-BX-06-T3",
@@ -11922,7 +11578,7 @@
     "RTP-BX-06-T3"
    ],
    "category": "toilet",
-   "door_node": "L6-n90"
+   "door_node": "L6-n91"
   },
   {
    "id": "RTP-BX-06-00",
@@ -11933,7 +11589,7 @@
     "RTP-BX-06-00"
    ],
    "category": "lab",
-   "door_node": "L6-n91"
+   "door_node": "L6-n92"
   },
   {
    "id": "RTP-XF-06-05",
@@ -11943,7 +11599,7 @@
     "XF-06-05"
    ],
    "category": "room",
-   "door_node": "L6-n92"
+   "door_node": "L6-n94"
   },
   {
    "id": "RTP-XF-06-T6",
@@ -11953,7 +11609,7 @@
     "XF-06-T6"
    ],
    "category": "toilet",
-   "door_node": "L6-n94"
+   "door_node": "L6-n96"
   },
   {
    "id": "RTP-XF-06-14",
@@ -11963,7 +11619,7 @@
     "XF-06-14"
    ],
    "category": "lab",
-   "door_node": "L6-n96"
+   "door_node": "L6-n98"
   },
   {
    "id": "RTP-XF-06-22",
@@ -11976,7 +11632,7 @@
     "XF-06-22"
    ],
    "category": "room",
-   "door_node": "L6-n98"
+   "door_node": "L6-n100"
   },
   {
    "id": "RTP-XF-06-04",
@@ -11986,7 +11642,7 @@
     "XF-06-04"
    ],
    "category": "lab",
-   "door_node": "L6-n100"
+   "door_node": "L6-n102"
   },
   {
    "id": "RTP-BX-06-01-2",
@@ -11996,14 +11652,14 @@
     "RTP-BX-06-01"
    ],
    "category": "room",
-   "door_node": "L6-n102"
+   "door_node": "L6-n104"
   },
   {
    "id": "L6-RTP-BX-06",
    "name": "RTP-BX-06",
    "aliases": [],
    "category": "lab",
-   "door_node": "L6-n103"
+   "door_node": "L6-n105"
   },
   {
    "id": "RTP-XF-06-19A",
@@ -12013,7 +11669,7 @@
     "XF-06-19A"
    ],
    "category": "lab",
-   "door_node": "L6-n105"
+   "door_node": "L6-n106"
   },
   {
    "id": "RTP-XF-06-02",
@@ -12023,7 +11679,7 @@
     "XF-06-02"
    ],
    "category": "lab",
-   "door_node": "L6-n107"
+   "door_node": "L6-n108"
   },
   {
    "id": "RTP-XF-06-19B",
@@ -12033,7 +11689,7 @@
     "XF-06-19B"
    ],
    "category": "room",
-   "door_node": "L6-n108"
+   "door_node": "L6-n109"
   },
   {
    "id": "RTP-BX-06-02",
@@ -12063,7 +11719,7 @@
     "XF-06-T4"
    ],
    "category": "toilet",
-   "door_node": "L6-n112"
+   "door_node": "L6-n113"
   },
   {
    "id": "RTP-XF-06-05A",
@@ -12073,7 +11729,7 @@
     "XF-06-05A"
    ],
    "category": "lab",
-   "door_node": "L6-n114"
+   "door_node": "L6-n115"
   },
   {
    "id": "RTP-XF-06-18A",
@@ -12093,7 +11749,7 @@
     "XF-06-07"
    ],
    "category": "room",
-   "door_node": "L6-n118"
+   "door_node": "L6-n117"
   },
   {
    "id": "RTP-XF-06-T8",
@@ -12103,7 +11759,7 @@
     "XF-06-T8"
    ],
    "category": "toilet",
-   "door_node": "L6-n120"
+   "door_node": "L6-n119"
   },
   {
    "id": "RTP-XF-06-21",
@@ -12116,14 +11772,14 @@
     "XF-06-21"
    ],
    "category": "room",
-   "door_node": "L6-n122"
+   "door_node": "L6-n121"
   },
   {
    "id": "L6-HANDICAP-TOILET",
    "name": "Handicap Toilet",
    "aliases": [],
    "category": "toilet",
-   "door_node": "L6-n124"
+   "door_node": "L6-n123"
   },
   {
    "id": "RTP-XF-06",
@@ -12133,7 +11789,7 @@
     "XF-06"
    ],
    "category": "lab",
-   "door_node": "L6-n125"
+   "door_node": "L6-n124"
   },
   {
    "id": "RTP-BX-07-05",
@@ -12143,7 +11799,7 @@
     "RTP-BX-07-05"
    ],
    "category": "lab",
-   "door_node": "L7-n68"
+   "door_node": "L7-n25"
   },
   {
    "id": "RTP-BX-07",
@@ -12153,7 +11809,7 @@
     "RTP-BX-07"
    ],
    "category": "lab",
-   "door_node": "L7-n69"
+   "door_node": "L7-n26"
   },
   {
    "id": "RTP-BX-07-09",
@@ -12166,7 +11822,7 @@
     "RTP-BX-07-09"
    ],
    "category": "room",
-   "door_node": "L7-n71"
+   "door_node": "L7-n28"
   },
   {
    "id": "RTP-BX-07-01",
@@ -12177,7 +11833,7 @@
     "SaRC II"
    ],
    "category": "lab",
-   "door_node": "L7-n73"
+   "door_node": "L7-n30"
   },
   {
    "id": "RTP-BX-07-T3",
@@ -12187,7 +11843,7 @@
     "RTP-BX-07-T3"
    ],
    "category": "toilet",
-   "door_node": "L7-n74"
+   "door_node": "L7-n31"
   },
   {
    "id": "RTP-BX-07-T2",
@@ -12197,7 +11853,7 @@
     "RTP-BX-07-T2"
    ],
    "category": "toilet",
-   "door_node": "L7-n75"
+   "door_node": "L7-n32"
   },
   {
    "id": "RTP-BX-07-10",
@@ -12207,7 +11863,7 @@
     "RTP-BX-07-10"
    ],
    "category": "room",
-   "door_node": "L7-n77"
+   "door_node": "L7-n34"
   },
   {
    "id": "RTP-BX-07-11",
@@ -12220,14 +11876,14 @@
     "RTP-BX-07-11"
    ],
    "category": "room",
-   "door_node": "L7-n78"
+   "door_node": "L7-n35"
   },
   {
    "id": "L7-MALE-TOILET",
    "name": "Male Toilet",
    "aliases": [],
    "category": "toilet",
-   "door_node": "L7-n80"
+   "door_node": "L7-n37"
   },
   {
    "id": "RTP-BX-08-01B",
@@ -12384,9 +12040,7 @@
   "L5: bridged a 12 m gap between corridor pieces at (38,20)",
   "L6: stairs at (21,92) left out of the routes: inside a key-card area (team site notes)",
   "L6: bridged a 11 m gap between corridor pieces at (33,26)",
-  "L7: 2 disconnected corridor pieces remain (nearest gap 22 m)",
   "L9: bridged a 2 m gap between corridor pieces at (25,11)",
-  "stairs at (23,95) not linked from L2 to L7: the floors between are inside key-card areas (team site notes)",
   "hints: hint (from -> to) and hint_reverse (to -> from) drafted by hints/draft_hints.py on 2026-11-02"
  ]
 }
