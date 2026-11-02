@@ -79,7 +79,11 @@
   // facts per place from places.json and the photo folder: a place's key is its destination id, its plan room id (room:… stripped), entrance:N or node:<id>
   const ACCESS = { keycard: 'Key card needed', staff: 'Staff only', closed: 'Closed to visitors' };
   const placeKey = p => String(p.id || '').replace(/^room:/, '');
-  function infoOf(p) { const k = placeKey(p), o = places[k] || {}; return { photo: photos[k] || o.photo || null, access: ACCESS[o.access] ? o.access : null, note: o.note || '' }; }
+  const labOf = new Map(); for (const rm of roomIndex.values()) if (rm.zone) { labOf.set(rm.id, rm.zone); if (rm.dest) labOf.set(rm.dest, rm.zone); }   // a room inside a key-card lab (the team's red outlines; rooms.json zone): key card, unless places.json says otherwise
+  function infoOf(p) {
+    const k = placeKey(p), o = places[k] || {}, lab = labOf.get(k);
+    return { photo: photos[k] || o.photo || null, access: ACCESS[o.access] ? o.access : lab ? 'keycard' : null, note: o.note || (lab ? `Inside the ${lab} key-card area` : '') };
+  }
   const lockSvg = a => `<svg class="lock" role="img" aria-label="${ACCESS[a]}"><use href="#i-lock"/></svg>`;
   const accChip = p => { const i = p ? infoOf(p) : {}; return i.access ? `<span class="acc ${i.access}"><svg aria-hidden="true"><use href="#i-lock"/></svg>${ACCESS[i.access]}</span>` : ''; };
   function placeOfRoom(rm, lv) {

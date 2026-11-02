@@ -107,6 +107,7 @@
     "roof_m2": 0
    },
    "notes": [
+    "Tinted orange: key-card labs from the team's marked plans (ANGEL (Alibaba-NTU lab); NTU Entrepreneurship Academy). Every room inside needs a key card; the orange dot is the lab's entrance, the only way the routes go in (map/site-corrections.json restricted_zones).",
     "MazeMap has no corridors for this level; the walkways drawn here (the foyer, the lift lobbies, the landing at the top of the steps, the Chua Thian Poh Chamber lobby) and several names come from the team's site notes (map/site-corrections.json).",
     "Labels that do not fit their room and were left off: Breakout Room A; Breakout Room B; Breakout Room D; Breakout Room E; Breakout Room F; Chua Thian Poh Chamber for Entrepreneurship Education; Executive Training Room; Handicap Toilet; Male Toilet",
     "Labels shortened to fit: NTU Entrepreneurship Academy [NTUpreneur] as \"NTUpreneur\""
@@ -145,6 +146,7 @@
     "roof_m2": 0
    },
    "notes": [
+    "Tinted orange: key-card labs from the team's marked plans (NCDT (Digital Trust Centre); AUMOVIO-NTU Corporate Lab). Every room inside needs a key card; the orange dot is the lab's entrance, the only way the routes go in (map/site-corrections.json restricted_zones).",
     "Labels that do not fit their room and were left off: Handicap Toilet; Male Toilet",
     "Labels shortened to fit: National Centre for Research in Digital Trust [NCDT] as \"NCDT\""
    ]
@@ -182,6 +184,7 @@
     "roof_m2": 0
    },
    "notes": [
+    "Tinted orange: key-card labs from the team's marked plans (NTU Perovskite Laboratory; SCRIPTS; NiCE lab 1). Every room inside needs a key card; the orange dot is the lab's entrance, the only way the routes go in (map/site-corrections.json restricted_zones).",
     "Labels that do not fit their room and were left off: Handicap Toilet; Male Toilet",
     "Labels shortened to fit: Strategic Centre for Research in Privacy-Preserving Technologies & System [SCRIPTS] as \"SCRIPTS\""
    ]
@@ -219,6 +222,7 @@
     "roof_m2": 0
    },
    "notes": [
+    "Tinted orange: key-card labs from the team's marked plans (ERI@N; TL Advanced Materials Lab). Every room inside needs a key card; the orange dot is the lab's entrance, the only way the routes go in (map/site-corrections.json restricted_zones).",
     "Labels that do not fit their room and were left off: Compressor Room; Cylinder Room; Handicap Toilet; Male Toilet; Translational Materials Innovation Group [TMIG] Lab",
     "Labels shortened to fit: CNRS-International-NTU-Thales Research Alliance @ Level 5 [CINTRA] as \"CINTRA\""
    ]
