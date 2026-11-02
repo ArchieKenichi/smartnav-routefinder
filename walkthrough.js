@@ -110,7 +110,7 @@
     const app = $('#app'); app.style.setProperty('--sheet-h', (isPhone() ? sheetHeight(sheetState) : 0) + 'px');   // the sheet's target height, not its rect: it may still be sliding
     app.style.setProperty('--header-h', (isPhone() ? $('#searchcard').getBoundingClientRect().height + 16 : 0) + 'px');
   }
-  const v3 = View3D({ canvas, manifest, V, paths, ui: { headerPx, panelFrac, levelName, borrowedFrom, borrowedCaption: BORROWED_CAPTION } });
+  const v3 = View3D({ canvas, manifest, V, paths, ui: { headerPx, panelFrac, levelName, borrowedFrom, borrowedCaption: BORROWED_CAPTION, onFree: st => { if (v2 && v2.setFree) v2.setFree(st); } } });
   let v2 = null;
   if (typeof L !== 'undefined') v2 = View2D({ el: $('#map'), levelsEl: $('#levels'), msgEl: $('#mapmsg'), plans, PLANS, levels: byFloor.map(l => ({ id: l.id, name: levelName(l.id), floor: l.floor })), esc, onScrub: (s, run, lv) => { stopFly(); setS(s, lv); }, onClickStep: i => goToStep(i), overlaps, rooms, onPickRoom: (rm, lv) => pickRoom(rm, lv), onPickPoint: (lv, x, y) => pickPoint(lv, x, y), isThumb: () => viewMode === '3d', labelOf: rm => (rm.kind === 'lift' || rm.kind === 'stairs' ? kindLabel(rm) : 'Unnamed ' + kindLabel(rm).toLowerCase()) });
   else { $('#mapmsg').textContent = 'The map library (Leaflet) could not be loaded; the 2D plan needs internet access for it once.'; $('#mapmsg').style.display = 'block'; }
@@ -281,6 +281,7 @@
   $('#compactrow').onclick = () => setCollapsed(false);
   function route(keepS) {
     const sPrev = keepS && R ? pos.s : 0;
+    if (v3.freeOn()) setFree(false);
     stopFly(); plan = null; R = null; dest = null; already = null; pos = { s: 0, run: 0 };
     v3.clear(); if (v2) v2.setRoute(null);
     $('#steps').innerHTML = ''; summary(''); setCaptionIdle(); enableControls(false); $('#scrub').value = 0; $('#scrub').max = 100; $('#pos').textContent = '0 m / 0 m';
@@ -337,6 +338,7 @@
   let urlDirty = false, urlAt = 0;   // the address bar follows the position once it has settled for a moment (not during a drag)
   function setS(s, levelHint, o) {   // -> whether the run (level) changed
     if (!R) return false; o = o || {};
+    if (v3.freeOn()) setFree(false);   // using the route (scrub, steps, play, the plan's marker) brings the view back onto it
     const ns = Math.max(0, Math.min(R.length, s)), dir = Math.sign(ns - pos.s) || 1, run = runFor(ns, levelHint, dir), changed = run !== pos.run;
     pos = { s: ns, run }; if (!o.pin) pinnedStep = -1;
     v3.setTarget(ns, run, { snap: o.snap, fadeMs: o.fly && changed ? FLY_RIDE_MS : undefined, card: !!(o.fly && changed) });
@@ -407,7 +409,7 @@
 
   // ------------------------------------------------------------ fly-through
   const fly = { on: false, pace: +$('#speed').value, pauseUntil: 0 };
-  function setFly(on) { if (!R) return; fly.on = on; if (on && pos.s >= R.length - 1e-6) setS(0, null, { snap: true }); fly.pauseUntil = 0; updatePlay(); }
+  function setFly(on) { if (!R) return; if (on && v3.freeOn()) setFree(false); fly.on = on; if (on && pos.s >= R.length - 1e-6) setS(0, null, { snap: true }); fly.pauseUntil = 0; updatePlay(); }
   function stopFly() { if (fly.on) { fly.on = false; updatePlay(); } }
   function updatePlay() { const b = $('#play'); b.classList.toggle('playing', fly.on); b.querySelector('.lbl').textContent = fly.on ? 'Pause' : 'Play'; b.title = fly.on ? 'Pause the fly-through (space)' : 'Fly through the route (space)'; b.setAttribute('aria-label', b.title); }
   $('#speed').onchange = () => { fly.pace = +$('#speed').value; };
@@ -431,6 +433,7 @@
   $('#compactrow').addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setCollapsed(false); inputs.to.focus(); } });
   window.addEventListener('keydown', e => {
     if (e.key === 'Escape' && pickMode) { endPick(); toast(''); return; }
+    if (v3.freeOn() && freeKey(e, true)) return;
     if (e.defaultPrevented || (e.target && e.target.closest && e.target.closest('[role="button"], #placecard, .leaflet-container'))) return;   // a row, the route header, the card and the map handle their own keys
     const tag = e.target && e.target.tagName, isRange = tag === 'INPUT' && e.target.type === 'range';
     if (tag === 'BUTTON' || tag === 'SELECT' || tag === 'TEXTAREA' || (tag === 'INPUT' && !isRange)) return;
@@ -446,11 +449,13 @@
   let drag = null; const pointers = new Set();
   canvas.addEventListener('pointerdown', e => {
     pointers.add(e.pointerId); if (e.button === 1) return;
+    if (v3.freeOn()) { freeDown(e); return; }
     drag = { x: e.clientX, y: e.clientY, s: pos.s, yaw: v3.lookOffset(), pitch: v3.lookPitch(), axis: (e.button === 2 || e.shiftKey || pointers.size > 1) ? 'look' : null, id: e.pointerId };
     if (isPhone()) $('#hint3d').classList.add('seen');   // a phone shows the gesture hint once, until the first drag
     try { canvas.setPointerCapture(e.pointerId); } catch (err) {}
   });
   canvas.addEventListener('pointermove', e => {
+    if (v3.freeOn()) { freeMove(e); return; }
     if (!drag || e.pointerId !== drag.id) return;
     const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
     if (pointers.size > 1 && drag.axis !== 'look') { drag.axis = 'look'; drag.x = e.clientX; drag.y = e.clientY; drag.yaw = v3.lookOffset(); drag.pitch = v3.lookPitch(); return; }
@@ -458,10 +463,83 @@
     if (drag.axis === 'look') v3.look(drag.yaw + (drag.x - e.clientX) / canvas.clientWidth * Math.PI, drag.pitch + (drag.y - e.clientY) / canvas.clientHeight * 1.2, true);
     else if (drag.axis === 'move' && R) { stopFly(); setS(drag.s + dx * SWIPE_M_PER_PX); }
   });
-  const endDrag = e => { pointers.delete(e.pointerId); if (drag && e.pointerId === drag.id) drag = null; };
+  const endDrag = e => { pointers.delete(e.pointerId); if (drag && e.pointerId === drag.id) drag = null; if (v3.freeOn()) freeUp(e); };
   canvas.addEventListener('pointerup', endDrag); canvas.addEventListener('pointercancel', endDrag);
   canvas.addEventListener('contextmenu', e => e.preventDefault());
-  canvas.addEventListener('wheel', e => { if (!R) return; e.preventDefault(); stopFly(); setS(pos.s + (Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX) * WHEEL_M_PER_PX); }, { passive: false });
+  canvas.addEventListener('wheel', e => { if (v3.freeOn()) { e.preventDefault(); v3.freeForward(-(e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY) * FREE_WHEEL_M_PER_PX); return; } if (!R) return; e.preventDefault(); stopFly(); setS(pos.s + (Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX) * WHEEL_M_PER_PX); }, { passive: false });
+
+  // ------------------------------------------------------------ free look: walk around the building yourself in the 3D view
+  // Drag looks around (grab the view, as on a street-view map); the wheel, a pinch or the keys walk; a tap on the floor walks there;
+  // the level buttons go up or down a level (to the same spot, or the nearest walkway there). The route controls bring the view back.
+  const FREE_WHEEL_M_PER_PX = 0.012, FREE_PINCH_M_PER_PX = 0.03, TAP_MS = 350, TAP_PX = 8;
+  const HINT_ROUTE = $('#hint3d').textContent;
+  const HINT_FREE = 'Drag to look around · scroll or pinch to walk · tap the floor to go there · arrow keys / WASD';
+  const levelOrder = byFloor.map(l => l.id);
+  function setFree(on) {
+    if (!!on === v3.freeOn()) return;
+    if (on) { stopFly(); if (viewMode === 'map') setView('3d'); v3.freeStart(); }
+    else { v3.freeKeys({}); freeKeysDown.clear(); v3.freeStop(); if (v2 && v2.setFree) v2.setFree(null); }
+    $('#app').classList.toggle('free3d', !!on);
+    const b = $('#freebtn'); b.setAttribute('aria-pressed', String(!!on));
+    b.querySelector('.lbl').textContent = on ? (R ? 'Back to route' : 'Done') : 'Look around';
+    if (on) b.dataset.short = 'Done'; else delete b.dataset.short;   // a phone shows the short label (app.css): the level buttons sit beside it
+    b.querySelector('use').setAttribute('href', on ? '#i-directions' : '#i-walk');
+    b.title = on ? 'Back to the route view (Esc)' : 'Look around and walk yourself: drag to look, scroll or pinch to walk, tap the floor to go there (arrow keys / WASD on a keyboard)';
+    const h = $('#hint3d'); h.textContent = on ? HINT_FREE : HINT_ROUTE; h.classList.remove('seen');
+  }
+  $('#freebtn').onclick = () => setFree(!v3.freeOn());
+  function freeLevel(dir) {
+    const st = v3.freeState(); if (!st) return;
+    const to = levelOrder[levelOrder.indexOf(st.level) + dir];
+    if (!to) { toast(dir > 0 ? 'This is the top level' : 'This is the lowest level', 1800); return; }
+    if (v3.freeSetLevel(to, st.x, st.y)) { toast(levelName(to), 1200); return; }
+    let best = null;   // no floor straight above or below: the nearest walkway on that level
+    for (const n of V.nodes.values()) if (n.level === to && (n.type === 'junction' || n.type === 'turn')) { const d = Math.hypot(n.x - st.x, n.y - st.y); if (!best || d < best.d) best = { n, d }; }
+    if (best && v3.freeSetLevel(to, best.n.x, best.n.y)) toast(`${levelName(to)}: the nearest walkway, ${Math.round(best.d)} m from here`, 2200);
+    else toast(`Nowhere to stand on ${levelName(to)} near here`, 2000);
+  }
+  $('#freeup').onclick = () => freeLevel(+1); $('#freedown').onclick = () => freeLevel(-1);
+  const freeTouch = new Map(); let fdrag = null, pinch = null;
+  const pinchDist = () => { const [a, b] = [...freeTouch.values()]; return Math.hypot(a.x - b.x, a.y - b.y); };
+  function freeDown(e) {
+    freeTouch.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (freeTouch.size === 1) fdrag = { id: e.pointerId, x: e.clientX, y: e.clientY, yaw: v3.freeYaw(), pitch: v3.freePitch(), t: performance.now(), moved: false, button: e.button };
+    else if (freeTouch.size === 2) { fdrag = null; pinch = { d: pinchDist() }; }
+    $('#hint3d').classList.add('seen');
+    try { canvas.setPointerCapture(e.pointerId); } catch (err) {}
+  }
+  function freeMove(e) {
+    if (!freeTouch.has(e.pointerId)) return;
+    freeTouch.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pinch && freeTouch.size === 2) { const d = pinchDist(); v3.freeForward((d - pinch.d) * FREE_PINCH_M_PER_PX); pinch.d = d; return; }
+    if (!fdrag || e.pointerId !== fdrag.id) return;
+    const dx = e.clientX - fdrag.x, dy = e.clientY - fdrag.y;
+    if (!fdrag.moved && Math.hypot(dx, dy) > TAP_PX) fdrag.moved = true;
+    if (fdrag.moved) v3.freeLook(fdrag.yaw + dx / canvas.clientWidth * Math.PI, fdrag.pitch + dy / canvas.clientHeight * 1.2, true);   // grab the view: drag right turns left, drag down looks up
+  }
+  function freeUp(e) {
+    const tap = fdrag && e.pointerId === fdrag.id && !fdrag.moved && fdrag.button === 0 && performance.now() - fdrag.t < TAP_MS && e.type === 'pointerup';
+    freeTouch.delete(e.pointerId);
+    if (freeTouch.size < 2) pinch = null;
+    if (fdrag && e.pointerId === fdrag.id) fdrag = null;
+    if (tap && !v3.freeWalkTo(e.clientX, e.clientY)) toast('Tap the floor to walk there', 1500);
+  }
+  const freeKeysDown = new Set();
+  const FREE_KEYS = { KeyW: 'f+', ArrowUp: 'f+', KeyS: 'f-', ArrowDown: 'f-', KeyA: 's-', KeyD: 's+', ArrowLeft: 't+', KeyQ: 't+', ArrowRight: 't-', KeyE: 't-', KeyR: 'p+', KeyF: 'p-', ShiftLeft: 'run', ShiftRight: 'run' };
+  function freeKey(e, down) {   // -> whether the key was the free look's
+    if (e.key === 'Escape' && down) { setFree(false); return true; }
+    if (e.code === 'PageUp' && down) { freeLevel(+1); e.preventDefault(); return true; }
+    if (e.code === 'PageDown' && down) { freeLevel(-1); e.preventDefault(); return true; }
+    const what = FREE_KEYS[e.code];
+    const tag = e.target && e.target.tagName;
+    if (!what || tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (e.target && e.target.isContentEditable)) return false;
+    if (down) freeKeysDown.add(what); else freeKeysDown.delete(what);
+    const has = k => freeKeysDown.has(k);
+    v3.freeKeys({ fwd: (has('f+') ? 1 : 0) - (has('f-') ? 1 : 0), side: (has('s+') ? 1 : 0) - (has('s-') ? 1 : 0), turn: (has('t+') ? 1 : 0) - (has('t-') ? 1 : 0), pitch: (has('p+') ? 1 : 0) - (has('p-') ? 1 : 0), fast: has('run') });
+    e.preventDefault(); return true;
+  }
+  window.addEventListener('keyup', e => { if (v3.freeOn()) freeKey(e, false); });
+  window.addEventListener('blur', () => { freeKeysDown.clear(); v3.freeKeys({}); });
 
   // ------------------------------------------------------------ view modes: the plan with the 3D view as a thumbnail (map), the 3D view with the plan as a thumbnail (3d), side by side (split, desktops); and the phone sheet
   function setView(mode) {
@@ -469,6 +547,7 @@
     viewMode = ['map', '3d', 'split'].includes(mode) ? mode : 'map';
     if (viewMode === 'split' && (isPhone() || window.innerWidth < 1100)) viewMode = '3d';   // side by side needs room for the panel beside half a plan
     for (const m of ['map', '3d', 'split']) $('#app').classList.toggle('view-' + m, m === viewMode);
+    if (viewMode === 'map' && v3.freeOn()) setFree(false);
     const to3d = viewMode !== '3d';
     $('#thumblbl').textContent = to3d ? '3D' : 'Map'; $('#thumbtap').setAttribute('aria-label', to3d ? '3D: switch to the 3D view' : 'Map: back to the plan');
     $('#thumbtap use').setAttribute('href', to3d ? '#i-cube' : '#i-map');
@@ -569,6 +648,7 @@
     setStart: v => { const pl = placeFromParam(v); if (pl) { setField('from', pl); route(); } return !!pl; },
     pick: (lv, x, y) => pickPoint(lv, x, y), pickRoom: id => { const rm = roomIndex.get(id); if (rm) pickRoom(rm, rm.level); return !!rm; }, rooms: () => rooms, explore: openCat, categories: CATS,
     get debugCamera() { return v3.debugCamera; }, set debugCamera(c) { v3.debugCamera = c; },
+    free: { on: () => v3.freeOn(), state: () => v3.freeState(), set: on => setFree(on), level: dir => freeLevel(dir), go: (level, x, y, heading) => { const ok = v3.freeSetLevel(level, x, y); if (ok && heading != null) v3.freeLook(heading, 0, true); return ok; } },   // free look, for tests and inspection
     state: () => { const st = v3.state(); return { s: pos.s, run: pos.run, length: R ? R.length : 0, level: st.level, moving: st.moving, transition: st.transition, autoWalk: fly.on, arrivedHere: !!already, view: viewMode }; },
   };
 })();

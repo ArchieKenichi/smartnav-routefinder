@@ -72,6 +72,7 @@ svg:not(.leaflet-pane *) { width:20px; height:20px; fill:none; stroke:currentCol
 .stepmark.current { box-shadow:0 0 0 4px rgba(245,158,11,.75), 0 1px 3px rgba(0,0,0,.4); }
 .posmark { width:44px; height:44px; display:flex; align-items:center; justify-content:center; cursor:grab; touch-action:none; position:relative; }
 .posmark .dot { width:18px; height:18px; border-radius:50%; background:var(--primary); border:3px solid #fff; box-shadow:0 0 0 3px rgba(37,99,235,.35), 0 2px 6px rgba(0,0,0,.4); }
+.posmark.free { cursor:default; } .posmark.free .dot { background:#f59e0b; box-shadow:0 0 0 3px rgba(245,158,11,.35), 0 2px 6px rgba(0,0,0,.4); } .posmark.free .dir { border-bottom-color:#f59e0b; }
 .posmark .dir { position:absolute; width:0; height:0; border-left:7px solid transparent; border-right:7px solid transparent; border-bottom:12px solid var(--primary); top:2px; left:15px; transform-origin:7px 20px; }
 .room-hover { cursor:pointer; }
 /* a tapped room must not grow a focus ring: browsers draw it as the path's bounding box, a huge square around a room drawn at 45° */
@@ -86,6 +87,18 @@ svg:not(.leaflet-pane *) { width:20px; height:20px; fill:none; stroke:currentCol
 .view-3d #banner { left:calc(var(--panel-w) + var(--gl) + var(--gutter)); }
 #hint3d { position:absolute; left:50%; bottom:12px; transform:translateX(-50%); color:#fff; background:rgba(15,23,42,.6); padding:6px 12px; border-radius:var(--r-pill); font-size:12px; pointer-events:none; z-index:3; max-width:calc(100% - 24px); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 #hint3d.seen { display:none; }
+/* free look: walk around yourself in the 3D view */
+#freetools { position:absolute; right:var(--gutter); top:calc(var(--gutter) + 36px); display:flex; gap:6px; z-index:3; }
+.pill3d { display:inline-flex; align-items:center; gap:6px; min-height:40px; padding:0 14px; border:0; border-radius:var(--r-pill); background:rgba(15,23,42,.85); color:#fff; font-weight:600; font-size:13px; line-height:1; cursor:pointer; box-shadow:var(--shadow-1); transition:background .15s ease; }
+.pill3d svg { width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.pill3d:hover { background:rgba(15,23,42,.95); }
+.pill3d:focus-visible { outline:3px solid #93c5fd; outline-offset:2px; }
+.pill3d[aria-pressed="true"] { background:var(--primary); }
+.pill3d.icon { width:40px; padding:0; justify-content:center; }
+#freeup, #freedown { display:none; }
+.free3d #freeup, .free3d #freedown { display:inline-flex; }
+.view-map #view3dwrap #freetools { display:none; }
+.free3d #view { cursor:grab; } .free3d #view:active { cursor:grabbing; }
 #fade { position:absolute; inset:0; background:#0b1220; opacity:0; pointer-events:none; display:flex; align-items:center; justify-content:center; z-index:4; }
 #fade .card { background:#fff; color:var(--ink); border-radius:var(--r-lg); padding:18px 24px; text-align:center; max-width:80%; box-shadow:0 10px 40px rgba(0,0,0,.4); display:none; }
 #fade .card .t { font-size:20px; font-weight:700; }
@@ -263,8 +276,11 @@ svg:not(.leaflet-pane *) { width:20px; height:20px; fill:none; stroke:currentCol
   #searchcard:not(.collapsed) .notice { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   #viewtools { display:none; }
   #view3dwrap #level { top:auto; bottom:12px; right:8px; }
-  #banner { top:auto; bottom:48px; right:8px; left:8px; font-size:11px; }
+  #banner, .view-3d #banner { top:calc(var(--header-h, 72px) + 40px); bottom:auto; right:8px; left:8px; font-size:11px; }   /* under the hint: the bottom right has the look-around buttons and the level */
   #hint3d { bottom:auto; top:calc(var(--header-h, 72px) + 4px); left:50%; }
+  #freetools { top:auto; bottom:48px; right:8px; }
+  .pill3d { min-height:44px; } .pill3d.icon { width:44px; }
+  #freebtn[data-short] .lbl { display:none; } #freebtn[data-short]::after { content:attr(data-short); }   /* "Done": the long label would run into the plan thumbnail */
   #placecard { left:var(--gutter); right:var(--gutter); transform:none; bottom:calc(var(--sheet-h, 104px) + env(safe-area-inset-bottom, 0px) + 10px); width:auto; }   /* the desktop rule centres it in the free middle of the map; on a phone it spans the width above the sheet */
   #toast { left:12px; right:72px; bottom:auto; top:calc(var(--header-h, 72px) + 4px); margin:0; max-width:none; text-align:left; }   /* a banner under the search card, clear of the level pills on the right */
   .view-3d #placecard { display:none; }

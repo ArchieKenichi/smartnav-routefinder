@@ -567,6 +567,7 @@ window.View3D = function (deps) {
   }
   function update(now) {
     const dt = Math.min(0.2, (now - lastNow) / 1000); lastNow = now;
+    if (free) { freeTick(dt); resize(); renderer.render(scene, api.debugCamera || camera); return; }
     if (R) apply(dt, false);
     else if (arrivedHere) { lookYaw *= Math.exp(-1.5 * dt); const h = yaw + lookYaw; camera.lookAt(camera.position.x + Math.cos(h) * Math.cos(pitch), camera.position.y + Math.sin(pitch), camera.position.z - Math.sin(h) * Math.cos(pitch)); }
     resize(); renderer.render(scene, api.debugCamera || camera);   // debugCamera: an alternative view for screenshots / inspection
@@ -577,9 +578,120 @@ window.View3D = function (deps) {
     camera.position.copy(toWorld(n0.x, n0.y, ze)); camera.lookAt(toWorld(nb.x, nb.y, ze)); yaw = Math.atan2(nb.y - n0.y, nb.x - n0.x);
     lamp.position.copy(toWorld(n0.x, n0.y, zOf[n0.level] + EYE + 1.25));
   }
+
+  // ------------------------------------------------------------ free look: walk anywhere on a level yourself (Street View style)
+  // The camera leaves the route: drag to look, wheel / pinch / keys to walk, tap the floor to walk there. It stays on the level's
+  // floor (raised floors included), and walls, glass, rails and columns stop it: rays at sill and rail height against the level's
+  // meshes, sliding along the wall it meets; a step onto no floor (the atrium void, outside) is refused.
+  const FREE_R = 0.3, FREE_STEP = 0.2, FREE_SPEED = 1.6, FREE_FAST = 3.2, FREE_TURN = 1.9, FREE_RAYS_Z = [0.3, 1.0];
+  const BLOCK_MATS = new Set(['wall', 'lift', 'stairs', 'facade_glass', 'facade_sill', 'glass_pane', 'metal', 'column', 'frame_dark', 'portal',
+    'stair_white', 'desk_wood', 'desk_base', 'granite_link', 'atrium_facade', 'lift_lintel', 'stairs_lintel']);
+  const FLOOR_MATS = new Set(['floor', 'corridor', 'granite', 'granite_step', 'granite_link', 'corridor_borrowed', 'floor_bridged', 'lift', 'stairs', 'nosing']);
+  const ray = new THREE.Raycaster(), DOWN = new THREE.Vector3(0, -1, 0);
+  let free = null;
+  const meshCache = {};
+  function meshesOf(level, mats) {   // the level's meshes in those materials (each material is one mesh per level in rtp.glb)
+    const key = level + '|' + [...mats].join(',');
+    if (!meshCache[key]) { const out = []; (levelObj[level] || new THREE.Group()).traverse(o => { if (o.isMesh && o.material && mats.has(o.material.name)) out.push(o); }); meshCache[key] = out; }
+    return meshCache[key];
+  }
+  const floorZ = (level, x, y) => zOf[level] + floorOff(level, x, y);
+  function hasFloor(level, x, y) {
+    ray.set(toWorld(x, y, floorZ(level, x, y) + 1.0), DOWN); ray.near = 0; ray.far = 1.4;
+    return ray.intersectObjects(meshesOf(level, FLOOR_MATS), false).length > 0;
+  }
+  function blockedBy(level, x, y, ux, uy, len) {   // the first wall the body would touch going len metres along (ux, uy), or null
+    let best = null;
+    for (const h of FREE_RAYS_Z) {
+      ray.set(toWorld(x, y, floorZ(level, x, y) + h), new THREE.Vector3(ux, 0, -uy)); ray.near = 0; ray.far = len + FREE_R;
+      const hit = ray.intersectObjects(meshesOf(level, BLOCK_MATS), false)[0];
+      if (hit && (!best || hit.distance < best.distance)) best = hit;
+    }
+    return best;
+  }
+  function tryStep(dx, dy) {   // one short step; slides along a wall it meets; false when nothing moved
+    const L = Math.hypot(dx, dy); if (L < 1e-5) return false;
+    let ux = dx / L, uy = dy / L;
+    let hit = blockedBy(free.level, free.x, free.y, ux, uy, L);
+    if (hit) {   // slide: keep the part of the step along the wall
+      const n = hit.face.normal.clone().transformDirection(hit.object.matrixWorld); let nx = n.x, ny = -n.z; const nl = Math.hypot(nx, ny) || 1; nx /= nl; ny /= nl;
+      const d = dx * nx + dy * ny; dx -= d * nx; dy -= d * ny;
+      const L2 = Math.hypot(dx, dy); if (L2 < 0.02) return false;
+      ux = dx / L2; uy = dy / L2;
+      if (blockedBy(free.level, free.x, free.y, ux, uy, L2)) return false;
+    }
+    const nx_ = free.x + dx, ny_ = free.y + dy;
+    if (!hasFloor(free.level, nx_, ny_)) return false;
+    free.x = nx_; free.y = ny_; return true;
+  }
+  function freeWalk(dx, dy) {   // a move of any length, in steps
+    const L = Math.hypot(dx, dy), n = Math.max(1, Math.ceil(L / FREE_STEP)); let moved = 0;
+    for (let i = 0; i < n; i++) { if (!tryStep(dx / n, dy / n)) break; moved++; }
+    return moved > 0;
+  }
+  function freeTick(dt) {
+    const k = free.keys, sp = k.fast ? FREE_FAST : FREE_SPEED;
+    if (k.turn) free.yaw = wrap(free.yaw + k.turn * FREE_TURN * dt);
+    if (k.pitch) free.pitch = Math.max(-1.2, Math.min(1.2, free.pitch + k.pitch * FREE_TURN * 0.6 * dt));
+    const cy = Math.cos(free.yaw), sy = Math.sin(free.yaw);
+    if (k.fwd || k.side) { free.walk = null; freeWalk((k.fwd * cy + k.side * sy) * sp * dt, (k.fwd * sy - k.side * cy) * sp * dt); }
+    if (Math.abs(free.pending) > 0.005) {   // wheel and pinch: eased
+      const d = free.pending * (1 - Math.exp(-dt / 0.15)); free.pending -= d;
+      if (!freeWalk(d * cy, d * sy)) free.pending = 0;
+    }
+    if (free.walk) {   // a tap on the floor: walk there, turning towards it
+      const wx = free.walk.x - free.x, wy = free.walk.y - free.y, L = Math.hypot(wx, wy);
+      if (L < 0.15) free.walk = null;
+      else {
+        free.yaw = free.yaw + wrap(Math.atan2(wy, wx) - free.yaw) * (1 - Math.exp(-8 * dt));
+        const st = Math.min(L, FREE_FAST * dt);
+        if (!freeWalk(wx / L * st, wy / L * st)) free.walk = null;
+      }
+    }
+    const zt = floorZ(free.level, free.x, free.y) + EYE;
+    free.z = free.z == null ? zt : free.z + (zt - free.z) * (1 - Math.exp(-dt / 0.12));   // up and down the steps smoothly
+    showLevel(free.level);
+    const h = free.yaw, pc = Math.cos(free.pitch);
+    camera.position.copy(toWorld(free.x, free.y, free.z));
+    camera.lookAt(toWorld(free.x + Math.cos(h) * pc, free.y + Math.sin(h) * pc, free.z + Math.sin(free.pitch)));
+    lamp.position.copy(toWorld(free.x + Math.cos(h) * 1.5, free.y + Math.sin(h) * 1.5, free.z + 1.25));
+    fadeSigns(free.x, -free.y); fadeMarker(free.x, -free.y);
+    if (ui.onFree) ui.onFree({ x: free.x, y: free.y, level: free.level, heading: free.yaw });
+  }
+  function freeStart() {
+    if (free) return;
+    const p = camera.position, lv = shownLevel || (R && R.runs[view.run].level) || manifest.levels[0].id;
+    free = { x: p.x, y: -p.z, z: null, level: lv, yaw: wrap(yaw + lookYaw), pitch: Math.max(-1.2, Math.min(1.2, pitch)), keys: {}, pending: 0, walk: null };
+    resetFade();
+  }
+  function freeStop() { if (!free) return; free = null; lookYaw = lookPitch = 0; if (R) apply(0, true); }
+  function freeWalkTo(clientX, clientY) {   // the floor point under a tap (on this level), or null
+    if (!free) return null;
+    const r = canvas.getBoundingClientRect();
+    ray.setFromCamera(new THREE.Vector2(((clientX - r.left) / r.width) * 2 - 1, -((clientY - r.top) / r.height) * 2 + 1), camera); ray.near = 0; ray.far = 60;
+    const hit = ray.intersectObjects(meshesOf(free.level, FLOOR_MATS), false)[0];
+    if (!hit) return null;
+    const x = hit.point.x, y = -hit.point.z;
+    free.walk = { x, y }; free.pending = 0;
+    return { x, y };
+  }
+  function freeSetLevel(level, x, y) {   // another level, at (x, y) if it has floor there
+    if (!free || zOf[level] == null) return false;
+    if (!hasFloor(level, x, y)) return false;
+    free.level = level; free.x = x; free.y = y; free.z = null; free.walk = null; free.pending = 0; return true;
+  }
   const api = {
     load, setRoute, setAlready, clear, setTarget, update, showLevel, setMarker, idleAt, destSign, headingAt, pointOnRun, resize,
     look: (dy, dp, abs) => { lookYaw = abs ? dy : lookYaw + dy; if (dp != null) lookPitch = Math.max(-1.2, Math.min(1.2, abs ? dp : lookPitch + dp)); },
+    // free look (walk around yourself): start / stop, look (yaw, pitch), walk (metres forward, eased), keys {fwd, side, turn, pitch, fast},
+    // a tap on the floor, another level, and where the camera is
+    freeStart, freeStop, freeOn: () => !!free,
+    freeLook: (dy, dp, abs) => { if (!free) return; free.yaw = wrap(abs ? dy : free.yaw + dy); if (dp != null) free.pitch = Math.max(-1.2, Math.min(1.2, abs ? dp : free.pitch + dp)); },
+    freeYaw: () => free ? free.yaw : 0, freePitch: () => free ? free.pitch : 0,
+    freeForward: m => { if (free) { free.pending = Math.max(-6, Math.min(6, free.pending + m)); free.walk = null; } },
+    freeKeys: k => { if (free) free.keys = k || {}; },
+    freeWalkTo, freeSetLevel,
+    freeState: () => free ? { x: free.x, y: free.y, level: free.level, heading: free.yaw, pitch: free.pitch } : null,
     lookOffset: () => lookYaw, lookPitch: () => lookPitch, pitch: () => pitch, heading: () => yaw,
     signs: () => Object.values(labels).flatMap(g => g.children.map(s => s.userData.node)),
     state: () => ({ s: view.s, run: view.run, target: target.s, moving: moving(), transition: !!fade, level: shownLevel, arrivedHere }),

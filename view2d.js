@@ -187,6 +187,23 @@ window.View2D = function (deps) {
     L.marker(toLL(lv, x, y), { icon: pinIcon('arrive', '<svg><use href="#i-flag"/></svg>'), interactive: false }).bindTooltip(esc(name), { permanent: true, direction: 'top', offset: [0, -12], className: 'pin' }).addTo(markerLayer);
     map.invalidateSize(); map.setView(toLL(lv, x, y), 1);
   }
+  // free look in the 3D view: where the camera stands and which way it faces, on its level (amber, not draggable); null removes it
+  let freeMarker = null, freeLast = null, freePan = 0;
+  function setFree(p) {
+    if (!p) { if (freeMarker) { posLayer.removeLayer(freeMarker); freeMarker = null; } freeLast = null; return; }
+    if (freeLast && freeLast.level === p.level && Math.abs(freeLast.x - p.x) < 0.02 && Math.abs(freeLast.y - p.y) < 0.02 && Math.abs(freeLast.heading - p.heading) < 0.01) return;   // called every frame: nothing moved
+    freeLast = { x: p.x, y: p.y, level: p.level, heading: p.heading };
+    if (p.level !== level && !userBusy()) showLevel(p.level, false);
+    if (p.level !== level) { if (freeMarker) freeMarker.setOpacity(0); return; }   // the viewer chose another level on the plan: hidden there
+    const ll = toLL(level, p.x, p.y);
+    if (!freeMarker) freeMarker = L.marker(ll, { icon: L.divIcon({ className: '', html: '<div class="posmark free"><div class="dir"></div><div class="dot"></div></div>', iconSize: [44, 44], iconAnchor: [22, 22] }), interactive: false, keyboard: false, zIndexOffset: 1100 }).addTo(posLayer);
+    else freeMarker.setLatLng(ll);
+    freeMarker.setOpacity(1);
+    const d = freeMarker.getElement() && freeMarker.getElement().querySelector('.dir');
+    if (d) d.style.transform = `rotate(${(90 - p.heading * 180 / Math.PI).toFixed(1)}deg)`;
+    const now = performance.now();
+    if (now - freePan > 300 && !userBusy()) { freePan = now; panTo(ll); }   // keep it in view, at most three times a second, never against the viewer's own pan
+  }
   function refit() { map.invalidateSize(); if (R) { const pts = R.runs.filter(r => r.level === level).flatMap(r => r.pts.map(p => toLL(level, p.x, p.y))); const pd = padding(); if (pts.length > 1) map.fitBounds(L.latLngBounds(pts), { paddingTopLeft: pd.tl, paddingBottomRight: pd.br, maxZoom: 1 }); } else fitPlan(); }
-  return { map, showLevel, setRoute, setPosition, setCurrentStep, showDestination, refit, setPick, level: () => level, invalidate: () => map.invalidateSize(), fit: fitPlan };
+  return { map, showLevel, setRoute, setPosition, setCurrentStep, showDestination, refit, setPick, setFree, level: () => level, invalidate: () => map.invalidateSize(), fit: fitPlan };
 };
