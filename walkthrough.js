@@ -42,8 +42,8 @@
     try { const p = await fetch('camera-paths.json'); if (p.ok) paths = await p.json(); } catch (e) {}
     try { const p = await fetch(PLANS + 'manifest.json'); if (p.ok) plans = await p.json(); } catch (e) {}
     try { const p = await fetch('rooms.json'); if (p.ok) rooms = await p.json(); } catch (e) {}   // room polygons for taps on the plan (build_rooms.py); optional
-    try { const p = await fetch('places.json'); if (p.ok) { const j = await p.json(); for (const k in j) if (k[0] !== '_') places[k] = j[k]; } } catch (e) {}   // hand-kept facts per place: name, access, note (photos/README.md); optional
-    try { const p = await fetch('photos/manifest.json'); if (p.ok) photos = await p.json(); } catch (e) {}   // key → photo file, written by make_shotlist.py from the photos folder; optional
+    try { const p = await fetch('places.json', { cache: 'no-cache' }); if (p.ok) { const j = await p.json(); for (const k in j) if (k[0] !== '_') places[k] = j[k]; } } catch (e) {}   // hand-kept facts per place: name, access, note (photos/README.md); optional
+    try { const p = await fetch('photos/manifest.json', { cache: 'no-cache' }); if (p.ok) photos = await p.json(); } catch (e) {}   // key → photo file, written by make_shotlist.py from the photos folder; optional
   } catch (e) { status('Could not load data. Serve the mapping folder (python3 -m http.server 8765) and open http://localhost:8765/preview3d/ — and run build_model.py once.'); return; }
   if (typeof THREE === 'undefined' || !THREE.GLTFLoader) { status('three.js could not be loaded; this page needs internet access for it once.'); return; }
   let V;
@@ -229,7 +229,7 @@
     li.title = p.name;
     const info = infoOf(p);
     li.innerHTML = `<span class="ico">${icon(p)}</span><span class="txt"><span class="name">${esc(p.name)}${info.access ? lockSvg(info.access) : ''}</span>${p.category === 'entrance' ? '' : `<span class="code">${esc(p.id.replace(/^node:/, ''))}</span>`}</span><span class="lvl">${esc(p.node.level)}</span>${info.photo ? `<img class="thumb" src="${esc(info.photo)}" alt="" loading="lazy">` : ''}`;
-    li.onclick = () => choose('to', p); li.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choose('to', p); } };
+    li.onclick = () => showPlaceCard(p); li.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showPlaceCard(p); } };   // the place first (photo, facts, Directions), as Google Maps does
     return li;
   }
   function renderExplore() {
@@ -255,7 +255,7 @@
   function closeCat() { $('#exlist').hidden = true; $('#excats').hidden = false; $('#exlandmarks').hidden = !landmarks.length; }
   $('#exback').onclick = closeCat;
   renderExplore();
-  function showRouteBox(on) { $('#routebox').hidden = !on; $('#explore').hidden = !!on; }
+  function showRouteBox(on) { if (!$('#placeview').hidden) { pvRoute = !!on; return; } $('#routebox').hidden = !on; $('#explore').hidden = !!on; }   // a place on show keeps the panel: the box shows when it closes
 
   // ------------------------------------------------------------ a tapped room or point on the plan: a card with Directions / Start here, or, after "Choose … on the plan", the place itself
   let picked = null, pickMode = null;   // pickMode: 'from' | 'to' while the next tap on the plan sets that field
@@ -277,20 +277,52 @@
     showPlaceCard(p, rm.name ? kindLabel(rm) : (rm.kind === 'lift' || rm.kind === 'stairs' ? kindLabel(rm) : 'Unnamed ' + kindLabel(rm).toLowerCase()), lv);
   }
   function pickPoint(lv, x, y) { if (viewMode === '3d') return; const p = placeAtPoint(lv, x, y); if (pickMode) { tookPick(p); return; } showPlaceCard(p, 'Point on the plan', lv); }
-  function showPlaceCard(p, kind, lv) {
-    picked = p; $('#pcname').textContent = p.name;
-    $('#pcsub').textContent = `${kind.charAt(0).toUpperCase() + kind.slice(1)} · ${levelName(lv)}${p.door_node ? '' : ' · the route ends in the corridor beside it'}`;
-    const info = infoOf(p), img = $('#pcphoto');   // a photo from the photos folder, an access warning or note from places.json, the map id of a room nobody has named yet
-    if (info.photo) { img.src = info.photo; img.alt = 'Photo of ' + p.name; img.hidden = false; } else { img.removeAttribute('src'); img.hidden = true; }
-    $('#pcaccess').hidden = !(info.access || info.note); $('#pcaccess').className = 'access ' + (info.access || 'info'); $('#pcaccessico').setAttribute('href', info.access ? '#i-lock' : '#i-info');
-    $('#pcaccesstext').textContent = [info.access ? ACCESS[info.access] : '', info.note].filter(Boolean).join(' · ');
-    const unnamed = p.room && !p.room.name; $('#pcid').hidden = !unnamed; $('#pcid').textContent = unnamed ? 'Map id ' + p.room.id : '';
-    $('#placecard').hidden = false; $('#app').classList.add('has-card'); if (v2) v2.setPick(p.node, p.name);
+  // a place, Google Maps style: it takes the panel (the sheet on a phone) in place of Explore or the route, which come back when it closes
+  let pvRoute = false;   // the route box was showing when the place opened
+  const roomOfDest = new Map(); for (const rm of roomIndex.values()) if (rm.dest && !roomOfDest.has(rm.dest)) roomOfDest.set(rm.dest, rm);
+  const CAT_LABEL = { entrance: 'Entrance', toilet: 'Toilet', lab: 'Lab', lift: 'Lift', stairs: 'Stairs', room: 'Room', lecture_theatre: 'Seminar room', help_point: 'Help point', point: 'Point on the plan' };
+  function kindOfPlace(p) {
+    const rm = p.room || roomOfDest.get(p.id);
+    if (rm) return rm.name || rm.kind === 'lift' || rm.kind === 'stairs' ? kindLabel(rm) : 'Unnamed ' + kindLabel(rm).toLowerCase();
+    return CAT_LABEL[p.category] || 'Place';
   }
-  function hidePlaceCard() { picked = null; $('#placecard').hidden = true; $('#app').classList.remove('has-card'); if (v2) v2.setPick(null); }
+  const infoRow = (ic, html) => `<li><svg aria-hidden="true"><use href="#i-${ic}"/></svg><span>${html}</span></li>`;
+  function showPlaceCard(p, kind, lv) {
+    picked = p; lv = lv || (p.node && p.node.level); kind = kind || kindOfPlace(p);
+    $('#pcname').textContent = p.name;
+    $('#pcsub').textContent = `${kind.charAt(0).toUpperCase() + kind.slice(1)} · ${levelName(lv)}`;
+    const info = infoOf(p), img = $('#pcphoto');   // a photo from the photos folder, an access warning or note from places.json
+    if (info.photo) { img.src = info.photo; img.alt = 'Photo of ' + p.name; img.hidden = false; } else { img.removeAttribute('src'); img.hidden = true; }
+    $('#pcnophotoico').setAttribute('href', '#i-' + (ICON[p.category] || (isMeeting(p) ? 'meeting' : 'room')));
+    $('#pcaccess').hidden = !info.access; $('#pcaccess').className = 'access ' + (info.access || 'info');
+    $('#pcaccesstext').textContent = info.access ? ACCESS[info.access] : '';
+    const rm = p.room || roomOfDest.get(p.id), code = p.door_node && !/^(node:|entrance)/.test(p.id) ? p.id : '';
+    const rows = [infoRow('pin', `${esc(levelName(lv))}, Research Techno Plaza`)];
+    if (code) rows.push(infoRow('door', `Room code <span class="mono">${esc(code)}</span>`));
+    if (info.note) rows.push(infoRow(info.access ? 'lock' : 'info', esc(info.note)));
+    if (!p.door_node && p.category !== 'point') rows.push(infoRow('info', 'No door in the map data: the route ends in the corridor beside it'));
+    if (p.category === 'point') rows.push(infoRow('info', 'A point on the plan: the route ends in the corridor beside it'));
+    if (rm && !rm.name) rows.push(infoRow('info', `Not named yet · Map id <span class="mono">${esc(rm.id)}</span>`));
+    $('#pcinfo').innerHTML = rows.join('');
+    if ($('#placeview').hidden) { pvRoute = !$('#routebox').hidden; $('#routebox').hidden = true; $('#explore').hidden = true; $('#placeview').hidden = false; }
+    $('#placeview').scrollTop = 0; $('#sheetbody').scrollTop = 0;
+    if (isPhone()) setSheet('half');
+    if (v2) v2.setPick(p.node, p.name);
+  }
+  function hidePlaceCard() {
+    picked = null; if (v2) v2.setPick(null);
+    if ($('#placeview').hidden) return;
+    $('#placeview').hidden = true; showRouteBox(pvRoute); if (isPhone()) setSheet('peek');
+  }
   $('#pcclose').onclick = hidePlaceCard;
   $('#pcgo').onclick = () => { if (!picked) return; const p = picked; hidePlaceCard(); choose('to', p); };
   $('#pcstart').onclick = () => { if (!picked) return; const p = picked; hidePlaceCard(); setField('from', p); route(); if (!sel.to) inputs.to.focus(); };
+  $('#pczoom').onclick = () => { if (!picked) return; if (viewMode === '3d') setView('map'); if (v2) v2.setPick(picked.node, picked.name); if (isPhone()) setSheet('peek'); };
+  $('#pcshare').onclick = async () => {   // a link that opens this place's panel
+    if (!picked) return;
+    const u = new URL(location.href); u.search = new URLSearchParams({ place: picked.id }).toString(); u.hash = '';
+    toast(await copyText(u.toString()) ? 'Link to this place copied' : u.toString(), 4000);
+  };
 
   // ------------------------------------------------------------ the route
   let plan = null, R = null, dest = null, already = null;
@@ -454,7 +486,7 @@
   window.addEventListener('keydown', e => {
     if (e.key === 'Escape' && pickMode) { endPick(); toast(''); return; }
     if (v3.freeOn() && freeKey(e, true)) return;
-    if (e.defaultPrevented || (e.target && e.target.closest && e.target.closest('[role="button"], #placecard, .leaflet-container'))) return;   // a row, the route header, the card and the map handle their own keys
+    if (e.defaultPrevented || (e.target && e.target.closest && e.target.closest('[role="button"], #placeview, .leaflet-container'))) return;   // a row, the route header, the card and the map handle their own keys
     const tag = e.target && e.target.tagName, isRange = tag === 'INPUT' && e.target.type === 'range';
     if (tag === 'BUTTON' || tag === 'SELECT' || tag === 'TEXTAREA' || (tag === 'INPUT' && !isRange)) return;
     if (isRange && !(e.key in keyDir)) return;
@@ -581,7 +613,7 @@
   $('#splitbtn').onclick = () => setView(viewMode === 'split' ? 'map' : 'split');
   const sheet = $('#sheet');
   function sheetHeight(st) {   // peek: the grip plus the route's summary, caption and controls (measured), or just the Explore heading; full stops under the search card
-    if (st === 'half') return Math.round(window.innerHeight * 0.45);
+    if (st === 'half') return Math.round(window.innerHeight * ($('#placeview').hidden ? 0.45 : 0.6));   // a place: its photo, name and buttons in view
     if (st === 'full') return Math.min(Math.round(window.innerHeight * 0.86), Math.round(window.innerHeight - $('#searchcard').getBoundingClientRect().bottom - 8));
     const nav = $('.navsticky'), grip = $('#sheetgrip').offsetHeight || 36;
     return sel.to && !$('#routebox').hidden ? grip + nav.offsetHeight + 2 : grip + ($('.exhead').offsetHeight || 64) + 8;
@@ -610,16 +642,16 @@
     return p;
   }
   function updateUrl() { urlDirty = false; const q = linkParams().toString(); history.replaceState(null, '', q ? '?' + q : location.pathname); }
+  async function copyText(text) {   // the clipboard, else a hidden textarea; true when it was copied
+    try { await navigator.clipboard.writeText(text); return true; } catch (e) {}
+    const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select();
+    let ok = false; try { ok = document.execCommand('copy'); } catch (e) {} ta.remove(); return ok;
+  }
   $('#copy').onclick = async () => {
     if (!sel.to) { toast('Pick a destination first'); return; }
     const u = new URL(location.href); u.search = linkParams().toString(); u.hash = '';
-    const link = u.toString(); let copied = false;
-    try { await navigator.clipboard.writeText(link); copied = true; } catch (e) {}
-    if (!copied) {
-      const ta = document.createElement('textarea'); ta.value = link; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select();
-      try { copied = document.execCommand('copy'); } catch (e) {} ta.remove();
-    }
-    toast(copied ? 'Link copied: ' + link : 'Copy the link from the address bar: ' + link, 6000);
+    const link = u.toString();
+    toast(await copyText(link) ? 'Link copied: ' + link : 'Copy the link from the address bar: ' + link, 6000);
   };
   $('#export').onclick = () => {
     if (!R) { toast('Plan a route first'); return; }
@@ -638,6 +670,7 @@
     route();
     const s = +p.get('s'); if (R && s > 0) setS(Math.min(s, R.length), p.get('lv') || null, { snap: true });
     if (p.get('play') === '1' && R) setFly(true);   // a link that flies the route as soon as it opens
+    if (p.get('place')) { const pl = placeFromParam(p.get('place')); if (pl) showPlaceCard(pl); else toast(`No place matches "${p.get('place')}"`); }   // a place's Share link opens its panel
     updateUrl();
   }
 

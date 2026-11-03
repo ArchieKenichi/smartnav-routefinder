@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="leaflet.css?v=a783710282">
-<link rel="stylesheet" href="app.css?v=03ddcd468a">
+<link rel="stylesheet" href="app.css?v=a9d4025da1">
 </head>
 <body>
 <svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
@@ -111,6 +111,26 @@
           <div id="exlandmarks"><h3>Landmarks</h3><ol id="exlm"></ol></div>
         </section>
 
+        <section id="placeview" aria-label="Place" hidden>
+          <div class="pv-hero">
+            <img id="pcphoto" alt="" hidden>
+            <div id="pcnophoto" class="pv-nophoto"><svg aria-hidden="true"><use id="pcnophotoico" href="#i-room"/></svg><span>No photo yet</span></div>
+            <button id="pcclose" type="button" aria-label="Close"><svg><use href="#i-close"/></svg></button>
+          </div>
+          <div class="pv-body">
+            <h2 id="pcname"></h2>
+            <div class="pc-sub" id="pcsub"></div>
+            <div id="pcaccess" class="access" hidden><svg aria-hidden="true"><use id="pcaccessico" href="#i-lock"/></svg><span id="pcaccesstext"></span></div>
+            <div class="pv-actions">
+              <button id="pcgo" type="button" class="pv-act primary"><span class="ic"><svg><use href="#i-directions"/></svg></span><span class="lb">Directions</span></button>
+              <button id="pcstart" type="button" class="pv-act"><span class="ic"><svg><use href="#i-dot"/></svg></span><span class="lb">Start here</span></button>
+              <button id="pcshare" type="button" class="pv-act"><span class="ic"><svg><use href="#i-link"/></svg></span><span class="lb">Share</span></button>
+              <button id="pczoom" type="button" class="pv-act"><span class="ic"><svg><use href="#i-target"/></svg></span><span class="lb">On the plan</span></button>
+            </div>
+            <ul id="pcinfo" class="pv-info"></ul>
+          </div>
+        </section>
+
         <section id="routebox" aria-label="Route" hidden>
           <div class="navsticky">
           <div id="sheethead"></div>
@@ -137,17 +157,6 @@
     </div>
   </aside>
 
-  <div id="placecard" hidden>
-    <img id="pcphoto" alt="" hidden>
-    <div class="pc-head"><div class="pc-name" id="pcname"></div><button id="pcclose" type="button" aria-label="Close"><svg><use href="#i-close"/></svg></button></div>
-    <div class="pc-sub" id="pcsub"></div>
-    <div id="pcaccess" class="access" hidden><svg aria-hidden="true"><use id="pcaccessico" href="#i-lock"/></svg><span id="pcaccesstext"></span></div>
-    <div class="pc-id" id="pcid" hidden></div>
-    <div class="pc-actions">
-      <button id="pcgo" type="button" class="primary"><svg><use href="#i-directions"/></svg>Directions</button>
-      <button id="pcstart" type="button"><svg><use href="#i-dot"/></svg>Start here</button>
-    </div>
-  </div>
 <div id="toast" role="status" aria-live="polite"></div>
 </div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -159,6 +168,6 @@
 <script src="rtp-glb.js?v=0f76cbb0a6"></script>
 <script src="view3d.js?v=a79c059524"></script>
 <script src="view2d.js?v=c53124e888"></script>
-<script src="walkthrough.js?v=0b2b116082"></script>
+<script src="walkthrough.js?v=649b137a34"></script>
 </body>
 </html>
