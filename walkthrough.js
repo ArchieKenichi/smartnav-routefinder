@@ -194,8 +194,20 @@
   for (const b of document.querySelectorAll('.field .clear')) b.onclick = () => { const which = b.dataset.for; setField(which, null); route(); setCollapsed(false); inputs[which].focus(); };
   $('#collapse').onclick = () => setCollapsed(true);
   $('#swap').onclick = () => { const a = sel.from, b = sel.to; setField('from', b); setField('to', a); route(); };
-  const opts = () => ({ stepFree: $('#stepfree').classList.contains('on'), avoidLifts: $('#nolifts').classList.contains('on') });
-  for (const id of ['stepfree', 'nolifts']) $('#' + id).onclick = () => { const b = $('#' + id), on = b.classList.toggle('on'); b.setAttribute('aria-pressed', on); route(true); };
+  // how a route changes floors (#vert): lifts first (the default: stairs only where no lift is near, wayfind.js STAIRS_PENALTY_M),
+  // stairs only (no lifts), or the shortest walk (lift or stairs, whichever is shorter). Step-free never uses stairs.
+  const opts = () => { const v = $('#vert').value; return { stepFree: $('#stepfree').classList.contains('on'), avoidLifts: v === 'stairs', preferLifts: v !== 'any' }; };
+  function setVert(v) { $('#vert').value = v; $('#floorsby').classList.toggle('on', v !== 'lift'); }
+  $('#stepfree').onclick = () => {
+    const b = $('#stepfree'), on = b.classList.toggle('on'); b.setAttribute('aria-pressed', on);
+    if (on && $('#vert').value === 'stairs') setVert('lift');   // step-free uses no stairs: stairs only would leave no way between floors
+    route(true);
+  };
+  $('#vert').onchange = () => {
+    setVert($('#vert').value);
+    if ($('#vert').value === 'stairs' && $('#stepfree').classList.contains('on')) { $('#stepfree').classList.remove('on'); $('#stepfree').setAttribute('aria-pressed', false); }
+    route(true);
+  };
   setField('from', sel.from);
 
   // ------------------------------------------------------------ Explore: places by category, and the landmarks (shown while no destination is set)
@@ -592,7 +604,7 @@
   function linkParams() {
     const p = new URLSearchParams();
     if (sel.from) p.set('from', sel.from.id); if (sel.to) p.set('to', sel.to.id);
-    if (opts().stepFree) p.set('stepfree', '1'); if (opts().avoidLifts) p.set('nolifts', '1');
+    if (opts().stepFree) p.set('stepfree', '1'); if (opts().avoidLifts) p.set('nolifts', '1'); if (!opts().preferLifts) p.set('shortest', '1');
     if (R && pos.s > 0.05) { p.set('s', pos.s.toFixed(1)); p.set('lv', R.runs[pos.run].level); }   // the level too: at a ride boundary the same metre is on two floors
     if (viewMode !== 'map') p.set('view', viewMode);
     return p;
@@ -618,7 +630,8 @@
   function applyUrl() {
     const p = new URLSearchParams(location.search);
     if (p.get('view')) setView(p.get('view'));
-    for (const [id, key] of [['stepfree', 'stepfree'], ['nolifts', 'nolifts']]) { const on = p.get(key) === '1'; $('#' + id).classList.toggle('on', on); $('#' + id).setAttribute('aria-pressed', on); }
+    { const on = p.get('stepfree') === '1'; $('#stepfree').classList.toggle('on', on); $('#stepfree').setAttribute('aria-pressed', on); }
+    setVert(p.get('nolifts') === '1' ? 'stairs' : p.get('shortest') === '1' ? 'any' : 'lift');
     const from = p.get('from'), to = p.get('to');
     if (from) { const pl = placeFromParam(from); if (pl) setField('from', pl); else toast(`Unknown start "${from}", using entrance 1`); }
     if (to) { const pl = placeFromParam(to); if (pl) setField('to', pl); else toast(`No destination matches "${to}"`); }

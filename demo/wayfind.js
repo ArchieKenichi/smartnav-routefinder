@@ -6,7 +6,9 @@
 })(typeof self !== 'undefined' ? self : this, function () {
   'use strict';
 
-  const FLOOR_M = 4.5;        // assumed floor-to-floor height for the heuristic
+  const FLOOR_M = 4.5;        // the heuristic's ride per floor where a package has no lift or stairs edges
+  const STAIRS_PENALTY_M = 40;  // lifts first (the default): each floor climbed or descended by stairs costs this much extra walking, so
+                                // the stairs are taken only where no lift is within that much more walking per floor (as the C# router)
 
   // ------------------------------------------------------------ venue
   function load(json) {
@@ -25,9 +27,14 @@
       if (!e.one_way) adj.get(e.to).push({ edge: e, to: e.from, forward: false });
     }
     const levels = new Map(json.levels.map(l => [l.id, l]));
+    // floors are counted by the levels' order, not their numbers (a package may skip one: B1 = -1, L1 = 1), as the C# RouteGraph
+    const floorsInOrder = [...new Set(json.levels.map(l => l.floor))].sort((x, y) => x - y);
+    const rank = new Map(json.levels.map(l => [l.id, floorsInOrder.indexOf(l.floor)]));
+    let minVertical = Infinity;   // the cheapest ride per floor: the heuristic's bound across levels
+    for (const e of edges) if (e.type !== 'walk') minVertical = Math.min(minVertical, e.length_m / Math.max(1, Math.abs(rank.get(nodes.get(e.from).level) - rank.get(nodes.get(e.to).level))));
     const dests = json.destinations.filter(d => nodes.has(d.door_node)).map(d => Object.assign({}, d, { node: nodes.get(d.door_node) }));
     const doorToDest = new Map(dests.map(d => [d.door_node, d]));
-    return { json, nodes, edges, adj, levels, dests, doorToDest, entries: (json.entry_points || []).map(p => p.node) };
+    return { json, nodes, edges, adj, levels, rank, minVertical: Number.isFinite(minVertical) ? minVertical : 0, dests, doorToDest, entries: (json.entry_points || []).map(p => p.node) };
   }
 
   // ------------------------------------------------------------ search
@@ -91,8 +98,18 @@
     return true;
   }
   function levelNum(venue, id) { const l = venue.levels.get(id); return l ? l.floor : 0; }
+  function floorsBetween(venue, la, lb) { const a = venue.rank.get(la), b = venue.rank.get(lb); return a == null || b == null ? 0 : Math.abs(a - b); }
+  /* What an edge costs the search: its length, and with lifts first (opts.preferLifts, on unless false) a stairs edge
+     STAIRS_PENALTY_M more per floor (opts.stairsPenaltyM overrides it). The route's length_m stays the walked length. */
+  function edgeCost(venue, e, opts) {
+    if (e.type !== 'stairs' || opts.preferLifts === false) return e.length_m;
+    const a = venue.nodes.get(e.from), b = venue.nodes.get(e.to);
+    const floors = Math.max(1, floorsBetween(venue, a.level, b.level));
+    const pen = opts.stairsPenaltyM != null && Number.isFinite(+opts.stairsPenaltyM) ? Math.max(0, +opts.stairsPenaltyM) : STAIRS_PENALTY_M;   // never below 0: cheaper stairs would break the heuristic's bound
+    return e.length_m + floors * pen;
+  }
   function heuristic(venue, a, b) {
-    return Math.hypot(a.x - b.x, a.y - b.y) + Math.abs(levelNum(venue, a.level) - levelNum(venue, b.level)) * FLOOR_M;
+    return Math.hypot(a.x - b.x, a.y - b.y) + floorsBetween(venue, a.level, b.level) * (venue.minVertical != null ? venue.minVertical : FLOOR_M);
   }
   function astar(venue, startId, goalId, opts) {
     opts = opts || {};
@@ -104,7 +121,7 @@
       if (cur === goalId) break;
       for (const nb of venue.adj.get(cur) || []) {
         if (!allowed(nb.edge, opts)) continue;
-        const ng = g.get(cur) + nb.edge.length_m;
+        const ng = g.get(cur) + edgeCost(venue, nb.edge, opts);
         if (ng < (g.has(nb.to) ? g.get(nb.to) : Infinity) - 1e-9) {
           g.set(nb.to, ng); prev.set(nb.to, { from: cur, edge: nb.edge, forward: nb.forward });
           open.push([ng + heuristic(venue, venue.nodes.get(nb.to), goal), nb.to]);   // nodes may be re-opened
@@ -114,7 +131,7 @@
     if (!g.has(goalId)) return null;
     const steps = [];
     for (let n = goalId; n !== startId;) { const p = prev.get(n); steps.unshift({ from: p.from, to: n, edge: p.edge, forward: p.forward }); n = p.from; }
-    return { nodes: [startId].concat(steps.map(s => s.to)), edges: steps, length_m: g.get(goalId) };
+    return { nodes: [startId].concat(steps.map(s => s.to)), edges: steps, length_m: steps.reduce((t, s) => t + s.edge.length_m, 0), cost: g.get(goalId) };
   }
 
   /* Snap a free position to the nearest walk edge on its level; returns a temporary venue with a virtual node. */
@@ -148,7 +165,7 @@
     const a = venue.nodes.get(s.e.from), b = venue.nodes.get(s.e.to);
     const ea = { from: id, to: a.id, type: 'walk', length_m: Math.hypot(s.px - a.x, s.py - a.y), i: -1, hint: s.e.hint_reverse || null, step_free: s.e.step_free };
     const eb = { from: id, to: b.id, type: 'walk', length_m: Math.hypot(s.px - b.x, s.py - b.y), i: -2, hint: s.e.hint || null, step_free: s.e.step_free };
-    adj.set(id, [{ edge: ea, to: a.id, forward: true }, { edge: eb, to: b.id, forward: true }]);
+    adj.set(id, s.e.one_way ? [{ edge: eb, to: b.id, forward: true }] : [{ edge: ea, to: a.id, forward: true }, { edge: eb, to: b.id, forward: true }]);   // a one-way edge is not walked backwards from a point on it (as the C# router)
     return { venue: Object.assign({}, venue, { nodes, adj }), startId: id, snapDistance: s.d, snap: s };
   }
   /* A free destination, snapped the same way: a virtual node __end joined by walk edges from the snapped edge's ends (hints of that

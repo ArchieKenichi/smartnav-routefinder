@@ -146,6 +146,11 @@ svg:not(.leaflet-pane *) { width:20px; height:20px; fill:none; stroke:currentCol
 .chip:hover { background:var(--hover); color:var(--ink); }
 .chip[aria-pressed="true"], .chip.on { background:var(--primary-soft); color:var(--primary-ink); border-color:#bfd3fb; font-weight:600; }
 .chip svg { width:16px; height:16px; }
+.chip.pick { position:relative; padding:0 10px; cursor:pointer; }   /* a chip holding a menu: how routes change floors */
+.chip.pick select { appearance:none; -webkit-appearance:none; border:none; background:transparent; font:inherit; color:inherit; height:100%; padding:0 16px 0 0; cursor:pointer; outline:none; }
+.chip.pick::after { content:""; position:absolute; right:10px; top:50%; width:6px; height:6px; margin-top:-5px; border-right:1.5px solid currentColor; border-bottom:1.5px solid currentColor; transform:rotate(45deg); pointer-events:none; }
+.chip.pick:focus-within { outline:2px solid var(--primary); outline-offset:1px; }
+.chip.pick.on { background:var(--primary-soft); color:var(--primary-ink); border-color:#bfd3fb; font-weight:600; }   /* not the default (lifts first) */
 #sheet { display:flex; flex-direction:column; min-height:0; flex:1 1 auto; border-top:1px solid var(--line); }
 .handle, #sheetgrip { display:none; }
 #sheetbody { display:flex; flex-direction:column; overflow:hidden; flex:1 1 auto; min-height:0; }
