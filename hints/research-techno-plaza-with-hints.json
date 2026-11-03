@@ -4232,28 +4232,20 @@
   {
    "id": "L6-n70",
    "level": "L6",
-   "x": 26.2,
-   "y": 18.02,
-   "type": "stairs",
-   "label": "Stairs"
-  },
-  {
-   "id": "L6-n71",
-   "level": "L6",
    "x": 24.23,
    "y": 14.94,
    "type": "door",
    "label": "Female Toilet"
   },
   {
-   "id": "L6-n72",
+   "id": "L6-n71",
    "level": "L6",
    "x": 24.26,
    "y": 16.25,
    "type": "turn"
   },
   {
-   "id": "L6-n73",
+   "id": "L6-n72",
    "level": "L6",
    "x": 85.79,
    "y": 30.85,
@@ -4261,7 +4253,7 @@
    "label": "Male Toilet"
   },
   {
-   "id": "L6-n74",
+   "id": "L6-n73",
    "level": "L6",
    "x": 38.83,
    "y": 70.41,
@@ -4269,14 +4261,14 @@
    "label": "Darkroom - BMERC"
   },
   {
-   "id": "L6-n75",
+   "id": "L6-n74",
    "level": "L6",
    "x": 39.81,
    "y": 71.39,
    "type": "junction"
   },
   {
-   "id": "L6-n76",
+   "id": "L6-n75",
    "level": "L6",
    "x": 28.0,
    "y": 89.12,
@@ -4284,14 +4276,14 @@
    "label": "Female Toilet"
   },
   {
-   "id": "L6-n77",
+   "id": "L6-n76",
    "level": "L6",
    "x": 28.73,
    "y": 89.88,
    "type": "junction"
   },
   {
-   "id": "L6-n78",
+   "id": "L6-n77",
    "level": "L6",
    "x": 46.48,
    "y": 68.68,
@@ -4299,14 +4291,14 @@
    "label": "Office 1"
   },
   {
-   "id": "L6-n79",
+   "id": "L6-n78",
    "level": "L6",
    "x": 43.88,
    "y": 67.67,
    "type": "junction"
   },
   {
-   "id": "L6-n80",
+   "id": "L6-n79",
    "level": "L6",
    "x": 31.09,
    "y": 78.27,
@@ -4314,14 +4306,14 @@
    "label": "Assembly Lab"
   },
   {
-   "id": "L6-n81",
+   "id": "L6-n80",
    "level": "L6",
    "x": 32.23,
    "y": 79.73,
    "type": "junction"
   },
   {
-   "id": "L6-n82",
+   "id": "L6-n81",
    "level": "L6",
    "x": 26.81,
    "y": 14.93,
@@ -4329,22 +4321,22 @@
    "label": "Male Toilet"
   },
   {
-   "id": "L6-n83",
+   "id": "L6-n82",
    "level": "L6",
-   "x": 61.4,
-   "y": 43.34,
+   "x": 60.32,
+   "y": 45.61,
    "type": "door",
    "label": "Filing"
   },
   {
-   "id": "L6-n84",
+   "id": "L6-n83",
    "level": "L6",
    "x": 62.5,
    "y": 43.34,
    "type": "junction"
   },
   {
-   "id": "L6-n85",
+   "id": "L6-n84",
    "level": "L6",
    "x": 41.17,
    "y": 71.18,
@@ -4352,7 +4344,7 @@
    "label": "Characterisation Lab I"
   },
   {
-   "id": "L6-n86",
+   "id": "L6-n85",
    "level": "L6",
    "x": 48.55,
    "y": 70.89,
@@ -4360,7 +4352,7 @@
    "label": "Characterisation Lab III (door position guessed)"
   },
   {
-   "id": "L6-n87",
+   "id": "L6-n86",
    "level": "L6",
    "x": 21.96,
    "y": 83.13,
@@ -4368,14 +4360,14 @@
    "label": "Tank / Reading / Refence Room"
   },
   {
-   "id": "L6-n88",
+   "id": "L6-n87",
    "level": "L6",
    "x": 22.52,
    "y": 83.68,
    "type": "junction"
   },
   {
-   "id": "L6-n89",
+   "id": "L6-n88",
    "level": "L6",
    "x": 50.35,
    "y": 61.85,
@@ -4383,14 +4375,14 @@
    "label": "Discussion Room"
   },
   {
-   "id": "L6-n90",
+   "id": "L6-n89",
    "level": "L6",
    "x": 49.86,
    "y": 61.22,
    "type": "junction"
   },
   {
-   "id": "L6-n91",
+   "id": "L6-n90",
    "level": "L6",
    "x": 27.4,
    "y": 15.87,
@@ -4398,7 +4390,7 @@
    "label": "Handicap Toilet"
   },
   {
-   "id": "L6-n92",
+   "id": "L6-n91",
    "level": "L6",
    "x": 38.99,
    "y": 14.43,
@@ -4406,29 +4398,29 @@
    "label": "CNRS-International-NTU-Thales Research Alliance [CINTRA]"
   },
   {
-   "id": "L6-n93",
+   "id": "L6-n92",
    "level": "L6",
    "x": 39.85,
    "y": 14.47,
    "type": "turn"
   },
   {
-   "id": "L6-n94",
+   "id": "L6-n93",
    "level": "L6",
-   "x": 68.58,
-   "y": 50.29,
+   "x": 64.75,
+   "y": 52.04,
    "type": "door",
    "label": "Conference Room - L6"
   },
   {
-   "id": "L6-n95",
+   "id": "L6-n94",
    "level": "L6",
    "x": 68.48,
    "y": 49.23,
    "type": "junction"
   },
   {
-   "id": "L6-n96",
+   "id": "L6-n95",
    "level": "L6",
    "x": 23.97,
    "y": 88.15,
@@ -4436,14 +4428,14 @@
    "label": "Handicap Toilet"
   },
   {
-   "id": "L6-n97",
+   "id": "L6-n96",
    "level": "L6",
    "x": 22.99,
    "y": 89.08,
    "type": "junction"
   },
   {
-   "id": "L6-n98",
+   "id": "L6-n97",
    "level": "L6",
    "x": 46.49,
    "y": 65.78,
@@ -4451,14 +4443,14 @@
    "label": "Printing Room"
   },
   {
-   "id": "L6-n99",
+   "id": "L6-n98",
    "level": "L6",
    "x": 45.8,
    "y": 65.11,
    "type": "junction"
   },
   {
-   "id": "L6-n100",
+   "id": "L6-n99",
    "level": "L6",
    "x": 70.52,
    "y": 34.9,
@@ -4466,14 +4458,14 @@
    "label": "Discussion Room 2"
   },
   {
-   "id": "L6-n101",
+   "id": "L6-n100",
    "level": "L6",
    "x": 70.44,
    "y": 36.57,
    "type": "junction"
   },
   {
-   "id": "L6-n102",
+   "id": "L6-n101",
    "level": "L6",
    "x": 34.72,
    "y": 74.58,
@@ -4481,14 +4473,14 @@
    "label": "Biomaterials Lab"
   },
   {
-   "id": "L6-n103",
+   "id": "L6-n102",
    "level": "L6",
    "x": 36.25,
    "y": 76.16,
    "type": "junction"
   },
   {
-   "id": "L6-n104",
+   "id": "L6-n103",
    "level": "L6",
    "x": 38.68,
    "y": 22.94,
@@ -4496,7 +4488,7 @@
    "label": "Discussion Room"
   },
   {
-   "id": "L6-n105",
+   "id": "L6-n104",
    "level": "L6",
    "x": 41.12,
    "y": 24.0,
@@ -4504,7 +4496,7 @@
    "label": "RTP-BX-06"
   },
   {
-   "id": "L6-n106",
+   "id": "L6-n105",
    "level": "L6",
    "x": 30.61,
    "y": 84.82,
@@ -4512,14 +4504,14 @@
    "label": "Bio Chem Lab"
   },
   {
-   "id": "L6-n107",
+   "id": "L6-n106",
    "level": "L6",
    "x": 29.85,
    "y": 84.89,
    "type": "junction"
   },
   {
-   "id": "L6-n108",
+   "id": "L6-n107",
    "level": "L6",
    "x": 29.36,
    "y": 80.04,
@@ -4527,7 +4519,7 @@
    "label": "Clean Room"
   },
   {
-   "id": "L6-n109",
+   "id": "L6-n108",
    "level": "L6",
    "x": 41.84,
    "y": 76.46,
@@ -4535,7 +4527,7 @@
    "label": "Darkroom - BMERC (door position guessed)"
   },
   {
-   "id": "L6-n110",
+   "id": "L6-n109",
    "level": "L6",
    "x": 33.11,
    "y": 25.55,
@@ -4543,7 +4535,7 @@
    "label": "Molecular Engineering (door position guessed)"
   },
   {
-   "id": "L6-n111",
+   "id": "L6-n110",
    "level": "L6",
    "x": 46.48,
    "y": 62.77,
@@ -4551,14 +4543,14 @@
    "label": "Sensor Lab"
   },
   {
-   "id": "L6-n112",
+   "id": "L6-n111",
    "level": "L6",
    "x": 47.3,
    "y": 63.57,
    "type": "junction"
   },
   {
-   "id": "L6-n113",
+   "id": "L6-n112",
    "level": "L6",
    "x": 21.96,
    "y": 85.19,
@@ -4566,14 +4558,14 @@
    "label": "Male Toilet"
   },
   {
-   "id": "L6-n114",
+   "id": "L6-n113",
    "level": "L6",
    "x": 21.49,
    "y": 84.71,
    "type": "junction"
   },
   {
-   "id": "L6-n115",
+   "id": "L6-n114",
    "level": "L6",
    "x": 41.86,
    "y": 67.32,
@@ -4581,7 +4573,7 @@
    "label": "Materials Lab"
   },
   {
-   "id": "L6-n116",
+   "id": "L6-n115",
    "level": "L6",
    "x": 42.72,
    "y": 77.16,
@@ -4589,7 +4581,7 @@
    "label": "Characterisation Lab II (door position guessed)"
   },
   {
-   "id": "L6-n117",
+   "id": "L6-n116",
    "level": "L6",
    "x": 56.19,
    "y": 52.75,
@@ -4597,14 +4589,14 @@
    "label": "Grad Office"
   },
   {
-   "id": "L6-n118",
+   "id": "L6-n117",
    "level": "L6",
    "x": 57.73,
    "y": 54.23,
    "type": "junction"
   },
   {
-   "id": "L6-n119",
+   "id": "L6-n118",
    "level": "L6",
    "x": 81.21,
    "y": 33.33,
@@ -4612,14 +4604,14 @@
    "label": "Female Toilet"
   },
   {
-   "id": "L6-n120",
+   "id": "L6-n119",
    "level": "L6",
    "x": 80.74,
    "y": 32.57,
    "type": "junction"
   },
   {
-   "id": "L6-n121",
+   "id": "L6-n120",
    "level": "L6",
    "x": 76.96,
    "y": 40.6,
@@ -4627,14 +4619,14 @@
    "label": "Discussion Room 1"
   },
   {
-   "id": "L6-n122",
+   "id": "L6-n121",
    "level": "L6",
    "x": 75.24,
    "y": 40.74,
    "type": "junction"
   },
   {
-   "id": "L6-n123",
+   "id": "L6-n122",
    "level": "L6",
    "x": 83.88,
    "y": 33.8,
@@ -4642,7 +4634,7 @@
    "label": "Handicap Toilet (point of interest, no room outline)"
   },
   {
-   "id": "L6-n124",
+   "id": "L6-n123",
    "level": "L6",
    "x": 35.69,
    "y": 76.54,
@@ -4650,7 +4642,7 @@
    "label": "Center for Sustainable Materials (SusMat-B2R2)"
   },
   {
-   "id": "L6-n125",
+   "id": "L6-n124",
    "level": "L6",
    "x": 35.77,
    "y": 76.62,
@@ -8404,8 +8396,7 @@
   {
    "from": "L6-n5",
    "to": "L6-n48",
-   "type": "walk",
-   "hint": "Pass CINTRA on your left, Discussion Room ahead"
+   "type": "walk"
   },
   {
    "from": "L6-n48",
@@ -8418,17 +8409,9 @@
    "type": "walk"
   },
   {
-   "from": "L6-n10",
-   "to": "L6-n5",
-   "type": "walk",
-   "hint": "Pass CINTRA on your left",
-   "hint_reverse": "Pass CINTRA on your right, lifts ahead"
-  },
-  {
    "from": "L6-n21",
    "to": "L6-n26",
-   "type": "walk",
-   "hint": "Pass CINTRA on your right"
+   "type": "walk"
   },
   {
    "from": "L6-n25",
@@ -8439,9 +8422,7 @@
   {
    "from": "L6-n10",
    "to": "L6-n22",
-   "type": "walk",
-   "hint": "Pass CINTRA on your right, lifts ahead",
-   "hint_reverse": "Pass CINTRA on your left, lifts ahead"
+   "type": "walk"
   },
   {
    "from": "L6-n25",
@@ -8452,8 +8433,7 @@
   {
    "from": "L6-n21",
    "to": "L6-n38",
-   "type": "walk",
-   "hint": "Pass CINTRA on your left"
+   "type": "walk"
   },
   {
    "from": "L6-n28",
@@ -8518,13 +8498,6 @@
    "from": "L6-n56",
    "to": "L6-n26",
    "type": "walk"
-  },
-  {
-   "from": "L6-n21",
-   "to": "L6-n22",
-   "type": "walk",
-   "hint": "Pass Discussion Room on your right, lifts ahead",
-   "hint_reverse": "Pass CINTRA on your left"
   },
   {
    "from": "L6-n43",
@@ -8637,8 +8610,7 @@
    "from": "L6-n66",
    "to": "L6-n22",
    "type": "walk",
-   "hint": "Pass CINTRA on your left, lifts ahead",
-   "hint_reverse": "Pass CINTRA on your right, lifts ahead"
+   "hint": "Pass CINTRA on your left, lifts ahead"
   },
   {
    "from": "L6-n65",
@@ -8649,8 +8621,7 @@
   {
    "from": "L6-n67",
    "to": "L6-n10",
-   "type": "walk",
-   "hint_reverse": "Lifts straight ahead"
+   "type": "walk"
   },
   {
    "from": "L6-n68",
@@ -8663,375 +8634,369 @@
    "type": "walk"
   },
   {
-   "from": "L6-n70",
+   "from": "L6-n71",
    "to": "L6-n20",
-   "type": "walk",
-   "hint": "Pass CINTRA on your left, toilets ahead"
+   "type": "walk"
+  },
+  {
+   "from": "L6-n70",
+   "to": "L6-n71",
+   "type": "walk"
   },
   {
    "from": "L6-n72",
-   "to": "L6-n20",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n71",
-   "to": "L6-n72",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n73",
    "to": "L6-n37",
    "type": "walk"
   },
   {
    "from": "L6-n54",
-   "to": "L6-n75",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n75",
-   "to": "L6-n55",
+   "to": "L6-n74",
    "type": "walk"
   },
   {
    "from": "L6-n74",
-   "to": "L6-n75",
+   "to": "L6-n55",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n73",
+   "to": "L6-n74",
    "type": "walk"
   },
   {
    "from": "L6-n4",
-   "to": "L6-n77",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n77",
-   "to": "L6-n60",
+   "to": "L6-n76",
    "type": "walk"
   },
   {
    "from": "L6-n76",
-   "to": "L6-n77",
+   "to": "L6-n60",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n75",
+   "to": "L6-n76",
    "type": "walk"
   },
   {
    "from": "L6-n24",
-   "to": "L6-n79",
+   "to": "L6-n78",
    "type": "walk"
   },
   {
-   "from": "L6-n78",
-   "to": "L6-n79",
+   "from": "L6-n77",
+   "to": "L6-n78",
    "type": "walk"
   },
   {
    "from": "L6-n0",
-   "to": "L6-n81",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n81",
-   "to": "L6-n50",
+   "to": "L6-n80",
    "type": "walk"
   },
   {
    "from": "L6-n80",
-   "to": "L6-n81",
+   "to": "L6-n50",
    "type": "walk"
   },
   {
-   "from": "L6-n82",
+   "from": "L6-n79",
+   "to": "L6-n80",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n81",
    "to": "L6-n20",
    "type": "walk"
   },
   {
    "from": "L6-n18",
-   "to": "L6-n84",
+   "to": "L6-n83",
    "type": "walk",
    "hint": "Filing on your left, lift core right"
   },
   {
-   "from": "L6-n83",
-   "to": "L6-n84",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n85",
+   "from": "L6-n84",
    "to": "L6-n55",
    "type": "walk"
   },
   {
-   "from": "L6-n86",
+   "from": "L6-n85",
    "to": "L6-n24",
    "type": "walk"
   },
   {
    "from": "L6-n35",
-   "to": "L6-n88",
+   "to": "L6-n87",
    "type": "walk"
   },
   {
-   "from": "L6-n87",
-   "to": "L6-n88",
+   "from": "L6-n86",
+   "to": "L6-n87",
    "type": "walk"
   },
   {
    "from": "L6-n17",
-   "to": "L6-n90",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n90",
-   "to": "L6-n6",
+   "to": "L6-n89",
    "type": "walk"
   },
   {
    "from": "L6-n89",
-   "to": "L6-n90",
+   "to": "L6-n6",
    "type": "walk"
   },
   {
-   "from": "L6-n91",
+   "from": "L6-n88",
+   "to": "L6-n89",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n90",
    "to": "L6-n20",
    "type": "walk"
   },
   {
-   "from": "L6-n93",
+   "from": "L6-n92",
    "to": "L6-n5",
    "type": "walk"
   },
   {
-   "from": "L6-n92",
-   "to": "L6-n93",
+   "from": "L6-n91",
+   "to": "L6-n92",
    "type": "walk"
   },
   {
    "from": "L6-n39",
-   "to": "L6-n95",
+   "to": "L6-n94",
    "type": "walk"
   },
   {
-   "from": "L6-n95",
+   "from": "L6-n94",
    "to": "L6-n62",
    "type": "walk",
    "hint_reverse": "Conference Room on your right, lift core left"
   },
   {
-   "from": "L6-n94",
-   "to": "L6-n95",
-   "type": "walk"
-  },
-  {
    "from": "L6-n11",
-   "to": "L6-n97",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n97",
-   "to": "L6-n30",
+   "to": "L6-n96",
    "type": "walk"
   },
   {
    "from": "L6-n96",
-   "to": "L6-n97",
+   "to": "L6-n30",
    "type": "walk"
   },
   {
-   "from": "L6-n98",
-   "to": "L6-n99",
+   "from": "L6-n95",
+   "to": "L6-n96",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n97",
+   "to": "L6-n98",
    "type": "walk"
   },
   {
    "from": "L6-n28",
-   "to": "L6-n101",
+   "to": "L6-n100",
    "type": "walk",
    "hint": "Keep right around the lift core"
   },
   {
-   "from": "L6-n100",
-   "to": "L6-n101",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n103",
-   "to": "L6-n40",
+   "from": "L6-n99",
+   "to": "L6-n100",
    "type": "walk"
   },
   {
    "from": "L6-n102",
-   "to": "L6-n103",
+   "to": "L6-n40",
    "type": "walk"
   },
   {
-   "from": "L6-n104",
+   "from": "L6-n101",
+   "to": "L6-n102",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n103",
    "to": "L6-n48",
    "type": "walk"
   },
   {
-   "from": "L6-n105",
+   "from": "L6-n104",
    "to": "L6-n38",
    "type": "walk"
   },
   {
    "from": "L6-n25",
-   "to": "L6-n107",
+   "to": "L6-n106",
    "type": "walk",
    "hint": "Bio Chem Lab on your right, more ahead"
   },
   {
-   "from": "L6-n107",
+   "from": "L6-n106",
    "to": "L6-n9",
    "type": "walk"
   },
   {
-   "from": "L6-n106",
-   "to": "L6-n107",
+   "from": "L6-n105",
+   "to": "L6-n106",
    "type": "walk"
   },
   {
-   "from": "L6-n108",
+   "from": "L6-n107",
    "to": "L6-n50",
    "type": "walk"
   },
   {
-   "from": "L6-n109",
+   "from": "L6-n108",
    "to": "L6-n40",
    "type": "walk"
   },
   {
-   "from": "L6-n110",
+   "from": "L6-n109",
    "to": "L6-n48",
    "type": "walk"
   },
   {
    "from": "L6-n6",
-   "to": "L6-n112",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n112",
-   "to": "L6-n99",
+   "to": "L6-n111",
    "type": "walk"
   },
   {
    "from": "L6-n111",
-   "to": "L6-n112",
+   "to": "L6-n98",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n110",
+   "to": "L6-n111",
    "type": "walk"
   },
   {
    "from": "L6-n53",
-   "to": "L6-n114",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n114",
-   "to": "L6-n88",
+   "to": "L6-n113",
    "type": "walk"
   },
   {
    "from": "L6-n113",
-   "to": "L6-n114",
+   "to": "L6-n87",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n112",
+   "to": "L6-n113",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n114",
+   "to": "L6-n78",
    "type": "walk"
   },
   {
    "from": "L6-n115",
-   "to": "L6-n79",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n116",
    "to": "L6-n40",
    "type": "walk"
   },
   {
    "from": "L6-n17",
-   "to": "L6-n118",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n118",
-   "to": "L6-n23",
+   "to": "L6-n117",
    "type": "walk"
   },
   {
    "from": "L6-n117",
-   "to": "L6-n118",
+   "to": "L6-n23",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n116",
+   "to": "L6-n117",
    "type": "walk"
   },
   {
    "from": "L6-n1",
-   "to": "L6-n120",
+   "to": "L6-n119",
    "type": "walk"
   },
   {
-   "from": "L6-n120",
+   "from": "L6-n119",
    "to": "L6-n3",
    "type": "walk",
    "hint_reverse": "Toilets on your right"
   },
   {
-   "from": "L6-n119",
-   "to": "L6-n120",
+   "from": "L6-n118",
+   "to": "L6-n119",
    "type": "walk"
   },
   {
    "from": "L6-n28",
-   "to": "L6-n122",
+   "to": "L6-n121",
    "type": "walk",
    "hint": "Discussion Room 1 on your right, lifts ahead"
   },
   {
-   "from": "L6-n122",
+   "from": "L6-n121",
    "to": "L6-n59",
    "type": "walk",
    "hint_reverse": "Pass Discussion Room 1 on your left"
   },
   {
-   "from": "L6-n121",
-   "to": "L6-n122",
+   "from": "L6-n120",
+   "to": "L6-n121",
    "type": "walk"
   },
   {
-   "from": "L6-n123",
+   "from": "L6-n122",
    "to": "L6-n43",
    "type": "walk"
   },
   {
    "from": "L6-n0",
-   "to": "L6-n125",
-   "type": "walk"
-  },
-  {
-   "from": "L6-n125",
-   "to": "L6-n103",
+   "to": "L6-n124",
    "type": "walk"
   },
   {
    "from": "L6-n124",
-   "to": "L6-n125",
+   "to": "L6-n102",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n123",
+   "to": "L6-n124",
    "type": "walk"
   },
   {
    "from": "L6-n36",
-   "to": "L6-n84",
+   "to": "L6-n83",
    "type": "walk",
    "hint": "Keep left around the lift core"
   },
   {
    "from": "L6-n18",
-   "to": "L6-n101",
+   "to": "L6-n100",
    "type": "walk",
    "hint": "Pass Discussion Room 2 on your right"
   },
   {
-   "from": "L6-n79",
-   "to": "L6-n99",
+   "from": "L6-n78",
+   "to": "L6-n98",
    "type": "walk"
   },
   {
-   "from": "L6-n110",
-   "to": "L6-n91",
+   "from": "L6-n109",
+   "to": "L6-n90",
    "type": "walk",
    "hint": "(corridor data incomplete here: link added across a 11 m gap, confirm on site)"
+  },
+  {
+   "from": "L6-n82",
+   "to": "L6-n23",
+   "type": "walk"
+  },
+  {
+   "from": "L6-n93",
+   "to": "L6-n23",
+   "type": "walk"
   },
   {
    "from": "L7-n1",
@@ -10067,14 +10032,6 @@
    "type": "stairs",
    "length_m": 9.9,
    "hint": "Take the stairs to Level 5",
-   "step_free": false
-  },
-  {
-   "from": "L6-n70",
-   "to": "L7-n24",
-   "type": "stairs",
-   "length_m": 9.9,
-   "hint": "Take the stairs to Level 7",
    "step_free": false
   },
   {
@@ -11250,7 +11207,7 @@
     "RTP-BX-06-T2"
    ],
    "category": "toilet",
-   "door_node": "L6-n71"
+   "door_node": "L6-n70"
   },
   {
    "id": "RTP-XF-06-T7",
@@ -11260,7 +11217,7 @@
     "XF-06-T7"
    ],
    "category": "toilet",
-   "door_node": "L6-n73"
+   "door_node": "L6-n72"
   },
   {
    "id": "RTP-XF-06-05B",
@@ -11270,7 +11227,7 @@
     "XF-06-05B"
    ],
    "category": "lab",
-   "door_node": "L6-n74"
+   "door_node": "L6-n73"
   },
   {
    "id": "RTP-XF-06-T5",
@@ -11280,7 +11237,7 @@
     "XF-06-T5"
    ],
    "category": "toilet",
-   "door_node": "L6-n76"
+   "door_node": "L6-n75"
   },
   {
    "id": "RTP-XF-06-15",
@@ -11290,7 +11247,7 @@
     "XF-06-15"
    ],
    "category": "room",
-   "door_node": "L6-n78"
+   "door_node": "L6-n77"
   },
   {
    "id": "RTP-XF-06-03",
@@ -11300,7 +11257,7 @@
     "XF-06-03"
    ],
    "category": "lab",
-   "door_node": "L6-n80"
+   "door_node": "L6-n79"
   },
   {
    "id": "RTP-BX-06-T1",
@@ -11310,7 +11267,7 @@
     "RTP-BX-06-T1"
    ],
    "category": "toilet",
-   "door_node": "L6-n82"
+   "door_node": "L6-n81"
   },
   {
    "id": "RTP-XF-06-08A",
@@ -11320,7 +11277,7 @@
     "XF-06-08A"
    ],
    "category": "lab",
-   "door_node": "L6-n83"
+   "door_node": "L6-n82"
   },
   {
    "id": "RTP-XF-06-18",
@@ -11330,7 +11287,7 @@
     "XF-06-18"
    ],
    "category": "lab",
-   "door_node": "L6-n85"
+   "door_node": "L6-n84"
   },
   {
    "id": "RTP-XF-06-17A",
@@ -11340,7 +11297,7 @@
     "XF-06-17A"
    ],
    "category": "lab",
-   "door_node": "L6-n86"
+   "door_node": "L6-n85"
   },
   {
    "id": "RTP-XF-06-01",
@@ -11350,7 +11307,7 @@
     "XF-06-01"
    ],
    "category": "room",
-   "door_node": "L6-n87"
+   "door_node": "L6-n86"
   },
   {
    "id": "RTP-BX-06-01",
@@ -11360,7 +11317,7 @@
     "RTP-BX-06-01"
    ],
    "category": "room",
-   "door_node": "L6-n89"
+   "door_node": "L6-n88"
   },
   {
    "id": "RTP-BX-06-T3",
@@ -11370,7 +11327,7 @@
     "RTP-BX-06-T3"
    ],
    "category": "toilet",
-   "door_node": "L6-n91"
+   "door_node": "L6-n90"
   },
   {
    "id": "RTP-BX-06-00",
@@ -11381,7 +11338,7 @@
     "RTP-BX-06-00"
    ],
    "category": "lab",
-   "door_node": "L6-n92"
+   "door_node": "L6-n91"
   },
   {
    "id": "RTP-XF-06-05",
@@ -11391,7 +11348,7 @@
     "XF-06-05"
    ],
    "category": "room",
-   "door_node": "L6-n94"
+   "door_node": "L6-n93"
   },
   {
    "id": "RTP-XF-06-T6",
@@ -11401,7 +11358,7 @@
     "XF-06-T6"
    ],
    "category": "toilet",
-   "door_node": "L6-n96"
+   "door_node": "L6-n95"
   },
   {
    "id": "RTP-XF-06-14",
@@ -11411,7 +11368,7 @@
     "XF-06-14"
    ],
    "category": "lab",
-   "door_node": "L6-n98"
+   "door_node": "L6-n97"
   },
   {
    "id": "RTP-XF-06-22",
@@ -11424,7 +11381,7 @@
     "XF-06-22"
    ],
    "category": "room",
-   "door_node": "L6-n100"
+   "door_node": "L6-n99"
   },
   {
    "id": "RTP-XF-06-04",
@@ -11434,7 +11391,7 @@
     "XF-06-04"
    ],
    "category": "lab",
-   "door_node": "L6-n102"
+   "door_node": "L6-n101"
   },
   {
    "id": "RTP-BX-06-01-2",
@@ -11444,14 +11401,14 @@
     "RTP-BX-06-01"
    ],
    "category": "room",
-   "door_node": "L6-n104"
+   "door_node": "L6-n103"
   },
   {
    "id": "L6-RTP-BX-06",
    "name": "RTP-BX-06",
    "aliases": [],
    "category": "lab",
-   "door_node": "L6-n105"
+   "door_node": "L6-n104"
   },
   {
    "id": "RTP-XF-06-19A",
@@ -11461,7 +11418,7 @@
     "XF-06-19A"
    ],
    "category": "lab",
-   "door_node": "L6-n106"
+   "door_node": "L6-n105"
   },
   {
    "id": "RTP-XF-06-02",
@@ -11471,7 +11428,7 @@
     "XF-06-02"
    ],
    "category": "lab",
-   "door_node": "L6-n108"
+   "door_node": "L6-n107"
   },
   {
    "id": "RTP-XF-06-19B",
@@ -11481,7 +11438,7 @@
     "XF-06-19B"
    ],
    "category": "room",
-   "door_node": "L6-n109"
+   "door_node": "L6-n108"
   },
   {
    "id": "RTP-BX-06-02",
@@ -11491,7 +11448,7 @@
     "RTP-BX-06-02"
    ],
    "category": "lab",
-   "door_node": "L6-n110"
+   "door_node": "L6-n109"
   },
   {
    "id": "RTP-XF-06-06",
@@ -11501,7 +11458,7 @@
     "XF-06-06"
    ],
    "category": "lab",
-   "door_node": "L6-n111"
+   "door_node": "L6-n110"
   },
   {
    "id": "RTP-XF-06-T4",
@@ -11511,7 +11468,7 @@
     "XF-06-T4"
    ],
    "category": "toilet",
-   "door_node": "L6-n113"
+   "door_node": "L6-n112"
   },
   {
    "id": "RTP-XF-06-05A",
@@ -11521,7 +11478,7 @@
     "XF-06-05A"
    ],
    "category": "lab",
-   "door_node": "L6-n115"
+   "door_node": "L6-n114"
   },
   {
    "id": "RTP-XF-06-18A",
@@ -11531,7 +11488,7 @@
     "XF-06-18A"
    ],
    "category": "lab",
-   "door_node": "L6-n116"
+   "door_node": "L6-n115"
   },
   {
    "id": "RTP-XF-06-07",
@@ -11541,7 +11498,7 @@
     "XF-06-07"
    ],
    "category": "room",
-   "door_node": "L6-n117"
+   "door_node": "L6-n116"
   },
   {
    "id": "RTP-XF-06-T8",
@@ -11551,7 +11508,7 @@
     "XF-06-T8"
    ],
    "category": "toilet",
-   "door_node": "L6-n119"
+   "door_node": "L6-n118"
   },
   {
    "id": "RTP-XF-06-21",
@@ -11564,14 +11521,14 @@
     "XF-06-21"
    ],
    "category": "room",
-   "door_node": "L6-n121"
+   "door_node": "L6-n120"
   },
   {
    "id": "L6-HANDICAP-TOILET",
    "name": "Handicap Toilet",
    "aliases": [],
    "category": "toilet",
-   "door_node": "L6-n123"
+   "door_node": "L6-n122"
   },
   {
    "id": "RTP-XF-06",
@@ -11581,7 +11538,7 @@
     "XF-06"
    ],
    "category": "lab",
-   "door_node": "L6-n124"
+   "door_node": "L6-n123"
   },
   {
    "id": "RTP-BX-07-05",
@@ -11846,7 +11803,10 @@
   "L5: TL Advanced Materials Lab (key card) entered only at its circled door: 4 other walk(s) across its outline cut",
   "L5: NiCE Lab 2 (key card) entered only at its circled door: 0 other walk(s) across its outline cut",
   "L6: stairs at (21,92) left out of the routes: inside a key-card area (team site notes)",
+  "L6: stairs at (26,18) left out of the routes: inside the CINTRA (CNRS-International-NTU-Thales Research Alliance) key-card area (team plans)",
   "L6: bridged a 11 m gap between corridor pieces at (33,26)",
+  "L6: SusMat-B2R2 (Center for Sustainable Materials) (key card) entered only at its circled door: 2 other walk(s) across its outline cut; door(s) joined to the corridor on their own side: Filing, Conference Room - L6",
+  "L6: CINTRA (CNRS-International-NTU-Thales Research Alliance) (key card) entered only at its circled door: 2 other walk(s) across its outline cut",
   "L9: bridged a 2 m gap between corridor pieces at (25,11)",
   "hints: hint (from -> to) and hint_reverse (to -> from) drafted by hints/draft_hints.py on 2026-11-03"
  ]

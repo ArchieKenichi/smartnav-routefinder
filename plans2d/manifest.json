@@ -1,7 +1,7 @@
 {
  "venue": "ntu-rtp",
  "name": "Research Techno Plaza (RTP)",
- "generated": "2026-11-02",
+ "generated": "2026-11-03",
  "source": "MazeMap building 1014912 (map/source/mazemap/), rendered by plans2d/render_plans.py",
  "frame": {
   "note": "Same frame as map/research-techno-plaza.json: x = metres east, y = metres north of geo_origin (SW corner of the building outline's bounding box). All levels share one canvas.",
@@ -261,7 +261,7 @@
     "roof_m2": 452.0
    },
    "notes": [
-    "Also tinted: 21 key-card room(s) outside those labs (preview3d/places.json), each entered at its own door.",
+    "Tinted orange: key-card labs as on floors 3-5 (level 5's outlines and doors; no marked plan for this level) (SusMat-B2R2 (Center for Sustainable Materials); CINTRA (CNRS-International-NTU-Thales Research Alliance)). Every room inside needs a key card; the orange dot is the lab's entrance, the only way the routes go in (map/site-corrections.json restricted_zones).",
     "MazeMap draws this level as loose rooms only. Its corridors, lifts and stairs are level 5's, cut back where level 6's rooms stand; rooms are copied only where floors 3-5 agree; area 2 is set back to its roof's outline; the undivided space in area 1 is CINTRA's restricted area (team notes; map/derive_level6.py writes these into map/site-corrections.json). Blue: the glass sides of the link from area 1 to area 2. Hatched: the roof of level 5.",
     "Labels that do not fit their room and were left off: Characterisation Lab I; Characterisation Lab II; Characterisation Lab III; Discussion Room; Handicap Toilet; Male Toilet; Tank / Reading / Refence Room",
     "Labels shortened to fit: Center for Sustainable Materials (SusMat-B2R2) as \"SusMat-B2R2\""
