@@ -25,9 +25,10 @@
   let toastTimer;
   function toast(msg, ms) { const t = $('#toast'); clearTimeout(toastTimer); if (!msg) { t.style.display = 'none'; return; } t.textContent = msg; t.style.display = 'block'; toastTimer = setTimeout(() => t.style.display = 'none', ms || 3500); }
   const fmtM = m => `${Math.round(m)} m`;
-  const isPhone = () => window.matchMedia('(max-width: 760px)').matches;
+  const PHONE_MQ = '(max-width: 760px), (max-width: 1023px) and (orientation: portrait)';   // the bottom-sheet layout (app.css): phones, and tablets held upright
+  const isPhone = () => window.matchMedia(PHONE_MQ).matches;
   {   // a phone's search fields are narrow: the short placeholder, so it is never cut off under the swap button
-    const mq = window.matchMedia('(max-width: 760px)'), fit = () => document.querySelectorAll('input[data-short]').forEach(i => { i.dataset.long = i.dataset.long || i.placeholder; i.placeholder = mq.matches ? i.dataset.short : i.dataset.long; });
+    const mq = window.matchMedia(PHONE_MQ), fit = () => document.querySelectorAll('input[data-short]').forEach(i => { i.dataset.long = i.dataset.long || i.placeholder; i.placeholder = mq.matches ? i.dataset.short : i.dataset.long; });
     fit(); mq.addEventListener('change', fit);
   }
 
@@ -526,9 +527,9 @@
   // ------------------------------------------------------------ free look: walk around the building yourself in the 3D view
   // Drag looks around (grab the view, as on a street-view map); the wheel, a pinch or the keys walk; a tap on the floor walks there;
   // the level buttons go up or down a level (to the same spot, or the nearest walkway there). The route controls bring the view back.
-  const FREE_WHEEL_M_PER_PX = 0.02, FREE_PINCH_M_PER_PX = 0.05, TAP_MS = 350, TAP_PX = 8;
+  const FREE_WHEEL_M_PER_PX = 0.04, FREE_PINCH_M_PER_PX = 0.1, TAP_MS = 350, TAP_PX = 8;
   const HINT_ROUTE = $('#hint3d').textContent;
-  const HINT_FREE = 'Drag to look around · scroll or pinch to walk · tap the floor to go there · arrow keys / WASD';
+  const HINT_FREE = 'Drag to look · hold the arrows or tap the floor to walk';
   const levelOrder = byFloor.map(l => l.id);
   function setFree(on) {
     if (!!on === v3.freeOn()) return;
@@ -589,9 +590,19 @@
     const tag = e.target && e.target.tagName;
     if (!what || tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (e.target && e.target.isContentEditable)) return false;
     if (down) freeKeysDown.add(what); else freeKeysDown.delete(what);
+    pushFreeKeys(); e.preventDefault(); return true;
+  }
+  function pushFreeKeys() {
     const has = k => freeKeysDown.has(k);
     v3.freeKeys({ fwd: (has('f+') ? 1 : 0) - (has('f-') ? 1 : 0), side: (has('s+') ? 1 : 0) - (has('s-') ? 1 : 0), turn: (has('t+') ? 1 : 0) - (has('t-') ? 1 : 0), pitch: (has('p+') ? 1 : 0) - (has('p-') ? 1 : 0), fast: has('run') });
-    e.preventDefault(); return true;
+  }
+  // the walk pad (phones and tablets have no keys): hold an arrow to walk or turn, as the keys do
+  for (const b of document.querySelectorAll('#walkpad button')) {
+    const what = b.dataset.k;
+    const up = e => { if (!freeKeysDown.has(what)) return; freeKeysDown.delete(what); b.classList.remove('held'); pushFreeKeys(); };
+    b.addEventListener('pointerdown', e => { e.preventDefault(); if (!v3.freeOn()) return; freeKeysDown.add(what); b.classList.add('held'); pushFreeKeys(); try { b.setPointerCapture(e.pointerId); } catch (err) {} $('#hint3d').classList.add('seen'); });
+    b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up); b.addEventListener('lostpointercapture', up);
+    b.addEventListener('contextmenu', e => e.preventDefault());
   }
   window.addEventListener('keyup', e => { if (v3.freeOn()) freeKey(e, false); });
   window.addEventListener('blur', () => { freeKeysDown.clear(); v3.freeKeys({}); });

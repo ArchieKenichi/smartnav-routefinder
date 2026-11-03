@@ -727,7 +727,7 @@ window.View3D = function (deps) {
   // The camera leaves the route: drag to look, wheel / pinch / keys to walk, tap the floor to walk there. It stays on the level's
   // floor (raised floors included), and walls, glass, rails and columns stop it: rays at sill and rail height against the level's
   // meshes, sliding along the wall it meets; a step onto no floor (the atrium void, outside) is refused.
-  const FREE_R = 0.3, FREE_STEP = 0.2, FREE_SPEED = 2.8, FREE_FAST = 5.0, FREE_TURN = 1.9, FREE_RAYS_Z = [0.3, 1.0];
+  const FREE_R = 0.3, FREE_STEP = 0.25, FREE_SPEED = 4.5, FREE_FAST = 8.0, FREE_TURN = 1.9, FREE_RAYS_Z = [0.3, 1.0];
   const BLOCK_MATS = new Set(['wall', 'lift', 'stairs', 'facade_glass', 'facade_sill', 'glass_pane', 'metal', 'column', 'frame_dark', 'portal',
     'stair_white', 'desk_wood', 'desk_base', 'granite_link', 'atrium_facade', 'lift_lintel', 'stairs_lintel']);
   const FLOOR_MATS = new Set(['floor', 'corridor', 'granite', 'granite_step', 'granite_link', 'corridor_borrowed', 'floor_bridged', 'lift', 'stairs', 'nosing']);
@@ -832,7 +832,7 @@ window.View3D = function (deps) {
     freeStart, freeStop, freeOn: () => !!free,
     freeLook: (dy, dp, abs) => { if (!free) return; free.yaw = wrap(abs ? dy : free.yaw + dy); if (dp != null) free.pitch = Math.max(-1.2, Math.min(1.2, abs ? dp : free.pitch + dp)); },
     freeYaw: () => free ? free.yaw : 0, freePitch: () => free ? free.pitch : 0,
-    freeForward: m => { if (free) { free.pending = Math.max(-6, Math.min(6, free.pending + m)); free.walk = null; } },
+    freeForward: m => { if (free) { free.pending = Math.max(-14, Math.min(14, free.pending + m)); free.walk = null; } },
     freeKeys: k => { if (free) free.keys = k || {}; },
     freeWalkTo, freeSetLevel,
     freeState: () => free ? { x: free.x, y: free.y, level: free.level, heading: free.yaw, pitch: free.pitch } : null,

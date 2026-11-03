@@ -99,6 +99,15 @@ svg:not(.leaflet-pane *) { width:20px; height:20px; fill:none; stroke:currentCol
 .free3d #freeup, .free3d #freedown { display:inline-flex; }
 .view-map #view3dwrap #freetools { display:none; }
 .free3d #view { cursor:grab; } .free3d #view:active { cursor:grabbing; }
+#walkpad { display:none; position:absolute; right:calc(var(--gr) + var(--thumb-w) + 2 * var(--gutter)); bottom:var(--gb); z-index:3; grid-template-columns:repeat(3, 52px); grid-template-rows:repeat(2, 52px); gap:6px; touch-action:none; user-select:none; -webkit-user-select:none; }   /* hold to walk or turn (touch screens have no keys) */
+.free3d #walkpad { display:grid; }
+.free3d #hint3d { bottom:calc(var(--gb) + 128px); left:calc(var(--panel-w) + var(--gl) + (100% - var(--panel-w) - var(--gl)) / 2); }   /* above the walk pad, centred on the view beside the panel */
+.view-map #view3dwrap #walkpad { display:none; }
+#walkpad button { width:52px; height:52px; border:0; border-radius:14px; background:rgba(15,23,42,.72); color:#fff; display:flex; align-items:center; justify-content:center; touch-action:none; -webkit-tap-highlight-color:transparent; }
+#walkpad button svg { width:24px; height:24px; fill:none; stroke:currentColor; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; }
+#walkpad button.held { background:var(--primary); }
+#walkpad .wp-f { grid-column:2; grid-row:1; } #walkpad .wp-l { grid-column:1; grid-row:2; } #walkpad .wp-b { grid-column:2; grid-row:2; } #walkpad .wp-r { grid-column:3; grid-row:2; }
+#walkpad .wp-r svg { transform:scaleX(-1); }
 #fade { position:absolute; inset:0; background:#0b1220; opacity:0; pointer-events:none; display:flex; align-items:center; justify-content:center; z-index:4; }
 #fade .card { background:#fff; color:var(--ink); border-radius:var(--r-lg); padding:18px 24px; text-align:center; max-width:80%; box-shadow:0 10px 40px rgba(0,0,0,.4); display:none; }
 #fade .card .t { font-size:20px; font-weight:700; }
@@ -247,7 +256,7 @@ svg:not(.leaflet-pane *) { width:20px; height:20px; fill:none; stroke:currentCol
 #app.picking #toast { background:var(--primary-ink); }
 
 /* ---------- phones and narrow windows */
-@media (max-width: 760px) {
+@media (max-width: 760px), (max-width: 1023px) and (orientation: portrait) {   /* phones, and tablets held upright: the bottom-sheet layout (a side panel leaves the plan too narrow) */
   :root { --thumb-w:140px; --thumb-h:96px; --gutter:12px; }
   #panel { position:static; width:auto; max-height:none; background:none; box-shadow:none; border-radius:0; overflow:visible; display:contents; }
   #searchcard { position:absolute; left:8px; right:8px; top:calc(8px + env(safe-area-inset-top, 0px)); border-radius:14px; box-shadow:var(--shadow-2); background:var(--card); z-index:610; }
@@ -296,6 +305,13 @@ svg:not(.leaflet-pane *) { width:20px; height:20px; fill:none; stroke:currentCol
   #searchcard:not(.collapsed) .notice { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   #viewtools { display:none; }
   #view3dwrap #level { top:auto; bottom:12px; right:8px; }
+  /* walking around yourself on a phone: the level and Done / up / down in a row under the header, the walk pad bottom
+     right across from the plan thumbnail, no route hint */
+  .free3d #view3dwrap #level { top:calc(var(--header-h, 72px) + 14px); bottom:auto; left:8px; right:auto; }
+  .free3d #freetools { top:calc(var(--header-h, 72px) + 8px); bottom:auto; right:8px; }
+  .free3d #hint3d { display:none; }
+  #walkpad { left:auto; right:8px; bottom:10px; transform:none; grid-template-columns:repeat(3, 48px); grid-template-rows:repeat(2, 48px); gap:5px; }
+  #walkpad button { width:48px; height:48px; }
   #banner, .view-3d #banner { top:calc(var(--header-h, 72px) + 40px); bottom:auto; right:8px; left:8px; font-size:11px; }   /* under the hint: the bottom right has the look-around buttons and the level */
   #hint3d { bottom:auto; top:calc(var(--header-h, 72px) + 4px); left:50%; }
   #freetools { top:auto; bottom:48px; right:8px; }
