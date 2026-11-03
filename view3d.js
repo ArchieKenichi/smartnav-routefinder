@@ -50,8 +50,10 @@ window.View3D = function (deps) {
       const pmrem = new THREE.PMREMGenerator(renderer); scene.environment = pmrem.fromScene(env, 0.04).texture; pmrem.dispose();
   }
   function resize() {
-    const w = canvas.clientWidth, h = canvas.clientHeight;
+    const fixed = api.recordSize, w = fixed ? fixed[0] : canvas.clientWidth, h = fixed ? fixed[1] : canvas.clientHeight;   // recordSize [w, h]: a route video draws the 3D at this size, whatever the canvas shows
     if (!w || !h) return;
+    if (fixed) { if (canvas.width !== w || canvas.height !== h) { renderer.setPixelRatio(1); renderer.setSize(w, h, false); camera.aspect = w / h; camera.fov = 70; camera.updateProjectionMatrix(); } return; }
+    if (renderer.getPixelRatio() !== Math.min(window.devicePixelRatio || 1, 2)) renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));   // back from a video's fixed size
     const pr = renderer.getPixelRatio();
     if (canvas.width !== Math.floor(w * pr) || canvas.height !== Math.floor(h * pr)) {   // as setSize() sets the buffer: no resize every frame at a fractional pixel ratio
       renderer.setSize(w, h, false); camera.aspect = w / h; camera.fov = w < h ? 80 : 70; camera.updateProjectionMatrix();
@@ -725,7 +727,7 @@ window.View3D = function (deps) {
   // The camera leaves the route: drag to look, wheel / pinch / keys to walk, tap the floor to walk there. It stays on the level's
   // floor (raised floors included), and walls, glass, rails and columns stop it: rays at sill and rail height against the level's
   // meshes, sliding along the wall it meets; a step onto no floor (the atrium void, outside) is refused.
-  const FREE_R = 0.3, FREE_STEP = 0.2, FREE_SPEED = 1.6, FREE_FAST = 3.2, FREE_TURN = 1.9, FREE_RAYS_Z = [0.3, 1.0];
+  const FREE_R = 0.3, FREE_STEP = 0.2, FREE_SPEED = 2.8, FREE_FAST = 5.0, FREE_TURN = 1.9, FREE_RAYS_Z = [0.3, 1.0];
   const BLOCK_MATS = new Set(['wall', 'lift', 'stairs', 'facade_glass', 'facade_sill', 'glass_pane', 'metal', 'column', 'frame_dark', 'portal',
     'stair_white', 'desk_wood', 'desk_base', 'granite_link', 'atrium_facade', 'lift_lintel', 'stairs_lintel']);
   const FLOOR_MATS = new Set(['floor', 'corridor', 'granite', 'granite_step', 'granite_link', 'corridor_borrowed', 'floor_bridged', 'lift', 'stairs', 'nosing']);
@@ -838,7 +840,7 @@ window.View3D = function (deps) {
     signs: () => Object.values(labels).flatMap(g => g.children.map(s => s.userData.node)),
     state: () => ({ s: view.s, run: view.run, target: target.s, moving: moving(), transition: !!fade, level: shownLevel, arrivedHere }),
     keyDoors: () => keyDoors.map(k => ({ id: k.rec.id, level: k.rec.level, label: k.rec.label, open: +k.t.toFixed(2), want: k.want, route: k.route, arrive: k.arrive })),
-    scene, camera, renderer, labels, levelObj, debugCamera: null,
+    scene, camera, renderer, labels, levelObj, debugCamera: null, recordSize: null,
   };
   return api;
 };

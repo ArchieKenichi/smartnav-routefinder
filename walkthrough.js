@@ -17,7 +17,7 @@
   const VENUE_URLS = ['hints/research-techno-plaza-with-hints.json'];
   const PLANS = 'plans2d/';
   const STEP_M = 3.0;             // metres per Forward / Back tap or arrow key
-  const PAUSE_MS = 600;           // the fly-through pauses this long at each decision point
+  const PAUSE_MS = 400;           // the fly-through pauses this long at each decision point
   const FLY_RIDE_MS = 600;        // ... and rides a lift / the stairs in this long (fade + card)
   const SWIPE_M_PER_PX = 0.04;    // sideways drag across the 3D view: metres per pixel
   const WHEEL_M_PER_PX = 0.02;    // mouse wheel over the 3D view
@@ -84,9 +84,11 @@
   const ACCESS = { keycard: 'Key card needed', staff: 'Staff only', closed: 'Closed to visitors' };
   const placeKey = p => String(p.id || '').replace(/^room:/, '');
   const labOf = new Map(); for (const rm of roomIndex.values()) if (rm.zone) { labOf.set(rm.id, rm.zone); if (rm.dest) labOf.set(rm.dest, rm.zone); }   // a room inside a key-card lab (the team's red outlines; rooms.json zone): key card, unless places.json says otherwise
+  const labDoor = new Map(((rooms && rooms.zones) || []).map(z => [z.label, z.destination]));   // a key-card lab -> its own destination (rooms.json zones)
   function infoOf(p) {
-    const k = placeKey(p), o = places[k] || {}, lab = labOf.get(k);
-    return { photo: photos[k] || o.photo || null, access: ACCESS[o.access] ? o.access : lab ? 'keycard' : null, note: o.note || (lab ? `Inside the ${lab} key-card area` : '') };
+    const k = placeKey(p), o = places[k] || {}, lab = labOf.get(k), own = photos[k] || o.photo || null;
+    const labPhoto = !own && lab ? photos[labDoor.get(lab)] || null : null;   // a room inside a key-card lab without its own photo: the lab's front door, the way in
+    return { photo: own || labPhoto, photoOf: labPhoto ? lab : null, access: ACCESS[o.access] ? o.access : lab ? 'keycard' : null, note: o.note || (lab ? `Inside the ${lab} key-card area` : '') };
   }
   const lockSvg = a => `<svg class="lock" role="img" aria-label="${ACCESS[a]}"><use href="#i-lock"/></svg>`;
   const accChip = p => { const i = p ? infoOf(p) : {}; return i.access ? `<span class="acc ${i.access}"><svg aria-hidden="true"><use href="#i-lock"/></svg>${ACCESS[i.access]}</span>` : ''; };
@@ -292,8 +294,9 @@
     $('#pcname').textContent = p.name;
     $('#pcsub').textContent = `${kind.charAt(0).toUpperCase() + kind.slice(1)} · ${levelName(lv)}`;
     const info = infoOf(p), img = $('#pcphoto');   // a photo from the photos folder, an access warning or note from places.json
-    if (info.photo) { img.src = info.photo; img.alt = 'Photo of ' + p.name; img.hidden = false; } else { img.removeAttribute('src'); img.hidden = true; }
-    $('#pcnophotoico').setAttribute('href', '#i-' + (ICON[p.category] || (isMeeting(p) ? 'meeting' : 'room')));
+    if (info.photo) { img.src = info.photo; img.alt = info.photoOf ? `The ${info.photoOf} entrance` : 'Photo of ' + p.name; img.hidden = false; } else { img.removeAttribute('src'); img.hidden = true; }
+    $('#placeview').classList.toggle('nophoto', !info.photo);   // no photo: no picture area at all
+    $('#pccaption').hidden = !info.photoOf; $('#pccaption').textContent = info.photoOf ? `Way in: the ${info.photoOf} entrance` : '';
     $('#pcaccess').hidden = !info.access; $('#pcaccess').className = 'access ' + (info.access || 'info');
     $('#pcaccesstext').textContent = info.access ? ACCESS[info.access] : '';
     const rm = p.room || roomOfDest.get(p.id), code = p.door_node && !/^(node:|entrance)/.test(p.id) ? p.id : '';
@@ -523,7 +526,7 @@
   // ------------------------------------------------------------ free look: walk around the building yourself in the 3D view
   // Drag looks around (grab the view, as on a street-view map); the wheel, a pinch or the keys walk; a tap on the floor walks there;
   // the level buttons go up or down a level (to the same spot, or the nearest walkway there). The route controls bring the view back.
-  const FREE_WHEEL_M_PER_PX = 0.012, FREE_PINCH_M_PER_PX = 0.03, TAP_MS = 350, TAP_PX = 8;
+  const FREE_WHEEL_M_PER_PX = 0.02, FREE_PINCH_M_PER_PX = 0.05, TAP_MS = 350, TAP_PX = 8;
   const HINT_ROUTE = $('#hint3d').textContent;
   const HINT_FREE = 'Drag to look around · scroll or pinch to walk · tap the floor to go there · arrow keys / WASD';
   const levelOrder = byFloor.map(l => l.id);
@@ -653,12 +656,106 @@
     const link = u.toString();
     toast(await copyText(link) ? 'Link copied: ' + link : 'Copy the link from the address bar: ' + link, 6000);
   };
-  $('#export').onclick = () => {
-    if (!R) { toast('Plan a route first'); return; }
-    const blob = new Blob([JSON.stringify(R.json, null, 1)], { type: 'application/json' });
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `route-${dest.id}.json`; document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(() => URL.revokeObjectURL(a.href), 2000); toast('route.json downloaded — see README for the Unity follower');
-  };
+  // ------------------------------------------------------------ a short video of the way there: the fly-through, the 3D walk beside the plan, the steps as captions
+  // Recorded from a canvas (MediaRecorder, mp4 where the browser can, else webm) while the route plays at VIDEO_PACE: each frame draws
+  // the 3D view (rendered at a fixed size meanwhile), the plan around the position with the route and a dot, the current step and,
+  // on a ride, its card. Saved as a file (on a phone through the share sheet where it can).
+  const VIDEO_W = 1280, VIDEO_H = 720, VIDEO_3D_W = 800, VIDEO_PACE_MPS = 6, VIDEO_END_MS = 2000, VIDEO_ZOOM = 1.3;
+  let recording = null;
+  const planImgs = {};
+  function planImage(lv) {
+    if (!planImgs[lv]) { const pl = (plans.levels || []).find(l => l.id === lv); if (!pl) return null; const im = new Image(); im.src = PLANS + pl.plan.image; planImgs[lv] = { im, plan: pl.plan }; }
+    return planImgs[lv];
+  }
+  function videoType() {
+    for (const t of ['video/mp4;codecs=avc1', 'video/mp4', 'video/webm;codecs=vp9', 'video/webm']) if (window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t)) return t;
+    return null;
+  }
+  function roundRect(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+  function wrapText(ctx, text, maxW) { const out = []; let line = ''; for (const w of String(text).split(' ')) { const t = line ? line + ' ' + w : w; if (!line || ctx.measureText(t).width <= maxW) line = t; else { out.push(line); line = w; } } if (line) out.push(line); return out; }
+  function drawVideoFrame(ctx) {
+    const F = '-apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+    ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, VIDEO_W, VIDEO_H);
+    ctx.drawImage(v3.renderer.domElement, 0, 0, VIDEO_3D_W, VIDEO_H);
+    const fadeA = +($('#fade').style.opacity || 0);
+    if (fadeA > 0.02) {   // a ride: the page's fade and card
+      ctx.fillStyle = `rgba(15,23,42,${Math.min(1, fadeA)})`; ctx.fillRect(0, 0, VIDEO_3D_W, VIDEO_H);
+      const t = $('#cardtitle').textContent, sub = $('#cardsub').textContent;
+      if (t && fadeA > 0.2) { ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.font = `600 34px ${F}`; ctx.fillText(t, VIDEO_3D_W / 2, VIDEO_H / 2); ctx.font = `400 22px ${F}`; ctx.fillStyle = '#cbd5e1'; ctx.fillText(sub, VIDEO_3D_W / 2, VIDEO_H / 2 + 40); ctx.textAlign = 'left'; }
+    }
+    // the plan around the position
+    const run = R.runs[pos.run], p = v3.pointOnRun(run, pos.s), pi = planImage(run.level), X0 = VIDEO_3D_W, PW = VIDEO_W - VIDEO_3D_W;
+    ctx.fillStyle = '#f1f5f9'; ctx.fillRect(X0, 0, PW, VIDEO_H);
+    if (pi && pi.im.complete && pi.im.naturalWidth) {
+      const pl = pi.plan, k = VIDEO_ZOOM, ppm = pl.pixels_per_metre, cx = pl.origin_px[0] + p.x * ppm, cy = pl.origin_px[1] - p.y * ppm;
+      const sw = PW / k, sh = VIDEO_H / k, sx = cx - sw / 2, sy = cy - sh / 2;
+      ctx.save(); ctx.beginPath(); ctx.rect(X0, 0, PW, VIDEO_H); ctx.clip();
+      ctx.drawImage(pi.im, sx, sy, sw, sh, X0, 0, PW, VIDEO_H);
+      const toV = (x, y) => [X0 + (pl.origin_px[0] + x * ppm - sx) * k, (pl.origin_px[1] - y * ppm - sy) * k];
+      ctx.lineCap = ctx.lineJoin = 'round';
+      for (const r of R.runs) {
+        if (r.level !== run.level) continue;
+        ctx.beginPath(); r.pts.forEach((q, i) => { const [vx, vy] = toV(q.x, q.y); i ? ctx.lineTo(vx, vy) : ctx.moveTo(vx, vy); });
+        ctx.strokeStyle = 'rgba(214,40,40,.9)'; ctx.lineWidth = 7; ctx.stroke();
+      }
+      const last = R.runs[R.runs.length - 1], end = last.pts[last.pts.length - 1];
+      if (last.level === run.level) { const [ex, ey] = toV(end.x, end.y); ctx.fillStyle = '#15803d'; ctx.beginPath(); ctx.arc(ex, ey, 11, 0, 7); ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 3; ctx.stroke(); }
+      const [px, py] = toV(p.x, p.y), h = v3.heading();
+      ctx.fillStyle = 'rgba(37,99,235,.22)'; ctx.beginPath(); ctx.moveTo(px, py); ctx.arc(px, py, 46, -h - 0.55, -h + 0.55); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#2563eb'; ctx.beginPath(); ctx.arc(px, py, 10, 0, 7); ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 3; ctx.stroke();
+      ctx.restore();
+    }
+    ctx.fillStyle = '#fff'; roundRect(ctx, X0 + PW - 126, 16, 110, 40, 20); ctx.fill();
+    ctx.fillStyle = '#1d4ed8'; ctx.font = `600 20px ${F}`; ctx.textAlign = 'center'; ctx.fillText(levelName(run.level), X0 + PW - 71, 43); ctx.textAlign = 'left';
+    ctx.fillStyle = 'rgba(255,255,255,.85)'; ctx.fillRect(X0 - 1, 0, 2, VIDEO_H);
+    // where to, and the step now
+    ctx.font = `600 24px ${F}`; const title = `To ${sel.to ? sel.to.name : ''}`, tw = Math.min(VIDEO_3D_W - 40, ctx.measureText(title).width + 32);
+    ctx.fillStyle = 'rgba(15,23,42,.72)'; roundRect(ctx, 16, 16, tw, 44, 22); ctx.fill(); ctx.fillStyle = '#fff'; ctx.fillText(title, 32, 46, tw - 32);
+    const step = $('#steptext').textContent, hint = $('#hint').textContent;
+    ctx.font = `600 30px ${F}`; const lines = wrapText(ctx, step, VIDEO_W - 64).slice(0, 2), bh = 36 + lines.length * 38 + (hint ? 30 : 0);
+    ctx.fillStyle = 'rgba(15,23,42,.82)'; ctx.fillRect(0, VIDEO_H - bh, VIDEO_W, bh);
+    ctx.fillStyle = '#fff'; lines.forEach((l, i) => ctx.fillText(l, 32, VIDEO_H - bh + 46 + i * 38));
+    if (hint) { ctx.font = `400 22px ${F}`; ctx.fillStyle = '#cbd5e1'; ctx.fillText(hint, 32, VIDEO_H - 22, VIDEO_W - 64); }
+  }
+  async function saveVideo(blob, name) {
+    const file = new File([blob], name, { type: blob.type });
+    if (isPhone() && navigator.canShare && navigator.canShare({ files: [file] })) { try { await navigator.share({ files: [file], title: name }); return; } catch (e) {} }
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  }
+  async function makeVideo() {
+    if (recording) return;
+    if (!R) { toast('Pick a destination first'); return; }
+    const type = videoType(); if (!type) { toast('This browser cannot record a video'); return; }
+    await Promise.all([...new Set(R.runs.map(r => r.level))].map(lv => { const pi = planImage(lv); return pi && !pi.im.complete ? new Promise(res => { pi.im.onload = pi.im.onerror = res; }) : null; }));
+    if (v3.freeOn()) setFree(false);
+    const cv = document.createElement('canvas'); cv.width = VIDEO_W; cv.height = VIDEO_H; const ctx = cv.getContext('2d');
+    const rec = new MediaRecorder(cv.captureStream(30), { mimeType: type, videoBitsPerSecond: 3e6 }), chunks = [];
+    rec.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); };
+    const pace = fly.pace, name = `RTP - to ${(sel.to ? sel.to.name : 'route').replace(/[\\/:*?"<>|]+/g, ' ').trim()}.${type.startsWith('video/mp4') ? 'mp4' : 'webm'}`;
+    recording = { ended: 0 };
+    $('#video').classList.add('on', 'rec'); $('#video').title = 'Recording… press to stop and save'; $('#app').classList.add('recording');
+    v3.recordSize = [VIDEO_3D_W, VIDEO_H];
+    stopFly(); setS(0, null, { snap: true }); fly.pace = VIDEO_PACE_MPS / SPEED;
+    toast('Recording the way there… keep this tab open', 4000);
+    const finish = () => {
+      recording = null; v3.recordSize = null; fly.pace = pace; stopFly(); v3.resize();
+      $('#video').classList.remove('on', 'rec'); $('#video').title = 'Save a short video of the way there: the 3D walk beside the plan'; $('#app').classList.remove('recording');
+      rec.onstop = () => { saveVideo(new Blob(chunks, { type: type.split(';')[0] }), name); toast('Video saved: ' + name, 5000); };
+      rec.stop();
+    };
+    rec.start(500);
+    const frame = now => {
+      if (!recording) return;
+      if (!recording.ended && !fly.on && recording.started) recording.ended = now;   // arrived (or paused): hold the arrival a moment
+      if (!recording.started) { recording.started = now; setFly(true); }
+      v3.update(now); drawVideoFrame(ctx);   // rendered just now, so the 3D canvas holds this frame
+      if (recording.ended && now - recording.ended > VIDEO_END_MS) { finish(); return; }
+      requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+  }
+  $('#video').onclick = () => { if (recording) { recording.ended = recording.ended || performance.now() - VIDEO_END_MS; return; } makeVideo(); };   // pressed again while recording: stop and save
   function applyUrl() {
     const p = new URLSearchParams(location.search);
     if (p.get('view')) setView(p.get('view'));
@@ -702,6 +799,8 @@
     setStart: v => { const pl = placeFromParam(v); if (pl) { setField('from', pl); route(); } return !!pl; },
     pick: (lv, x, y) => pickPoint(lv, x, y), pickRoom: id => { const rm = roomIndex.get(id); if (rm) pickRoom(rm, rm.level); return !!rm; }, rooms: () => rooms, explore: openCat, categories: CATS,
     get debugCamera() { return v3.debugCamera; }, set debugCamera(c) { v3.debugCamera = c; },
+    videoFrame: () => { const c = document.createElement('canvas'); c.width = VIDEO_W; c.height = VIDEO_H; v3.recordSize = [VIDEO_3D_W, VIDEO_H]; v3.update(performance.now()); drawVideoFrame(c.getContext('2d')); v3.recordSize = null; return c.toDataURL('image/jpeg', 0.6); },   // one frame of the route video (tests)
+    videoType, recording: () => !!recording,
     free: { on: () => v3.freeOn(), state: () => v3.freeState(), set: on => setFree(on), level: dir => freeLevel(dir), go: (level, x, y, heading) => { const ok = v3.freeSetLevel(level, x, y); if (ok && heading != null) v3.freeLook(heading, 0, true); return ok; } },   // free look, for tests and inspection
     state: () => { const st = v3.state(); return { s: pos.s, run: pos.run, length: R ? R.length : 0, level: st.level, moving: st.moving, transition: st.transition, autoWalk: fly.on, arrivedHere: !!already, view: viewMode }; },
   };

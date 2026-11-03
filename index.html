@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="leaflet.css?v=a783710282">
-<link rel="stylesheet" href="app.css?v=a9d4025da1">
+<link rel="stylesheet" href="app.css?v=5da1359c7e">
 </head>
 <body>
 <svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
@@ -39,6 +39,7 @@
   <symbol id="i-map" viewBox="0 0 24 24"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z"/><path d="M9 3v15M15 6v15"/></symbol>
   <symbol id="i-split" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M12 4v16"/></symbol>
   <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1.5 1.5"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1.5-1.5"/></symbol>
+  <symbol id="i-video" viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10l5-3v10l-5-3z"/></symbol>
   <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></symbol>
   <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></symbol>
   <symbol id="i-walk" viewBox="0 0 24 24"><circle cx="13" cy="4" r="1.5"/><path d="M10 21l2-7-3-2 1-5 4 2 2 3M8 12l-1 4M14 14l3 7"/></symbol>
@@ -94,7 +95,7 @@
         <label class="chip pick" id="floorsby" title="How a route changes floors: lifts first (stairs only where no lift is near), stairs only, or the shortest walk"><svg aria-hidden="true"><use href="#i-lift"/></svg><select id="vert" aria-label="Changing floors"><option value="lift">Lifts first</option><option value="stairs">Stairs only</option><option value="any">Shortest walk</option></select></label>
         <span class="sp"></span>
         <button id="copy" type="button" class="chip tool" title="Copy a link to this route and position"><svg><use href="#i-link"/></svg>Link</button>
-        <button id="export" type="button" class="chip tool icon hide-sm" title="Download route.json for Unity" aria-label="Download route.json for Unity"><svg><use href="#i-download"/></svg><span class="lbl">route.json</span></button>
+        <button id="video" type="button" class="chip tool icon" title="Save a short video of the way there: the 3D walk beside the plan" aria-label="Save a video of the way there"><svg><use href="#i-video"/></svg><span class="lbl">Video</span></button>
       </div>
     </div>
 
@@ -114,7 +115,7 @@
         <section id="placeview" aria-label="Place" hidden>
           <div class="pv-hero">
             <img id="pcphoto" alt="" hidden>
-            <div id="pcnophoto" class="pv-nophoto"><svg aria-hidden="true"><use id="pcnophotoico" href="#i-room"/></svg><span>No photo yet</span></div>
+            <div id="pccaption" class="pv-caption" hidden></div>
             <button id="pcclose" type="button" aria-label="Close"><svg><use href="#i-close"/></svg></button>
           </div>
           <div class="pv-body">
@@ -147,7 +148,7 @@
               <button id="play" type="button" class="primary play" title="Fly through the route (space)" aria-label="Fly through the route" disabled><svg class="ic-play"><use href="#i-play"/></svg><svg class="ic-pause"><use href="#i-pause"/></svg><span class="lbl">Play</span></button>
               <button id="fwd" type="button" title="Forward 3 m (↑ or →)" aria-label="Forward 3 metres" disabled><svg><use href="#i-fwd"/></svg><span class="lbl">3 m</span></button>
               <button id="nextturn" type="button" title="Next decision point (PageDown)" aria-label="Next decision point" disabled><svg><use href="#i-last"/></svg></button>
-              <select id="speed" title="Fly-through pace" aria-label="Fly-through pace"><option value="1">1×</option><option value="3" selected>3×</option><option value="10">10×</option></select>
+              <select id="speed" title="Fly-through pace" aria-label="Fly-through pace"><option value="2">2×</option><option value="5" selected>5×</option><option value="10">10×</option></select>
             </div>
           </div>
           </div>
@@ -166,8 +167,8 @@
 <script src="demo/wayfind.js?v=e181a90720"></script>
 <script src="route_export.js?v=f2d2852510"></script>
 <script src="rtp-glb.js?v=0f76cbb0a6"></script>
-<script src="view3d.js?v=a79c059524"></script>
+<script src="view3d.js?v=679de528ab"></script>
 <script src="view2d.js?v=c53124e888"></script>
-<script src="walkthrough.js?v=649b137a34"></script>
+<script src="walkthrough.js?v=8d829fa19f"></script>
 </body>
 </html>
