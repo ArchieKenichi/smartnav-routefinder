@@ -277,7 +277,7 @@ svg:not(.leaflet-pane *) { width:20px; height:20px; fill:none; stroke:currentCol
   #app.has-route #searchcard:not(.collapsed) #collapse { display:inline-flex; }
   .fields { margin:4px 8px 0; } .field { height:var(--tap); padding-right:52px; } .field input { font-size:16px; } .field .clear { width:40px; height:40px; }
   .chips { padding:6px 8px 8px; gap:8px; } .chip { height:var(--tap); } .hide-sm { display:none; }
-  #copy, #video { width:var(--tap); padding:0; justify-content:center; font-size:0; }   /* icons only: Step-free, the floors menu, Link and Video in one row */
+  #copy, #video { width:var(--tap); padding:0; justify-content:center; font-size:0; }   /* icons only beside the floors menu: Link and Video in one row */
   #pcclose { width:var(--tap); height:var(--tap); } .pv-hero { height:150px; } .exlisthead button { width:var(--tap); height:var(--tap); }
   .exlist li, #exlm li, .suggest div { min-height:var(--tap); } #steps li { min-height:var(--tap); }
   #sheet { position:absolute; left:0; right:0; bottom:0; height:var(--sheet); background:var(--card); border-radius:16px 16px 0 0; box-shadow:0 -4px 20px rgba(15,23,42,.2); transition:height .22s ease-out; padding-bottom:env(safe-area-inset-bottom, 0px); z-index:600; border-top:none; }
